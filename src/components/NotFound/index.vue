@@ -1,7 +1,11 @@
 <template>
     <div class="not-found-container">
         <h1>4</h1>
-        <img src="@assets/not-found.jpeg" alt="" class="img-not-found" />
+        <img
+            src="@assets/not-found/not-found.jpeg"
+            alt=""
+            class="img-not-found"
+        />
         <h1>4</h1>
     </div>
     <div class="not-found-prompt">
