@@ -1,0 +1,23 @@
+.
+├── README.md
+├── file-tree.txt
+├── file.txt
+├── index.html
+├── package-lock.json
+├── package.json
+├── public
+│   └── favicon.ico
+├── src
+│   ├── App.vue
+│   ├── assets
+│   │   ├── Dashboard
+│   │       ├── profile.png
+│   ├── components
+│   │   ├── Dashboard
+│   │       ├── index.vue
+│   ├── main.js
+│   └── router
+│       └── index.js
+└── vite.config.js
+
+167 directories, 586 files
