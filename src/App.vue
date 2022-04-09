@@ -8,7 +8,7 @@
     <router-view></router-view>
 </template>
 
-<style>
+<style lang="scss">
 #app {
     /* font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -17,4 +17,9 @@
     color: #2c3e50;
     margin-top: 60px; */
 }
+$-color-primary: #76553f;
+
+// :root {
+//     --el-color-primary: #76553f;
+// }
 </style>
