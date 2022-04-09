@@ -19,6 +19,8 @@
     "sass": "^1.50.0",
     "sass-loader": "^7.3.1",
     "style-loader": "^3.3.1",
+    "unplugin-auto-import": "^0.6.9",
+    "unplugin-vue-components": "^0.18.5",
     "vite": "^2.9.0"
   }
 }

@@ -1,7 +1,10 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
-// https://vitejs.dev/config/
+import AutoImport from 'unplugin-auto-import/vite';
+import Components from 'unplugin-vue-components/vite';
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
+
 export default defineConfig({
     resolve: {
         alias: {
@@ -12,7 +15,22 @@ export default defineConfig({
             '@components': '/src/components',
         },
     },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                // 自定义的主题色
+                additionalData: `@use "@/styles/element/index.scss" as *;`,
+            },
+        },
+    },
 
-    plugins: [vue()],
+    plugins: [
+        vue(),
+        AutoImport({
+            resolvers: [ElementPlusResolver({ importStyle: 'sass' })],
+        }),
+        Components({
+            resolvers: [ElementPlusResolver({ importStyle: 'sass' })],
+        }),
+    ],
 });
-
