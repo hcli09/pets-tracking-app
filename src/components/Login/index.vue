@@ -47,6 +47,7 @@
                             v-model="loginForm.password"
                             type="password"
                             autocomplete="off"
+                            clearable="true"
                         />
                     </el-form-item>
 
@@ -99,6 +100,7 @@ const submitForm = formEl => {
 </script>
 
 <style lang="scss" scoped>
+$lc-left-width: 50vw;
 .login-container {
     display: flex;
     justify-content: space-between;
@@ -107,7 +109,7 @@ const submitForm = formEl => {
     height: 100vh;
 
     .lc-left {
-        width: 53vw;
+        width: $lc-left-width;
         height: 100%;
         background-image: url('src/assets/login/dog-background/dog-bgd.png');
         background-position: center center;
@@ -119,7 +121,7 @@ const submitForm = formEl => {
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        width: calc(100vw - 53vw);
+        width: calc(100vw - $lc-left-width);
         height: 100%;
         background-color: #fbfaf5;
         .lc-box {
