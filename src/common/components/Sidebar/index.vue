@@ -1,98 +1,70 @@
 <template>
-    <div class="side-bar-box">
-        <!-- side menu -->
-        <el-menu class="side-bar-menu">
-            <!-- first pet card -->
-            <el-menu-item class="side-bar-menu-item" index="1">
-                <img class="side-bar-menu-item-petphoto" src="@assets/Dashboard/Oliver-petphoto.png" />
-                <p>Oliver</p>
-            </el-menu-item>
+    <!-- side menu -->
+    <el-menu>
+        <el-scrollbar>
+            <div>
 
-            <!-- second pet card -->
-            <el-menu-item class="side-bar-menu-item " index="2">
-                <img class="side-bar-menu-item-petphoto" src="@assets/Dashboard/Lucy-petphoto.png" />
-                <p>Lucy</p>
-            </el-menu-item>
+                <!-- add pet -->
+                <el-menu-item class="side-bar-menu-item" @click="addPet(uid)">
+                    <img class="side-bar-menu-item-petphoto"
+                        src="https://api.iconify.design/akar-icons/circle-plus.svg?color=%2376553f&width=1500" />
+                    <p>Add Pet</p>
+                </el-menu-item>
 
-            <!-- third pet card -->
-            <el-menu-item class="side-bar-menu-item" index="3">
-                <img class="side-bar-menu-item-petphoto" src="@assets/Dashboard/Lucy-petphoto.png" />
-                <p>Bella</p>
-            </el-menu-item>
+                <!-- pet card -->
+                <template v-for=" (pet) in petList" :key="pet.pid">
+                    <el-menu-item class="side-bar-menu-item" @click="clickPet(pet.pid, pet.petName)">
+                        <img class="side-bar-menu-item-petphoto" :src="pet.petAvatar" />
+                        <p>{{ pet.petName }}</p>
+                    </el-menu-item>
+                </template>
 
-        </el-menu>
-
-        <!-- add pet button -->
-        <el-button class="add-pet-button" type="primary" plain :icon="CirclePlusFilled"> Add </el-button>
-
-
-        <!-- log out button-->
-        <el-button class="log-out-button" type="primary" plain>Log Out</el-button>
-
-</div>
+            </div>
+        </el-scrollbar>
+    </el-menu>
 </template>
 
-<script setup>
-import { CirclePlusFilled } from "@element-plus/icons-vue";
-</script>
-
-<script >
+<script>
 export default {
-    name: 'PetsSideBar'
+    name: 'PetsTopBar',
+    props: ['petList', 'uid'],
+
+    methods: {
+        //print for now
+        addPet(uid) {
+            console.log(uid);
+        },
+        clickPet(petId, petName) {
+            console.log('redirect to ' + petName + ' petId: ' + petId);
+        }
+    }
 };
 </script>
 
 <style lang="scss" scoped>
-.side-bar-box {
-    width: 99%;
-    height: 100%;
-    padding-top: 0.2vh;
-    display: flex;
-    justify-content: space-evenly;
-    flex-direction: column;
-    align-items: center;
-    background-color: white;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+.el-scrollbar {
+    height: 95vh;
 }
 
-.side-bar-menu {
-    width: 101%;
-    align-items: center;
-    flex-direction: column;
+.el-scrollbar ::v-deep .el-scrollbar__wrap {
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .side-bar-menu-item {
-    height: 11vh;
-}
+    height: 10vh;
 
-.side-bar-menu-item-petphoto {
-    margin: 0 1vh;
-    height: 8vmin;
-    width: 8vmin;
-    clip-path: circle();
-}
+    .side-bar-menu-item-petphoto {
+        margin: 0 1vh;
+        height: 6vmin;
+        width: 6vmin;
+        clip-path: circle();
+    }
 
-p {
-    color: #76553f;
-    font-size: 2vmin;
-    font-family: Trebuchet MS;
-}
-
-.add-pet-button {
-    margin-top: 2vmax;
-    justify-content: space-evenly;
-    width: 7vw;
-    height: 5vh;
-    border: #76553f;
-    border-radius: 1rem;
-}
-
-.log-out-button {
-    width: 7vw;
-    height: 5vh;
-    margin-top: auto;
-    margin-bottom: 4vh;
-    border: #76553f;
-    border-radius: 1rem;
+    p {
+        color: #76553f;
+        font-size: 1.8vmin;
+        font-family: Trebuchet MS;
+    }
 }
 </style>
