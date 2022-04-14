@@ -384,49 +384,6 @@ export default {
 
 
 
-//including event/task name and time
-.event-task-inside {
-    padding-right: 2rem;
-}
-
-//event name and pet name
-.event-small-box b {
-    font-family: Trebuchet MS;
-    color: #4D56A2;
-    font-size: 1.8vmin;
-}
-
-//event detail time
-.event-small-box p {
-    font-family: Trebuchet MS;
-    color: #737BC1;
-    font-size: 1.5vmin;
-}
-
-//including event/task name, time and pet name
-.task-small-box {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-    margin-top: 1.4vh;
-
-    b {
-        font-family: Trebuchet MS;
-        color: #FD6540;
-        font-size: 1.8vmin;
-    }
-
-}
-
-.task-card {
-    width: 35vh;
-    height: 10vh;
-    background-color: #FFEEEA;
-    border-radius: 1rem;
-}
-
-
 .add-events-tasks-box {
     display: flex;
     justify-content: space-evenly;
