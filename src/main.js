@@ -4,9 +4,12 @@ import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
 import App from './App.vue';
 import router from '@/router';
+// vue sidebar menu
+import VueSidebarMenu from 'vue-sidebar-menu';
+import 'vue-sidebar-menu/dist/vue-sidebar-menu.css';
 
 const app = createApp(App);
-
+app.use(VueSidebarMenu);
 app.use(ElementPlus);
 app.use(createPinia());
 app.use(router);

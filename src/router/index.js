@@ -7,6 +7,19 @@ import Dashboard from '@/components/Dashboard/index.vue';
 
 const routes = [
     {
+        path: '/',
+        name: 'Dashboard',
+        component: Dashboard,
+    },
+    {
+        path: '/dashboard',
+        redirect: '/',
+    },
+    {
+        path: '/home',
+        redirect: '/',
+    },
+    {
         path: '/:catchAll(.*)',
         name: 'Not Found',
         component: NotFound,
@@ -15,16 +28,6 @@ const routes = [
         path: '/login',
         name: 'Login',
         component: Login,
-    },
-    {
-        path: '/',
-        name: 'Home',
-        component: Home,
-    },
-    {
-        path: '/dashboard',
-        name: 'Dashboard',
-        component: Dashboard,
     },
 ];
 
