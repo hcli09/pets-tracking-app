@@ -30,28 +30,51 @@
                     >
                         <el-input
                             v-model="registerForm.email"
-                            clearable="true"
+                            :clearable="true"
                             placeholder="Your email address"
                         />
                     </el-form-item>
 
-                    <el-form-item
-                        prop="username"
-                        label="Username"
-                        :rules="[
-                            {
-                                required: true,
-                                message: 'Please input your user name',
-                                trigger: 'blur',
-                            },
-                        ]"
-                    >
-                        <el-input
-                            v-model="registerForm.username"
-                            clearable="true"
-                            placeholder="Your user name"
-                        />
-                    </el-form-item>
+                    <el-row type="flex" class="row-bg">
+                        <el-col :span="12">
+                            <el-form-item
+                                label="First Name"
+                                prop="firstName"
+                                :rules="[
+                                    {
+                                        required: true,
+                                        message: 'Please input your first name',
+                                        trigger: 'blur',
+                                    },
+                                ]"
+                            >
+                                <el-input
+                                    style="width: 12em"
+                                    v-model="registerForm.firstName"
+                                    :clearable="true"
+                                    placeholder="Your First Name"
+                                ></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-form-item
+                            label="Last Name"
+                            prop="lastName"
+                            :rules="[
+                                {
+                                    required: true,
+                                    message: 'Please input your last name',
+                                    trigger: 'blur',
+                                },
+                            ]"
+                        >
+                            <el-input
+                                style="width: 12em"
+                                v-model="registerForm.lastName"
+                                :clearable="true"
+                                placeholder="Your Last Name"
+                            ></el-input>
+                        </el-form-item>
+                    </el-row>
 
                     <el-form-item
                         label="Password"
@@ -68,27 +91,27 @@
                             v-model="registerForm.password"
                             type="password"
                             autocomplete="off"
-                            clearable="true"
+                            :clearable="true"
                             placeholder="Your password"
                         />
                     </el-form-item>
 
                     <el-form-item
                         label="Confirm your password"
-                        prop="confirmPwd"
+                        prop="checkPass"
                         :rules="[
                             {
                                 required: true,
-                                message: 'Please re-type your password',
                                 trigger: 'blur',
+                                validator: validatePass,
                             },
                         ]"
                     >
                         <el-input
-                            v-model="registerForm.confirmPwd"
+                            v-model="registerForm.checkPass"
                             type="password"
                             autocomplete="off"
-                            clearable="true"
+                            :clearable="true"
                             placeholder="Confirm your password"
                         />
                     </el-form-item>
@@ -102,15 +125,11 @@
                         >
                     </el-form-item>
                 </el-form>
+
                 <el-link :underline="false" href="/login"
                     >Login<el-icon class="el-icon--right"
                         ><user-filled /></el-icon
                 ></el-link>
-
-                <!-- <el-icon><user /></el-icon> -->
-                <!-- <el-link>
-                    Check<el-icon class="el-icon--right"><icon-view /></el-icon>
-                </el-link> -->
             </div>
         </div>
     </div>
@@ -120,25 +139,46 @@
 // import { ElButton } from 'element-plus';
 import { ref, reactive } from 'vue';
 import { UserFilled } from '@element-plus/icons-vue';
+import { ElMessage } from 'element-plus';
+import httpServices from '@services';
 
-const formRef = ref();
-const registerForm = reactive({
-    email: '',
-    username: '',
-    password: '',
-    confirmPwd: '',
-});
+const formRef = ref(null);
+const registerForm = reactive({});
 
 const submitForm = formEl => {
     if (!formEl) return;
-    formEl.validate(valid => {
+    // console.log(formEl);
+
+    formEl.validate(async valid => {
         if (valid) {
-            console.log('submit!');
+            // console.log('submit!');
+            delete registerForm.checkPass;
+            const { data } = await httpServices.registerLogin.register(
+                registerForm
+            );
+
+            if (data.status === 200) {
+                formRef.value.resetFields();
+                ElMessage({
+                    message: data.message,
+                    type: 'success',
+                });
+            }
         } else {
             console.log('error submit!');
             return false;
         }
     });
+};
+
+const validatePass = (rule, value, callback) => {
+    if (value === '') {
+        callback(new Error('Please re-type your password'));
+    } else if (value !== registerForm.password) {
+        callback(new Error('Not same as the previous password you entered'));
+    } else {
+        callback();
+    }
 };
 </script>
 

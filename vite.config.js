@@ -14,6 +14,7 @@ export default defineConfig({
             '@common': '/src/common',
             '@utils': '/src/common/utils',
             '@components': '/src/components',
+            '@services': '/src/services',
         },
     },
     css: {
@@ -35,4 +36,20 @@ export default defineConfig({
             resolvers: [ElementPlusResolver({ importStyle: 'sass' })],
         }),
     ],
+    // proxy: {
+    //     '/api': {
+    //         target: 'https://pets-app.azurewebsites.net/',
+    //         changeOrigin: true,
+    //         logLevel: 'debug',
+    //         secure: false,
+    //         rewrite: path => {
+    //             console.log(path);
+    //             return path.replace(/^\/api/, '');
+    //         },
+    //     },
+    // },
+
+    // server: {
+    //     port: '8715',
+    // },
 });

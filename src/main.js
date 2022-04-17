@@ -6,6 +6,10 @@ import 'element-plus/dist/index.css';
 import App from './App.vue';
 import router from '@/router';
 
+import axios from 'axios';
+
+axios.defaults.baseURL = 'https://pets-app.azurewebsites.net/';
+
 const app = createApp(App);
 Object.keys(ElIcons).forEach(key => {
     app.component(key, ElIcons[key]);

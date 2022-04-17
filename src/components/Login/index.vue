@@ -14,7 +14,7 @@
                     size="large"
                 >
                     <el-form-item
-                        prop="email"
+                        prop="username"
                         label="Email"
                         :rules="[
                             {
@@ -30,8 +30,8 @@
                         ]"
                     >
                         <el-input
-                            v-model="loginForm.email"
-                            clearable="true"
+                            v-model="loginForm.username"
+                            :clearable="true"
                             placeholder="Your email"
                         />
                     </el-form-item>
@@ -51,7 +51,7 @@
                             v-model="loginForm.password"
                             type="password"
                             autocomplete="off"
-                            clearable="true"
+                            :clearable="true"
                             placeholder="Your password"
                         />
                     </el-form-item>
@@ -82,20 +82,28 @@
 // import { ElButton } from 'element-plus';
 import { ref, reactive } from 'vue';
 import { User } from '@element-plus/icons-vue';
+import { ElMessage } from 'element-plus';
+import httpServices from '@services';
 
-const formRef = ref();
-const loginForm = reactive({
-    email: '',
-    password: '',
-});
+const formRef = ref(null);
+const loginForm = reactive({});
 
 // console.log(validateForm);
 
 const submitForm = formEl => {
     if (!formEl) return;
-    formEl.validate(valid => {
+
+    formEl.validate(async valid => {
         if (valid) {
-            console.log('submit!');
+            const { data } = await httpServices.registerLogin.login(loginForm);
+
+            if (data.status === 200) {
+                formRef.value.resetFields();
+                ElMessage({
+                    message: data.message,
+                    type: 'success',
+                });
+            }
         } else {
             console.log('error submit!');
             return false;
