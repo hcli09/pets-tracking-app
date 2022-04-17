@@ -1,7 +1,7 @@
 <template>
     <el-container class="dashboard-home">
         <!-- Top bar -->
-        <el-header style="height: 6vh; padding: 0">
+        <el-header style="height: 8vh; padding: 0">
             <PetsTopBar
                 :firstName="userObject.firstName"
                 :lastName="userObject.lastName"
@@ -79,59 +79,169 @@
                 <div class="outer-folder-box">
                     <span class="main-title-text">Events and Tasks</span>
                     <div class="outer-events-tasks-box">
-                        <el-row>
+                        <el-row class="inner-events-tasks-box" :gutter="25">
                             <!-- calender -->
-                            <el-col :span="11">
-                                <el-calendar class="calender" v-model="value" />
+                            <el-col :span="6">
+                                <!-- <el-calendar class="calender" v-model="value" /> -->
+
+                                <v-date-picker v-model="value" locale="eng" />
+                            </el-col>
+                            <el-col :span="7">
+                                <Carousel
+                                    :autoplay="4000"
+                                    :transition="2000"
+                                    :wrap-around="true"
+                                >
+                                    <Slide v-for="pet in album" :key="pet.id">
+                                        <!-- <div class="carousel__item"> -->
+                                        <img
+                                            :src="pet.picURL"
+                                            class="album-pic"
+                                        />
+                                        <!-- </div> -->
+                                    </Slide>
+
+                                    <!-- <template #addons>
+                                        <Pagination />
+                                    </template> -->
+                                </Carousel>
                             </el-col>
 
                             <!-- events and tasks for today -->
-                            <el-col :span="8" class="summary-events-tasks-box">
-                                <el-row :span="6" class="events-tasks-big-box">
-                                    <b class="start-time-event-task">07:30</b>
-                                    <el-card shadow="hover" class="event-card">
-                                        <div class="event-small-box">
-                                            <div class="event-task-inside">
-                                                <b>Medication Exam</b>
-                                                <p>07:30-08:15</p>
+                            <el-col :span="6" class="summary-events-tasks-box">
+                                <el-scrollbar height="270px">
+                                    <el-row
+                                        :span="6"
+                                        class="events-tasks-big-box"
+                                    >
+                                        <b class="start-time-event-task"
+                                            >07:30</b
+                                        >
+                                        <el-card
+                                            shadow="hover"
+                                            class="event-card"
+                                        >
+                                            <div class="event-small-box">
+                                                <div class="event-task-inside">
+                                                    <b>Medication Exam</b>
+                                                    <p>07:30-08:15</p>
+                                                </div>
+                                                <b>Bella</b>
                                             </div>
-                                            <b>Bella</b>
-                                        </div>
-                                    </el-card>
-                                </el-row>
+                                        </el-card>
+                                    </el-row>
 
-                                <el-row :span="6" class="events-tasks-big-box">
-                                    <b class="start-time-event-task">09:20</b>
-                                    <el-card shadow="hover" class="event-card">
-                                        <div class="event-small-box">
-                                            <div class="event-task-inside">
-                                                <b>Vaccination</b>
-                                                <p>09:20-10:10</p>
+                                    <el-row
+                                        :span="6"
+                                        class="events-tasks-big-box"
+                                    >
+                                        <b class="start-time-event-task"
+                                            >09:20</b
+                                        >
+                                        <el-card
+                                            shadow="hover"
+                                            class="event-card"
+                                        >
+                                            <div class="event-small-box">
+                                                <div class="event-task-inside">
+                                                    <b>Vaccination</b>
+                                                    <p>09:20-10:10</p>
+                                                </div>
+                                                <b>Lucy</b>
                                             </div>
-                                            <b>Lucy</b>
-                                        </div>
-                                    </el-card>
-                                </el-row>
+                                        </el-card>
+                                    </el-row>
 
-                                <el-row :span="6" class="events-tasks-big-box">
-                                    <b class="start-time-event-task">Task</b>
-                                    <el-card shadow="hover" class="task-card">
-                                        <div class="task-small-box">
-                                            <b>10 Tablets this week</b>
-                                            <b>Bella</b>
-                                        </div>
-                                    </el-card>
-                                </el-row>
+                                    <el-row
+                                        :span="6"
+                                        class="events-tasks-big-box"
+                                    >
+                                        <b class="start-time-event-task"
+                                            >Task</b
+                                        >
+                                        <el-card
+                                            shadow="hover"
+                                            class="task-card"
+                                        >
+                                            <div class="task-small-box">
+                                                <b>10 Tablets this week</b>
+                                                <b>Bella</b>
+                                            </div>
+                                        </el-card>
+                                    </el-row>
 
-                                <el-row :span="6" class="events-tasks-big-box">
-                                    <b class="start-time-event-task">Task</b>
-                                    <el-card shadow="hover" class="task-card">
-                                        <div class="task-small-box">
-                                            <b>10 Tablets this week</b>
-                                            <b>Bella</b>
-                                        </div>
-                                    </el-card>
-                                </el-row>
+                                    <el-row
+                                        :span="6"
+                                        class="events-tasks-big-box"
+                                    >
+                                        <b class="start-time-event-task"
+                                            >Task</b
+                                        >
+                                        <el-card
+                                            shadow="hover"
+                                            class="task-card"
+                                        >
+                                            <div class="task-small-box">
+                                                <b>10 Tablets this week</b>
+                                                <b>Bella</b>
+                                            </div>
+                                        </el-card>
+                                    </el-row>
+
+                                    <el-row
+                                        :span="6"
+                                        class="events-tasks-big-box"
+                                    >
+                                        <b class="start-time-event-task"
+                                            >Task</b
+                                        >
+                                        <el-card
+                                            shadow="hover"
+                                            class="task-card"
+                                        >
+                                            <div class="task-small-box">
+                                                <b>10 Tablets this week</b>
+                                                <b>Bella</b>
+                                            </div>
+                                        </el-card>
+                                    </el-row>
+
+                                    <el-row
+                                        :span="6"
+                                        class="events-tasks-big-box"
+                                    >
+                                        <b class="start-time-event-task"
+                                            >Task</b
+                                        >
+                                        <el-card
+                                            shadow="hover"
+                                            class="task-card"
+                                        >
+                                            <div class="task-small-box">
+                                                <b>10 Tablets this week</b>
+                                                <b>Bella</b>
+                                            </div>
+                                        </el-card>
+                                    </el-row>
+
+                                    <el-row
+                                        :span="6"
+                                        class="events-tasks-big-box"
+                                    >
+                                        <b class="start-time-event-task"
+                                            >Task</b
+                                        >
+                                        <el-card
+                                            shadow="hover"
+                                            class="task-card"
+                                        >
+                                            <div class="task-small-box">
+                                                <b>10 Tablets this week</b>
+                                                <b>Bella</b>
+                                            </div>
+                                        </el-card>
+                                    </el-row>
+                                </el-scrollbar>
                             </el-col>
 
                             <!-- add button for events and tasks -->
@@ -140,7 +250,10 @@
                                     <el-button
                                         class="add-button"
                                         color="#76553f"
-                                        style="border: #737bc1"
+                                        style="
+                                            border: #737bc1;
+                                            margin-bottom: 30px;
+                                        "
                                         type="primary"
                                         plain
                                         :icon="CirclePlusFilled"
@@ -175,8 +288,11 @@ import { ref } from 'vue';
 import PetsTopBar from '@common/components/TopBar/index.vue';
 import PetsSideBar from '@common/components/SideBar/index.vue';
 import { Setting } from '@element-plus/icons-vue';
+import { Plus } from '@element-plus/icons-vue';
 import { CirclePlusFilled } from '@element-plus/icons-vue';
 import SideMenu from '../../common/components/SideMenu/index.vue';
+import { Carousel, Pagination, Slide } from 'vue3-carousel';
+import 'vue3-carousel/dist/carousel.css';
 
 const value = ref(new Date());
 </script>
@@ -188,11 +304,11 @@ export default {
             userObject: {
                 uid: 10086,
                 email: 'lulalulei@gmail.com',
-                firstName: 'Lucy',
+                firstName: 'Bruce',
                 lastName: 'Wayne',
                 phone: null,
                 address: null,
-                image: 'https://cdn.pixabay.com/photo/2020/07/14/13/07/icon-5404125_960_720.png',
+                image: 'https://cdn-icons-png.flaticon.com/512/1320/1320933.png',
                 petList: [
                     {
                         pid: 1,
@@ -275,6 +391,24 @@ export default {
                     { folderid: 3, folderName: 'Vaccination History' },
                 ],
             },
+            album: [
+                {
+                    id: 1,
+                    picURL: 'https://www.rd.com/wp-content/uploads/2020/07/animalmemes-12.jpg?w=1414',
+                },
+                {
+                    id: 2,
+                    picURL: 'https://www.rd.com/wp-content/uploads/2020/12/When-you-have-three-zoom-calls-back-to-back-1297963220.jpg?w=1200',
+                },
+                {
+                    id: 3,
+                    picURL: 'https://www.rd.com/wp-content/uploads/2020/07/animalmemes-21.jpg?w=1414',
+                },
+                {
+                    id: 4,
+                    picURL: 'https://www.rd.com/wp-content/uploads/2020/07/animalmemes-20.jpg?w=1414',
+                },
+            ],
         };
     },
 };
@@ -290,13 +424,13 @@ export default {
 }
 
 .el-main {
-    padding: 10px 20px;
+    padding: 20px 25px;
 }
 
 // this folder box including the text record and the large white box
 .outer-folder-box {
     margin-top: 0%;
-    margin-bottom: 10px;
+    margin-bottom: 40px;
     display: flex;
     justify-content: space-around;
     flex-direction: column;
@@ -305,7 +439,7 @@ export default {
 .main-title-text {
     margin-left: 1rem;
     margin-bottom: 10px;
-    font-size: medium;
+    font-size: 24px;
     color: #76553f;
     font-family: Trebuchet MS;
     font-weight: bold;
@@ -347,25 +481,33 @@ export default {
     }
 }
 
-.calender {
-    margin: 6vh 0 0 9vh;
+.inner-events-tasks-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    // section.carousel {
+    //     height: 300px;
+    // }
 
-    :deep(.el-calendar-day) {
-        height: 5vh;
-    }
-
-    :deep(.el-calendar__header) {
-        padding: 0px;
+    .album-pic {
+        width: 275px;
+        height: 270px;
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     }
 }
 
 //this box is the large white box under title events and tasks
 .outer-events-tasks-box {
-    // margin-top: 1rem;
+    display: flex;
+    align-items: center;
     background-color: white;
+    box-sizing: border-box;
     width: 99%;
-    height: 60vh;
+    height: 50vh;
     border-radius: 10px;
+    padding: 10px;
     // box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 
@@ -380,12 +522,16 @@ export default {
     justify-content: space-evenly;
     flex-direction: column;
     align-items: center;
+    height: 270px;
+    // background: #fd6540;
 
     //this box including one event/task box and correponding start time
     .events-tasks-big-box {
         display: flex;
         flex-direction: row;
         align-items: center;
+        padding-top: 0;
+        margin-bottom: 20px;
     }
 
     .start-time-event-task {
@@ -475,6 +621,10 @@ export default {
         width: 7rem;
         height: 3rem;
         border-radius: 1rem;
+        // margin-bottom: 30px;
+        // &:last-child {
+        //     margin-bottom: 0;
+        // }
     }
 }
 </style>

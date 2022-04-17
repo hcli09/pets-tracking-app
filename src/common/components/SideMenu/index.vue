@@ -74,6 +74,6 @@ export default {
 
 <style lang="scss" scoped>
 .v-sidebar-menu {
-    margin-top: 5.5vh;
+    margin-top: 7.5vh;
 }
 </style>
