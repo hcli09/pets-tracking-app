@@ -80,7 +80,7 @@
 
 <script setup>
 // import { ElButton } from 'element-plus';
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { User } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 import httpServices from '@services';
@@ -109,6 +109,15 @@ const submitForm = formEl => {
             return false;
         }
     });
+};
+
+onMounted(() => {
+    getBreedList();
+});
+
+const getBreedList = async () => {
+    const res = await httpServices.registerLogin.getBreedList({ speciesId: 1 });
+    console.log(res);
 };
 </script>
 

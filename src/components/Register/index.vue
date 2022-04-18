@@ -137,13 +137,24 @@
 
 <script setup>
 // import { ElButton } from 'element-plus';
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { UserFilled } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 import httpServices from '@services';
 
 const formRef = ref(null);
 const registerForm = reactive({});
+
+onMounted(() => {
+    getUserProfile();
+});
+
+const getUserProfile = async () => {
+    const res = await httpServices.userProfile.getUserProfile({
+        uid: 'EpLV3L5QqlanlrmH7dzjw',
+    });
+    console.log(res);
+};
 
 const submitForm = formEl => {
     if (!formEl) return;
