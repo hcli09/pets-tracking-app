@@ -1,26 +1,29 @@
 {
-  "name": "pets-tracking-app",
-  "private": true,
-  "version": "0.0.0",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "element-plus": "^2.1.8",
-    "pinia": "^2.0.13",
-    "vue": "^3.2.25",
-    "vue-router": "^4.0.14"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-vue": "^2.3.0",
-    "node-sass": "^4.14.1",
-    "sass": "^1.50.0",
-    "sass-loader": "^7.3.1",
-    "style-loader": "^3.3.1",
-    "unplugin-auto-import": "^0.6.9",
-    "unplugin-vue-components": "^0.18.5",
-    "vite": "^2.9.0"
-  }
+    "name": "pets-tracking-app",
+    "private": true,
+    "version": "0.0.0",
+    "scripts": {
+        "dev": "vite --debug",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "@element-plus/icons-vue": "^1.1.4",
+        "axios": "^0.26.1",
+        "element-plus": "^2.1.8",
+        "pinia": "^2.0.13",
+        "qs": "^6.10.3",
+        "vue": "^3.2.25",
+        "vue-router": "^4.0.14"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-vue": "^2.3.0",
+        "node-sass": "^4.14.1",
+        "sass": "^1.50.0",
+        "sass-loader": "^7.3.1",
+        "style-loader": "^3.3.1",
+        "unplugin-auto-import": "^0.6.9",
+        "unplugin-vue-components": "^0.18.5",
+        "vite": "^2.9.0"
+    }
 }

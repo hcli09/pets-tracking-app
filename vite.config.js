@@ -4,6 +4,7 @@ import vue from '@vitejs/plugin-vue';
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
+import { scssVars } from './src/styles/variables';
 
 export default defineConfig({
     resolve: {
@@ -13,13 +14,15 @@ export default defineConfig({
             '@common': '/src/common',
             '@utils': '/src/common/utils',
             '@components': '/src/components',
+            '@services': '/src/services',
         },
     },
     css: {
         preprocessorOptions: {
             scss: {
                 // 自定义的主题色
-                additionalData: `@use "@/styles/element/index.scss" as *;`,
+                additionalData:
+                    `@use "@/styles/element/index.scss" as *;` + scssVars(),
             },
         },
     },
@@ -33,4 +36,20 @@ export default defineConfig({
             resolvers: [ElementPlusResolver({ importStyle: 'sass' })],
         }),
     ],
+    // proxy: {
+    //     '/api': {
+    //         target: 'https://pets-app.azurewebsites.net/',
+    //         changeOrigin: true,
+    //         logLevel: 'debug',
+    //         secure: false,
+    //         rewrite: path => {
+    //             console.log(path);
+    //             return path.replace(/^\/api/, '');
+    //         },
+    //     },
+    // },
+
+    // server: {
+    //     port: '8715',
+    // },
 });
