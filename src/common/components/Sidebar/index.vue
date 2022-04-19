@@ -1,24 +1,30 @@
 <template>
     <!-- side menu -->
-    <el-menu>
+    <el-menu :collapse="true">
         <el-scrollbar>
             <div>
-
                 <!-- add pet -->
                 <el-menu-item class="side-bar-menu-item" @click="addPet(uid)">
-                    <img class="side-bar-menu-item-petphoto"
-                        src="https://api.iconify.design/akar-icons/circle-plus.svg?color=%2376553f&width=1500" />
+                    <img
+                        class="side-bar-menu-item-petphoto"
+                        src="https://api.iconify.design/akar-icons/circle-plus.svg?color=%2376553f&width=1500"
+                    />
                     <p>Add Pet</p>
                 </el-menu-item>
 
                 <!-- pet card -->
-                <template v-for=" (pet) in petList" :key="pet.pid">
-                    <el-menu-item class="side-bar-menu-item" @click="clickPet(pet.pid, pet.petName)">
-                        <img class="side-bar-menu-item-petphoto" :src="pet.petAvatar" />
+                <template v-for="pet in petList" :key="pet.pid">
+                    <el-menu-item
+                        class="side-bar-menu-item"
+                        @click="clickPet(pet.pid, pet.petName)"
+                    >
+                        <img
+                            class="side-bar-menu-item-petphoto"
+                            :src="pet.petAvatar"
+                        />
                         <p>{{ pet.petName }}</p>
                     </el-menu-item>
                 </template>
-
             </div>
         </el-scrollbar>
     </el-menu>
@@ -36,8 +42,8 @@ export default {
         },
         clickPet(petId, petName) {
             console.log('redirect to ' + petName + ' petId: ' + petId);
-        }
-    }
+        },
+    },
 };
 </script>
 

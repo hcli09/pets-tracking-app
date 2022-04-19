@@ -1,21 +1,33 @@
 <template>
     <div class="top-bar-box">
-
         <!-- left hand side of dashboard top bar -->
-        <p class="top-bar-title">Dashboard</p>
+        <div class="top-bar-title">
+            <img src="@assets/Dashboard/home-logo.svg" style="width: 35px" />
+            Home
+        </div>
 
         <!-- right hand side of the dashboard top bar -->
         <div class="top-bar-right">
             <p class="top-bar-username">{{ firstName }} {{ lastName }}</p>
-            <img class="top-bar-avatar" :src="UserAvatar" @click="clickUserAvatar()" />
-            <el-button class="top-bar-settings" type="primary" :icon="Setting" plain @click="clickSettings()">Settings
+            <img
+                class="top-bar-avatar"
+                :src="UserAvatar"
+                @click="clickUserAvatar()"
+            />
+            <el-button
+                class="top-bar-settings"
+                type="primary"
+                :icon="Setting"
+                plain
+                @click="clickSettings()"
+                >Settings
             </el-button>
         </div>
     </div>
 </template>
 
 <script setup>
-import { Setting } from "@element-plus/icons-vue";
+import { Setting } from '@element-plus/icons-vue';
 </script>
 
 <script>
@@ -31,8 +43,8 @@ export default {
 
         clickUserAvatar() {
             console.log('redirect to userprofile');
-        }
-    }
+        },
+    },
 };
 </script>
 
@@ -47,15 +59,19 @@ export default {
     box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
 }
 
-
-//title dashabord 
+//title dashabord
 .top-bar-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 130px;
     margin-left: 1vw;
     font-size: x-large;
     font-family: Trebuchet MS;
     color: #76553f;
+    font-size: 30px;
+    font-weight: bold;
 }
-
 
 //username, avatar, settings
 .top-bar-right {
@@ -74,11 +90,12 @@ export default {
         margin-right: 1.1vw;
         height: 2.7rem;
         width: 2.7rem;
-        border-radius: 10%
+        border-radius: 5px;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     }
 
     .top-bar-settings {
-        margin-right: 1.1vw;
+        margin-right: 3vw;
         border: #76553f;
     }
 }
