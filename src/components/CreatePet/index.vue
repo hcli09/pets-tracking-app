@@ -313,15 +313,13 @@ export default {
     background-color: #F2F2F2;
 }
 
-.el-main {
-    padding: 0;
-}
 
 .petinfo-header {
     height: 15vh;
     position: relative;
     background-color: #F2F2F2;
     padding-left: 3vw;
+    margin-bottom: 1vh;
 
     p {
         margin: 0;
@@ -379,8 +377,10 @@ export default {
 
 .petinfo-content {
     background-color: white;
-    height: 76vh;
+    height: 69vh;
     padding: 2vh 3vw;
+    border-radius: 1rem;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
     .buttons {
         padding: 1.5vh 0 0.5vh 0;
