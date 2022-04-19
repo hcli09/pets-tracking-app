@@ -31,7 +31,7 @@
                             <p></p>
                             <el-form-item>
                                 <el-button type="primary" @click="submitForm('petForm')">Create</el-button>
-                                <el-button @click="resetForm('petForm')">Reset</el-button>
+                                <el-button @click="resetForm('petForm')">Clear</el-button>
                             </el-form-item>
                         </div>
 
@@ -57,24 +57,24 @@
                                     <el-input v-model="petForm.petName"></el-input>
                                 </el-form-item>
 
-                                <!-- gender select -->
-                                <el-form-item label="Gender" prop="gender">
-                                    <el-select v-model="petForm.gender">
-                                        <el-option label="Female" value="0"></el-option>
-                                        <el-option label="Male" value="1"></el-option>
-                                        <el-option label="N/A" value="2"></el-option>
-                                    </el-select>
-                                </el-form-item>
+
 
                                 <!-- date of birth datepicker -->
                                 <el-form-item label="Date of Birth" required>
                                     <el-form-item prop="petDob">
-                                        <el-date-picker type="date" v-model="petForm.petDob" style="width: 100%;"
-                                            format="YYYY/MM/DD" value-format="YYYY/MM/DD">
+                                        <el-date-picker type="date" v-model="petForm.petDob"
+                                            :disabledDate="disabledDateDob" format="YYYY/MM/DD"
+                                            value-format="YYYY/MM/DD">
                                         </el-date-picker>
                                     </el-form-item>
                                 </el-form-item>
+
+                                <!-- weight input -->
+                                <el-form-item label="Weight (kg)" prop="weight">
+                                    <el-input v-model="petForm.weight" v-model.number="petForm.weight"></el-input>
+                                </el-form-item>
                             </div>
+
 
                             <div>
                                 <!-- species breed select -->
@@ -84,9 +84,13 @@
                                     </el-cascader>
                                 </el-form-item>
 
-                                <!-- weight input -->
-                                <el-form-item label="Weight (kg)" prop="weight">
-                                    <el-input v-model="petForm.weight" v-model.number="petForm.weight"></el-input>
+                                <!-- gender select -->
+                                <el-form-item label="Gender" prop="gender">
+                                    <el-select v-model="petForm.gender">
+                                        <el-option label="Female" value="0"></el-option>
+                                        <el-option label="Male" value="1"></el-option>
+                                        <el-option label="N/A" value="2"></el-option>
+                                    </el-select>
                                 </el-form-item>
 
                                 <!-- height input -->
@@ -123,7 +127,7 @@ export default {
 
             // mock userobject data, use for sidebar and top bar. need uid to get userobject, uid is from session storage
             userObject: {
-                "uid": 10086,
+                "uid": "4EL4hp_qRUYMzzal_G29f",
                 "email": "lulalulei@gmail.com",
                 "firstName": "Lucy",
                 "lastName": "Wayne",
@@ -155,8 +159,8 @@ export default {
                 petDob: '',
                 species: '',
                 speciesAndBreed: '',
-                weight: '',
-                height: '',
+                weight: null,
+                height: null,
             },
             // pet avatar, get from backend to show on the edit page, after editing then send to backend
             petAvatar: '',
@@ -173,10 +177,12 @@ export default {
                     { type: 'date', required: true, message: 'Please select date of birth', trigger: 'change' }
                 ],
                 weight: [
-                    { type: 'number', message: 'Weight must be a number' }
+                    { type: 'number', message: 'Weight must be a number' },
+                    { min: 1, message: 'Weight must be greater than 0', trigger: 'blur' },
                 ],
                 height: [
-                    { type: 'number', message: 'Height must be a number' }
+                    { type: 'number', message: 'Height must be a number' },
+                    { min: 1, message: 'Height must be greater than 0', trigger: 'blur' },
                 ],
                 speciesAndBreed: [
                     { required: true, message: 'Please select Species and Breeds', trigger: 'change' }
@@ -185,6 +191,11 @@ export default {
 
             // array for casecader
             speciesAndBreedOptions: [],
+
+            //pet dob can not be earlier than today
+            disabledDateDob(time) {
+                return time.getTime() > Date.now();
+            },
         }
     },
 
@@ -193,35 +204,50 @@ export default {
     created: function () {
         // TODO: fetch uid from session storage
 
-        //fetch breeds and species from backend, generate species and breeds options to match the cascader format in element plus
-        fetch('http://127.0.0.1:4523/mock/819321/data/species_list', { method: "POST" })
-            .then(response => response.json())
-            .then(json => {
-                let species_list = json.data;
-                for (let species of species_list) {
-                    let curr_speciesid = species.speciesId
-                    let test_species = {
-                        value: species.speciesName,
-                        label: species.speciesName,
-                    };
+        //fetch breeds and species from backedn, generate species and breeds options to match the cascader format in element plus
+        // this.axios.post('https://pets-app.azurewebsites.net/data/species_list')
+        //     .then((response) => {
+        //         console.log(response.data);
+        //         let species_list = response.data.data;
+        //         for (let species of species_list) {
+        //             let curr_speciesid = species.speciesId
+        //             let test_species = {
+        //                 value: species.speciesName,
+        //                 label: species.speciesName,
+        //             };
 
-                    fetch('http://127.0.0.1:4523/mock/819321/data/breed_list', { method: "POST", body: { speciesId: curr_speciesid } })
-                        .then(response => response.json())
-                        .then(json => {
+        //             this.axios.post('https://pets-app.azurewebsites.net/data/breed_list', { speciesId: curr_speciesid })
+        //                 .then((response) => {
 
-                            let children = [];
-                            let breed_list = json.data;
-                            for (const breed of breed_list) {
-                                let temp = { value: breed.breedName, label: breed.breedName };
-                                children.push(temp);
-                            }
-                            test_species["children"] = children;
-                            this.$data.speciesAndBreedOptions.push(test_species);
+        //                     let children = [];
+        //                     let breed_list = response.data.data;
+        //                     for (const breed of breed_list) {
+        //                         let temp = { value: breed.breedName.toLowerCase(), label: breed.breedName.toLowerCase() };
+        //                         children.push(temp);
+        //                     }
+        //                     test_species["children"] = children;
+        //                     this.$data.speciesAndBreedOptions.push(test_species);
+        //                 });
+        //         }
 
-                            // console.log(this.$data.speciesAndBreedOptions);
-                        });
-                }
-            })
+        //     })
+
+
+        this.$data.speciesAndBreedOptions.push({
+            value: 'Dog',
+            label: 'Dog',
+            children: [{
+                value: 'Labrador Retriever',
+                label: 'Labrador Retriever'
+            }, {
+                value: 'French Bulldog.',
+                label: 'French Bulldog.'
+            }, {
+                value: 'German Shepherd.',
+                label: 'German Shepherd.'
+            }]
+        })
+
 
     },
 
@@ -243,8 +269,8 @@ export default {
                         petDob: petForm.petDob,
                         species: petForm.speciesAndBreed[0],
                         breed: petForm.speciesAndBreed[1],
-                        weight: petForm.weight,
-                        height: petForm.height,
+                        weight: petForm.weight == null ? 0 : petForm.weight,
+                        height: petForm.height == null ? 0 : petForm.height,
 
                         //avatar url
                         petAvatar: this.$data.petAvatar,
@@ -252,20 +278,14 @@ export default {
                     console.log(petObject);
 
                     //create pet profile
-                    fetch('http://127.0.0.1:4523/mock/819321/user/pet/add', { method: "POST", body: petObject })
-                        .then(response => response.json())
-                        .then(json => {
-                            // console.log(json.status);
-                            // TODO: check if status is 200
-
+                    this.axios.post('https://pets-app.azurewebsites.net/user/pet/add', petObject)
+                        .then((response) => {
+                            let petId = response.data.data.petId;
                             this.$router.push({
                                 path: '/dashboard',
-                                // params: {
-                                //     param1: 'value1',
-                                //     param2: 'value2'
-                                // }
                             })
                         });
+
                 } else {
                     console.log('error submit!!');
                     return false;
