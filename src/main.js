@@ -6,11 +6,13 @@ import App from './App.vue';
 import router from '@/router';
 // vue sidebar menu
 import VueSidebarMenu from 'vue-sidebar-menu';
-import 'vue-sidebar-menu/dist/vue-sidebar-menu.css';
-import 'v-calendar/dist/style.css';
+
+
 import '@styles/side-menu/custom-var.scss';
 
 import VCalendar from 'v-calendar';
+import 'v-calendar/dist/style.css';
+
 
 // Use v-calendar & v-date-picker components
 
