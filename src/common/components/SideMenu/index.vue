@@ -75,5 +75,8 @@ export default {
 <style lang="scss" scoped>
 .v-sidebar-menu {
     margin-top: 7.5vh;
+    .vsm--mobile-bg {
+        background: tomato;
+    }
 }
 </style>

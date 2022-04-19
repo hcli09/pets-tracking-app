@@ -430,7 +430,7 @@ export default {
 // this folder box including the text record and the large white box
 .outer-folder-box {
     margin-top: 0%;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     display: flex;
     justify-content: space-around;
     flex-direction: column;
