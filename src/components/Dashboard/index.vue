@@ -477,6 +477,10 @@ export default {
             padding-top: 0.1vmax;
             align-items: center;
             width: 1vh;
+            font-weight: bold;
+        }
+        .el-button > span {
+            font-weight: 16px;
         }
     }
 }
