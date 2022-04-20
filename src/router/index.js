@@ -4,8 +4,22 @@ import Home from '@/components/Home/index.vue';
 import Login from '@/components/Login/index.vue';
 import Register from '@/components/Register/index.vue';
 import NotFound from '@/components/NotFound/index.vue';
+import Dashboard from '@/components/Dashboard/index.vue';
 
 const routes = [
+    {
+        path: '/',
+        name: 'Dashboard',
+        component: Dashboard,
+    },
+    {
+        path: '/dashboard',
+        redirect: '/',
+    },
+    {
+        path: '/home',
+        redirect: '/',
+    },
     {
         path: '/:catchAll(.*)',
         name: 'Not Found',
