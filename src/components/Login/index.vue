@@ -82,11 +82,14 @@
 // import { ElButton } from 'element-plus';
 import { ref, reactive, onMounted } from 'vue';
 import { User } from '@element-plus/icons-vue';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElNotification } from 'element-plus';
 import httpServices from '@services';
+import { useRoute, useRouter } from 'vue-router';
 
 const formRef = ref(null);
 const loginForm = reactive({});
+const route = useRoute();
+const router = useRouter();
 
 // console.log(validateForm);
 
@@ -96,12 +99,15 @@ const submitForm = formEl => {
     formEl.validate(async valid => {
         if (valid) {
             const { data } = await httpServices.registerLogin.login(loginForm);
-
-            if (data.status === 200) {
-                formRef.value.resetFields();
-                ElMessage({
-                    message: data.message,
+            formRef.value.resetFields();
+            if (data.status === 200) {   
+                ElNotification({
+                    title:'Login',
+                    message: 'Login Successfully',
                     type: 'success',
+                });
+                 router.push({
+                    name: 'Dashboard',
                 });
             }
         } else {
@@ -109,15 +115,6 @@ const submitForm = formEl => {
             return false;
         }
     });
-};
-
-onMounted(() => {
-    getBreedList();
-});
-
-const getBreedList = async () => {
-    const res = await httpServices.registerLogin.getBreedList({ speciesId: 1 });
-    console.log(res);
 };
 </script>
 

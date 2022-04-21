@@ -12,20 +12,17 @@ import axios from 'axios';
 
 axios.defaults.baseURL = 'https://pets-app.azurewebsites.net/';
 
-const app = createApp(App);
-Object.keys(ElIcons).forEach(key => {
-    app.component(key, ElIcons[key]);
-});
-
 import '@styles/side-menu/custom-var.scss';
 
 import VCalendar from 'v-calendar';
 import 'v-calendar/dist/style.css';
 
-
 // Use v-calendar & v-date-picker components
 
 const app = createApp(App);
+Object.keys(ElIcons).forEach(key => {
+    app.component(key, ElIcons[key]);
+});
 app.use(VueSidebarMenu);
 app.use(VCalendar, {});
 app.use(ElementPlus);

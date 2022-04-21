@@ -139,26 +139,17 @@
 // import { ElButton } from 'element-plus';
 import { ref, reactive, onMounted } from 'vue';
 import { UserFilled } from '@element-plus/icons-vue';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElNotification } from 'element-plus';
 import httpServices from '@services';
+import { useRoute, useRouter } from 'vue-router';
 
 const formRef = ref(null);
 const registerForm = reactive({});
-
-onMounted(() => {
-    getUserProfile();
-});
-
-const getUserProfile = async () => {
-    const res = await httpServices.userProfile.getUserProfile({
-        uid: 'EpLV3L5QqlanlrmH7dzjw',
-    });
-    console.log(res);
-};
+const route = useRoute();
+const router = useRouter();
 
 const submitForm = formEl => {
     if (!formEl) return;
-    // console.log(formEl);
 
     formEl.validate(async valid => {
         if (valid) {
@@ -167,12 +158,16 @@ const submitForm = formEl => {
             const { data } = await httpServices.registerLogin.register(
                 registerForm
             );
+            formRef.value.resetFields();
 
             if (data.status === 200) {
-                formRef.value.resetFields();
-                ElMessage({
-                    message: data.message,
+                ElNotification({
+                    title: 'Register',
+                    message: 'Register Successfully',
                     type: 'success',
+                });
+                router.push({
+                    name: 'Login',
                 });
             }
         } else {
