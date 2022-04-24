@@ -1,7 +1,5 @@
 <template>
     <sidebar-menu :menu="petsMenu" theme="white-theme" :collapsed="true" @item-click="loadPetPage" />
-    <!-- temporary add button -->
-    <el-button type="text">Add Pet</el-button>
 </template>
 
 <script>
