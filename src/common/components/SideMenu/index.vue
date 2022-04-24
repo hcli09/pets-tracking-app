@@ -1,5 +1,7 @@
 <template>
-    <sidebar-menu :menu="petsMenu" theme="white-theme" :collapsed="true" />
+    <sidebar-menu :menu="petsMenu" theme="white-theme" :collapsed="true" @item-click="loadPetPage" />
+    <!-- temporary add button -->
+    <el-button type="text">Add Pet</el-button>
 </template>
 
 <script>
@@ -15,7 +17,6 @@ export default {
                         element: 'img',
                         class: '',
                         attributes: { src: `${pet.petAvatar}` },
-                        // text: ''
                     },
                 };
             })
@@ -52,13 +53,12 @@ export default {
         petsMenu() {
             const menu = this.petList.map(pet => {
                 return {
-                    href: `/pet-profile?id=${pet.pid}`,
+                    petId: pet.petId,
                     title: `${pet.petName}`,
                     icon: {
                         element: 'img',
                         class: '',
                         attributes: { src: `${pet.petAvatar}` },
-                        // text: ''
                     },
                 };
             });
@@ -69,6 +69,11 @@ export default {
             return menu;
         },
     },
+    methods: {
+        loadPetPage(event, item, node) {
+            location.href = `/editpet?id=${item.petId}`;
+        }
+    }
 };
 </script>
 

@@ -1,7 +1,8 @@
 <template>
     <div class="top-bar-box">
         <!-- left hand side of dashboard top bar -->
-        <div class="top-bar-title">
+        <div class="top-bar-title" onclick="location.href='/';">
+            <!-- temporary add button -->
             <img src="@assets/Dashboard/home-logo.svg" style="width: 35px" />
             Home
         </div>
@@ -9,18 +10,12 @@
         <!-- right hand side of the dashboard top bar -->
         <div class="top-bar-right">
             <p class="top-bar-username">{{ firstName }} {{ lastName }}</p>
-            <img
-                class="top-bar-avatar"
-                :src="UserAvatar"
-                @click="clickUserAvatar()"
-            />
-            <el-button
-                class="top-bar-settings"
-                type="primary"
-                :icon="Setting"
-                plain
-                @click="clickSettings()"
-                >Settings
+            <img class="top-bar-avatar" :src="UserAvatar" @click="clickUserAvatar()" />
+            <el-button style="margin-right:1vw" class="top-bar-settings" type="primary" :icon="Setting" plain
+                @click="clickSettings()">Settings
+            </el-button>
+            <el-button style="margin-left:0; margin-right:1vw" class="top-bar-settings" type="primary" plain
+                @click="clickAddPet()">Add Pet
             </el-button>
         </div>
     </div>
@@ -43,6 +38,13 @@ export default {
 
         clickUserAvatar() {
             console.log('redirect to userprofile');
+        },
+
+        //temporary add pet button
+        clickAddPet() {
+            this.$router.push({
+                path: '/createpet',
+            })
         },
     },
 };

@@ -2,24 +2,23 @@
     <el-container class="dashboard-home">
 
         <!-- Top bar -->
-        <el-header style="height: 6vh; padding:0">
-            <PetsTopBar :firstName="userObject.firstName" :lastName="userObject.lastName"
-                :UserAvatar="userObject.image" />
+        <el-header style="height: 8vh; padding: 0">
+            <PetsTopBar :firstName="this.$data.userObject.firstName" :lastName="this.$data.userObject.lastName"
+                :UserAvatar="this.$data.userObject.image" />
         </el-header>
 
         <el-container>
             <!-- side bar -->
-            <el-aside style="width:12vw">
-                <PetsSideBar :petList="userObject.petList" :uid="userObject.uid" />
+            <el-aside style="width: 65px">
+                <SideMenu :petList="this.$data.userObject.petList" :uid="this.$data.uid"></SideMenu>
             </el-aside>
 
             <!-- start of pet general info page -->
             <el-main style="background-color:#F2F2F2">
 
-
                 <!-- header of pet general information page -->
                 <div class="petinfo-header">
-                    <p>Pet General Information</p>
+                    <p>Add New Pet</p>
                 </div>
 
                 <div class="petinfo-content">
@@ -37,9 +36,9 @@
 
 
 
-                        <!-- pet avatar to be updated later -->
+                        <!-- pet avatar -->
                         <div class="petavatar">
-                            <el-upload class="avatar-uploader" action="https://www.imgurl.org/upload/aws_s3"
+                            <el-upload class="avatar-uploader" action="https://api.uomg.com/api/image.sogou"
                                 :show-file-list="false" :on-success="handleAvatarSuccess"
                                 :before-upload="beforeAvatarUpload">
                                 <img v-if="petAvatar" :src="petAvatar" class="avatar" alt="upload">
@@ -50,14 +49,11 @@
                         </div>
 
                         <div class="petforms">
-
                             <div>
                                 <!-- pet name input -->
                                 <el-form-item label="Pet Name" prop="petName">
                                     <el-input v-model="petForm.petName"></el-input>
                                 </el-form-item>
-
-
 
                                 <!-- date of birth datepicker -->
                                 <el-form-item label="Date of Birth" required>
@@ -116,43 +112,38 @@
 
 <script setup>
 import PetsTopBar from '@common/components/TopBar/index.vue'
-import PetsSideBar from '@common/components/SideBar/index.vue'
+import SideMenu from '../../common/components/SideMenu/index.vue';
 
 </script>
 
 <script>
+//check height and weight
+var checknumber = (rule, value, callback) => {
+
+    if (value < 1 && value != null && value != '') {
+        callback(new Error('Must be greater than 0'))
+    } else {
+        callback()
+    }
+
+}
+
 export default {
     data() {
         return {
+            // mock uid for now
+            uid: '4EL4hp_qRUYMzzal_G29f',
 
-            // mock userobject data, use for sidebar and top bar. need uid to get userobject, uid is from session storage
+            // mock userobject data, use for sidebar and top bar. need uid to get userobject
             userObject: {
-                "uid": "4EL4hp_qRUYMzzal_G29f",
-                "email": "lulalulei@gmail.com",
-                "firstName": "Lucy",
-                "lastName": "Wayne",
-                "phone": null,
-                "address": null,
-                "image": "https://cdn.pixabay.com/photo/2020/07/14/13/07/icon-5404125_960_720.png",
-                "petList": [
-                    { pid: 1, petName: "Bella", petAvatar: "https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg" },
-                    { pid: 2, petName: "Lucy ", petAvatar: "https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png" },
-                    { pid: 3, petName: "Oliver", petAvatar: "https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg" },
-                    { pid: 4, petName: "Rocky", petAvatar: "https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg" },
-                    { pid: 5, petName: "Lily", petAvatar: "https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png" },
-                    { pid: 6, petName: "Roxy", petAvatar: "https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg" },
-                    { pid: 7, petName: "Emma", petAvatar: "https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg" },
-                    { pid: 8, petName: "Annie", petAvatar: "https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png" },
-                    { pid: 9, petName: "Teddy", petAvatar: "https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg" },
-                    { pid: 10, petName: "Cody", petAvatar: "https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png" },
-                    { pid: 11, petName: "Max", petAvatar: "https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg" },
-                    { pid: 12, petName: "Angel", petAvatar: "https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg" },],
-                "taskList": [],
-                "eventList": [],
-                "folderList": [{ folderid: 1, folderName: "Invoice" }, { folderid: 2, folderName: "Medication Report" }, { folderid: 3, folderName: "Vaccination History" }]
+                "firstName": '',
+                "lastName": '',
+                "image": 'https://cdn-icons-png.flaticon.com/512/1320/1320933.png',
+                "petList": [],
+                "folderList": []
             },
 
-            // pet form, get from backend to show on the edit page, after editing then send to backend
+            // initiate pet form
             petForm: {
                 petName: '',
                 gender: '',
@@ -178,11 +169,11 @@ export default {
                 ],
                 weight: [
                     { type: 'number', message: 'Weight must be a number' },
-                    { min: 1, message: 'Weight must be greater than 0', trigger: 'blur' },
+                    { validator: checknumber, trigger: 'blur' }
                 ],
                 height: [
-                    { type: 'number', message: 'Height must be a number' },
-                    { min: 1, message: 'Height must be greater than 0', trigger: 'blur' },
+                    { type: 'number', message: 'Height must be a number', trigger: 'change' },
+                    { validator: checknumber, trigger: 'blur' }
                 ],
                 speciesAndBreed: [
                     { required: true, message: 'Please select Species and Breeds', trigger: 'change' }
@@ -205,50 +196,47 @@ export default {
         // TODO: fetch uid from session storage
 
         //fetch breeds and species from backedn, generate species and breeds options to match the cascader format in element plus
-        // this.axios.post('https://pets-app.azurewebsites.net/data/species_list')
-        //     .then((response) => {
-        //         console.log(response.data);
-        //         let species_list = response.data.data;
-        //         for (let species of species_list) {
-        //             let curr_speciesid = species.speciesId
-        //             let test_species = {
-        //                 value: species.speciesName,
-        //                 label: species.speciesName,
-        //             };
+        this.axios.post('https://pets-app.azurewebsites.net/data/species_list')
+            .then((response) => {
+                console.log(response.data);
+                let species_list = response.data.data;
+                for (let species of species_list) {
+                    let curr_speciesid = species.speciesId
+                    let test_species = {
+                        value: species.speciesName,
+                        label: species.speciesName,
+                    };
 
-        //             this.axios.post('https://pets-app.azurewebsites.net/data/breed_list', { speciesId: curr_speciesid })
-        //                 .then((response) => {
+                    this.axios.post('https://pets-app.azurewebsites.net/data/breed_list', { speciesId: curr_speciesid })
+                        .then((response) => {
 
-        //                     let children = [];
-        //                     let breed_list = response.data.data;
-        //                     for (const breed of breed_list) {
-        //                         let temp = { value: breed.breedName.toLowerCase(), label: breed.breedName.toLowerCase() };
-        //                         children.push(temp);
-        //                     }
-        //                     test_species["children"] = children;
-        //                     this.$data.speciesAndBreedOptions.push(test_species);
-        //                 });
-        //         }
+                            let children = [];
+                            let breed_list = response.data.data;
+                            for (const breed of breed_list) {
+                                let temp = { value: breed.breedName, label: breed.breedName };
+                                children.push(temp);
+                            }
+                            test_species["children"] = children;
+                            this.$data.speciesAndBreedOptions.push(test_species);
+                        });
+                }
 
-        //     })
-
-
-        this.$data.speciesAndBreedOptions.push({
-            value: 'Dog',
-            label: 'Dog',
-            children: [{
-                value: 'Labrador Retriever',
-                label: 'Labrador Retriever'
-            }, {
-                value: 'French Bulldog.',
-                label: 'French Bulldog.'
-            }, {
-                value: 'German Shepherd.',
-                label: 'German Shepherd.'
-            }]
-        })
+            })
 
 
+        //get user profile
+        this.axios.post('https://pets-app.azurewebsites.net/user/dashboard', { uid: this.$data.uid })
+            .then((response) => {
+                let userObject = response.data.data;
+
+                //edit page, assign user object
+                this.$data.userObject.firstName = userObject.firstName;
+                this.$data.userObject.lastName = userObject.lastName;
+                this.$data.userObject.petList = userObject.petList;
+            })
+            .catch((error) => {
+                console.log(error.message);
+            });
     },
 
 
@@ -261,7 +249,7 @@ export default {
                     let petForm = this.$data.petForm;
                     let petObject = {
                         //mock uid for now
-                        uid: this.$data.userObject.uid,
+                        uid: this.$data.uid,
 
                         //from pet form
                         petName: petForm.petName,
@@ -269,8 +257,8 @@ export default {
                         petDob: petForm.petDob,
                         species: petForm.speciesAndBreed[0],
                         breed: petForm.speciesAndBreed[1],
-                        weight: petForm.weight == null ? 0 : petForm.weight,
-                        height: petForm.height == null ? 0 : petForm.height,
+                        weight: petForm.weight == null || petForm.weight === '' ? 0 : petForm.weight,
+                        height: petForm.height == null || petForm.height === '' ? 0 : petForm.height,
 
                         //avatar url
                         petAvatar: this.$data.petAvatar,

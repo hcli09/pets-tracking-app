@@ -2,15 +2,15 @@
     <el-container class="dashboard-home">
 
         <!-- Top bar -->
-        <el-header style="height: 6vh; padding:0">
-            <PetsTopBar :firstName="userObject.firstName" :lastName="userObject.lastName"
-                :UserAvatar="userObject.image" />
+        <el-header style="height: 8vh; padding: 0">
+            <PetsTopBar :firstName="this.$data.userObject.firstName" :lastName="this.$data.userObject.lastName"
+                :UserAvatar="this.$data.userObject.image" />
         </el-header>
 
         <el-container>
             <!-- side bar -->
-            <el-aside style="width:12vw">
-                <PetsSideBar :petList="userObject.petList" :uid="userObject.uid" />
+            <el-aside style="width: 65px">
+                <SideMenu :petList="this.$data.userObject.petList" :uid="this.$data.uid"></SideMenu>
             </el-aside>
 
             <!-- start of pet general info page -->
@@ -27,7 +27,7 @@
                     <el-form :model="petForm" :rules="rules" ref="petForm" label-width="100px" class="demo-ruleForm">
 
                         <div class="buttons">
-                            <el-button type="primary" @click="dialogVisible = true">Delete this pet</el-button>
+                            <el-button type="primary" @click="dialogVisible = true">Delete Pet</el-button>
 
                             <el-dialog title="Warning" v-model="dialogVisible" width="30%" :before-close="handleClose">
                                 <span>Are you sure to delete this pet?
@@ -52,7 +52,7 @@
 
                         <!-- pet avatar to be updated later -->
                         <div class="petavatar">
-                            <el-upload class="avatar-uploader" action="https://www.imgurl.org/upload/aws_s3"
+                            <el-upload class="avatar-uploader" action="https://api.uomg.com/api/image.sogou"
                                 :show-file-list="false" :on-success="handleAvatarSuccess"
                                 :before-upload="beforeAvatarUpload">
                                 <img v-if="petAvatar" :src="petAvatar" class="avatar" alt="upload">
@@ -106,7 +106,8 @@
 
                                 <!-- height input -->
                                 <el-form-item label="Height (cm)" prop="height">
-                                    <el-input v-model="petForm.height" v-model.number="petForm.height"></el-input>
+                                    <el-input v-model="petForm.height" v-model.number="petForm.height">
+                                    </el-input>
                                 </el-form-item>
 
                             </div>
@@ -127,42 +128,37 @@
 
 <script setup>
 import PetsTopBar from '@common/components/TopBar/index.vue'
-import PetsSideBar from '@common/components/SideBar/index.vue'
-
+import SideMenu from '../../common/components/SideMenu/index.vue';
 </script>
 
 <script>
+//check height and weight
+var checknumber = (rule, value, callback) => {
+
+    if (value < 1 && value != null && value != '') {
+        callback(new Error('Must be greater than 0'))
+    } else {
+        callback()
+    }
+
+}
+
 export default {
     data() {
         return {
+            // mock uid for now
+            uid: '4EL4hp_qRUYMzzal_G29f',
+            // get petid from url
+            petId: this.$route.query.id,
+
             // mock userobject data, use for sidebar and top bar. need uid to get userobject, uid is from session storage
             userObject: {
-                "uid": "4EL4hp_qRUYMzzal_G29f",
-                "email": "lulalulei@gmail.com",
-                "firstName": "Lucy",
-                "lastName": "Wayne",
-                "phone": null,
-                "address": null,
-                "image": "https://cdn.pixabay.com/photo/2020/07/14/13/07/icon-5404125_960_720.png",
-                "petList": [
-                    { pid: 1, petName: "Bella", petAvatar: "https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg" },
-                    { pid: 2, petName: "Lucy ", petAvatar: "https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png" },
-                    { pid: 3, petName: "Oliver", petAvatar: "https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg" },
-                    { pid: 4, petName: "Rocky", petAvatar: "https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg" },
-                    { pid: 5, petName: "Lily", petAvatar: "https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png" },
-                    { pid: 6, petName: "Roxy", petAvatar: "https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg" },
-                    { pid: 7, petName: "Emma", petAvatar: "https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg" },
-                    { pid: 8, petName: "Annie", petAvatar: "https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png" },
-                    { pid: 9, petName: "Teddy", petAvatar: "https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg" },
-                    { pid: 10, petName: "Cody", petAvatar: "https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png" },
-                    { pid: 11, petName: "Max", petAvatar: "https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg" },
-                    { pid: 12, petName: "Angel", petAvatar: "https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg" },],
-                "taskList": [],
-                "eventList": [],
-                "folderList": [{ folderid: 1, folderName: "Invoice" }, { folderid: 2, folderName: "Medication Report" }, { folderid: 3, folderName: "Vaccination History" }]
+                "firstName": '',
+                "lastName": '',
+                "image": "https://cdn-icons-png.flaticon.com/512/1320/1320933.png",
+                "petList": [],
+                "folderList": []
             },
-            // mock petid for now, since need to get petid from sessions storage later on
-            petId: "0IL3YUJpCgQWX-VsxiKVx",
 
             // pet form, get from backend to show on the edit page, after editing then send to backend
             petForm: {
@@ -190,11 +186,11 @@ export default {
                 ],
                 weight: [
                     { type: 'number', message: 'Weight must be a number' },
-                    { min: 1, message: 'Weight must be greater than 0', trigger: 'blur' },
+                    { validator: checknumber, trigger: 'blur' }
                 ],
                 height: [
-                    { type: 'number', message: 'Height must be a number' },
-                    { min: 1, message: 'Height must be greater than 0', trigger: 'blur' },
+                    { type: 'number', message: 'Height must be a number', trigger: 'change' },
+                    { validator: checknumber, trigger: 'blur' }
                 ],
                 speciesAndBreed: [
                     { required: true, message: 'Please select Species and Breeds', trigger: 'change' }
@@ -205,7 +201,7 @@ export default {
             speciesAndBreedOptions: [],
             dialogVisible: false,
 
-            //pet dob can not be earlier than today
+            //pet dob can not be later than today
             disabledDateDob(time) {
                 return time.getTime() > Date.now();
             },
@@ -213,56 +209,41 @@ export default {
 
         }
     },
-
-
-
     created: function () {
         // TODO: fetch uid and petId from session storage
 
+        console.log(this.$route.query.id);
+
         //fetch breeds and species from backedn, generate species and breeds options to match the cascader format in element plus
-        // this.axios.post('https://pets-app.azurewebsites.net/data/species_list')
-        //     .then((response) => {
-        //         console.log(response.data);
-        //         let species_list = response.data.data;
-        //         for (let species of species_list) {
-        //             let curr_speciesid = species.speciesId
-        //             let test_species = {
-        //                 value: species.speciesName,
-        //                 label: species.speciesName,
-        //             };
+        this.axios.post('https://pets-app.azurewebsites.net/data/species_list')
+            .then((response) => {
+                console.log(response.data);
+                let species_list = response.data.data;
+                for (let species of species_list) {
+                    let curr_speciesid = species.speciesId
+                    let test_species = {
+                        value: species.speciesName,
+                        label: species.speciesName,
+                    };
 
-        //             this.axios.post('https://pets-app.azurewebsites.net/data/breed_list', { speciesId: curr_speciesid })
-        //                 .then((response) => {
+                    this.axios.post('https://pets-app.azurewebsites.net/data/breed_list', { speciesId: curr_speciesid })
+                        .then((response) => {
 
-        //                     let children = [];
-        //                     let breed_list = response.data.data;
-        //                     for (const breed of breed_list) {
-        //                         let temp = { value: breed.breedName.toLowerCase(), label: breed.breedName.toLowerCase() };
-        //                         children.push(temp);
-        //                     }
-        //                     test_species["children"] = children;
-        //                     this.$data.speciesAndBreedOptions.push(test_species);
-        //                 });
-        //         }
+                            let children = [];
+                            let breed_list = response.data.data;
+                            for (const breed of breed_list) {
+                                let temp = { value: breed.breedName, label: breed.breedName };
+                                children.push(temp);
+                            }
+                            test_species["children"] = children;
+                            this.$data.speciesAndBreedOptions.push(test_species);
+                        });
+                }
 
-        //     }),
-        this.$data.speciesAndBreedOptions.push({
-            value: 'Dog',
-            label: 'Dog',
-            children: [{
-                value: 'Labrador Retriever',
-                label: 'Labrador Retriever'
-            }, {
-                value: 'French Bulldog.',
-                label: 'French Bulldog.'
-            }, {
-                value: 'German Shepherd.',
-                label: 'German Shepherd.'
-            }]
-        }),
+            }),
 
             //get pet profile
-            this.axios.post('https://pets-app.azurewebsites.net/user/pet/profile', { uid: this.$data.userObject.uid, petId: this.$data.petId })
+            this.axios.post('https://pets-app.azurewebsites.net/user/pet/profile', { uid: this.$data.uid, petId: this.$data.petId })
                 .then((response) => {
                     let petobject = response.data.data;
 
@@ -272,13 +253,26 @@ export default {
                     this.$data.petForm.petDob = petobject.petDob;
                     this.$data.petForm.weight = (petobject.weight === 0 ? null : petobject.weight);
                     this.$data.petForm.height = (petobject.height === 0 ? null : petobject.height);
-                    this.$data.petForm.speciesAndBreed = [petobject.species.toLowerCase(), petobject.breed.toLowerCase()];
-
-                    // this.$data.petAvatar = petobject.petAvatar; //comment because the mock avatar is invalid
+                    this.$data.petForm.speciesAndBreed = [petobject.species, petobject.breed];
+                    this.$data.petAvatar = petobject.petAvatar;
                 })
                 .catch((error) => {
                     console.log(error.message);
                 });
+
+        //get user profile
+        this.axios.post('https://pets-app.azurewebsites.net/user/dashboard', { uid: this.$data.uid })
+            .then((response) => {
+                let userObject = response.data.data;
+
+                //edit page, assign pet object to pet form
+                this.$data.userObject.firstName = userObject.firstName;
+                this.$data.userObject.lastName = userObject.lastName;
+                this.$data.userObject.petList = userObject.petList;
+            })
+            .catch((error) => {
+                console.log(error.message);
+            });
 
     },
 
@@ -296,7 +290,7 @@ export default {
                     let petForm = this.$data.petForm;
                     let petObject = {
                         //mock uid and petId for now
-                        uid: this.$data.userObject.uid,
+                        uid: this.$data.uid,
                         petId: this.$data.petId,
 
                         //from pet form
@@ -317,6 +311,7 @@ export default {
                     this.axios.post('https://pets-app.azurewebsites.net/user/pet/profile/update', petObject)
                         .then((response) => {
                             console.log(response.data.message)
+                            location.reload();
                         })
                         .catch((error) => {
                             console.log(error);
@@ -336,9 +331,12 @@ export default {
 
         // Delete pet
         deletePet() {
-            this.axios.delete('https://pets-app.azurewebsites.net/user/pet/delete', { data: { uid: this.$data.userObject.uid, petId: this.$data.petId } })
+            this.axios.delete('https://pets-app.azurewebsites.net/user/pet/delete', { data: { uid: this.$data.uid, petId: this.$data.petId } })
                 .then((response) => {
-                    console.log(response.message)
+                    // console.log(response.message)
+                    this.$router.push({
+                        path: '/dashboard',
+                    })
                 });
         },
 
@@ -376,6 +374,9 @@ export default {
     background-color: #F2F2F2;
 }
 
+.el-main {
+    padding: 0px 25px;
+}
 
 .petinfo-header {
     height: 15vh;
@@ -440,7 +441,7 @@ export default {
 
 .petinfo-content {
     background-color: white;
-    height: 69vh;
+    height: 10vh;
     padding: 2vh 3vw;
     border-radius: 1rem;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
