@@ -98,15 +98,19 @@ const submitForm = formEl => {
 
     formEl.validate(async valid => {
         if (valid) {
-            const { data } = await httpServices.registerLogin.login(loginForm);
+            const { data: res } = await httpServices.registerLogin.login(
+                loginForm
+            );
             formRef.value.resetFields();
-            if (data.status === 200) {   
+            if (res.status === 200) {
                 ElNotification({
-                    title:'Login',
+                    title: 'Login',
                     message: 'Login Successfully',
                     type: 'success',
                 });
-                 router.push({
+                const token = res.data.token;
+                localStorage.setItem('token', token);
+                router.push({
                     name: 'Dashboard',
                 });
             }

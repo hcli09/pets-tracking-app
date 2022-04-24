@@ -93,17 +93,11 @@
                                     :wrap-around="true"
                                 >
                                     <Slide v-for="pet in album" :key="pet.id">
-                                        <!-- <div class="carousel__item"> -->
                                         <img
                                             :src="pet.picURL"
                                             class="album-pic"
                                         />
-                                        <!-- </div> -->
                                     </Slide>
-
-                                    <!-- <template #addons>
-                                        <Pagination />
-                                    </template> -->
                                 </Carousel>
                             </el-col>
 
@@ -277,6 +271,8 @@
                         </el-row>
                     </div>
                 </div>
+
+                <router-view></router-view>
             </el-main>
             <!-- end of main part for dashboard -->
         </el-container>
@@ -292,8 +288,11 @@ import { Plus } from '@element-plus/icons-vue';
 import { CirclePlusFilled } from '@element-plus/icons-vue';
 import SideMenu from '../../common/components/SideMenu/index.vue';
 import { Carousel, Pagination, Slide } from 'vue3-carousel';
+
+
 import 'vue3-carousel/dist/carousel.css';
 
+const remarks = ref({ '2021-1-13': 'some tings' });
 const value = ref(new Date());
 </script>
 
