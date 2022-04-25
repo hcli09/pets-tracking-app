@@ -7,12 +7,6 @@ import App from './App.vue';
 import router from '@/router';
 // vue sidebar menu
 import VueSidebarMenu from 'vue-sidebar-menu';
-<<<<<<< HEAD
-
-import axios from 'axios';
-
-=======
->>>>>>> e3c8ef5c8f5c6c6ba830224ae24af382743748d1
 import '@styles/side-menu/custom-var.scss';
 // axios
 import axios from 'axios';
@@ -24,17 +18,8 @@ import 'v-calendar/dist/style.css';
 // import Vue from 'vue';
 // import VueClock from '@dangvanthanh/vue-clock';
 
-<<<<<<< HEAD
-
-// Use v-calendar & v-date-picker components
-
-axios.defaults.baseURL = 'https://pets-app.azurewebsites.net/';
-
-
-=======
 // Vue.use(VueClock);
 // ElementIcon
->>>>>>> e3c8ef5c8f5c6c6ba830224ae24af382743748d1
 const app = createApp(App);
 Object.keys(ElIcons).forEach(key => {
     app.component(key, ElIcons[key]);
