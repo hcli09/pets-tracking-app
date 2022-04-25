@@ -9,6 +9,13 @@
 </template>
 
 <style lang="scss">
+* {
+    margin: 0;
+    padding: 0;
+    // font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+    //     'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+}
+
 #app {
     /* font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -16,8 +23,10 @@
     text-align: center;
     color: #2c3e50;
     margin-top: 60px; */
+    font-family: 'Helvetica Neue', Helvetica, 'Hiragino Sans GB',
+        'Microsoft YaHei', Arial, sans-serif;
 }
-$-color-primary: #76553f;
+// $--color-primary: #76553f;
 
 // :root {
 //     --el-color-primary: #76553f;

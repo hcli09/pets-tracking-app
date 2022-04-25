@@ -2,6 +2,7 @@ import { createWebHistory, createRouter } from 'vue-router';
 
 import Home from '@/components/Home/index.vue';
 import Login from '@/components/Login/index.vue';
+import Register from '@/components/Register/index.vue';
 import NotFound from '@/components/NotFound/index.vue';
 import Dashboard from '@/components/Dashboard/index.vue';
 import Settings from '@/components/Settings/index.vue';
@@ -12,11 +13,17 @@ import EditUserProfile from '@/components/EditUserProfile/index.vue';
 const routes = [
     {
         path: '/',
-        name: 'Dashboard',
-        component: Dashboard,
+        name: 'Home',
+        component: Home,
+        children: [
+            {
+                path: 'dashboard',
+                component: Dashboard,
+            },
+        ],
     },
     {
-        path: '/dashboard',
+        path: '/home',
         redirect: '/',
     },
     {
@@ -34,19 +41,9 @@ const routes = [
         component: Login,
     },
     {
-        path: '/settings',
-        name: 'Settings',
-        component: Settings,
-    },
-    {
-        path: '/userprofile',
-        name: 'User Profile',
-        component: UserProfile,
-    },
-    {
-        path: '/userprofile/edit',
-        name: 'Edit User Profile',
-        component: EditUserProfile,
+        path: '/register',
+        name: 'Register',
+        component: Register,
     },
 ];
 
