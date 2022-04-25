@@ -113,7 +113,7 @@
 <script setup>
 import PetsTopBar from '@common/components/TopBar/index.vue'
 import SideMenu from '../../common/components/SideMenu/index.vue';
-
+import httpServices from '@services';
 </script>
 
 <script>
@@ -196,9 +196,9 @@ export default {
         // TODO: fetch uid from session storage
 
         //fetch breeds and species from backedn, generate species and breeds options to match the cascader format in element plus
-        this.axios.post('https://pets-app.azurewebsites.net/data/species_list')
+
+        httpServices.petInfo.getSpecies()
             .then((response) => {
-                console.log(response.data);
                 let species_list = response.data.data;
                 for (let species of species_list) {
                     let curr_speciesid = species.speciesId
@@ -207,9 +207,8 @@ export default {
                         label: species.speciesName,
                     };
 
-                    this.axios.post('https://pets-app.azurewebsites.net/data/breed_list', { speciesId: curr_speciesid })
+                    httpServices.petInfo.getBreed({ speciesId: curr_speciesid })
                         .then((response) => {
-
                             let children = [];
                             let breed_list = response.data.data;
                             for (const breed of breed_list) {
@@ -221,22 +220,22 @@ export default {
                         });
                 }
 
-            })
+            }),
 
 
-        //get user profile
-        this.axios.post('https://pets-app.azurewebsites.net/user/dashboard', { uid: this.$data.uid })
-            .then((response) => {
-                let userObject = response.data.data;
+            //get user profile
+            httpServices.dashboard.user_dashboard({ uid: this.$data.uid })
+                .then((response) => {
+                    let userObject = response.data.data;
 
-                //edit page, assign user object
-                this.$data.userObject.firstName = userObject.firstName;
-                this.$data.userObject.lastName = userObject.lastName;
-                this.$data.userObject.petList = userObject.petList;
-            })
-            .catch((error) => {
-                console.log(error.message);
-            });
+                    //edit page, assign pet object to pet form
+                    this.$data.userObject.firstName = userObject.firstName;
+                    this.$data.userObject.lastName = userObject.lastName;
+                    this.$data.userObject.petList = userObject.petList;
+                })
+                .catch((error) => {
+                    console.log(error.message);
+                });
     },
 
 
@@ -263,10 +262,9 @@ export default {
                         //avatar url
                         petAvatar: this.$data.petAvatar,
                     };
-                    console.log(petObject);
 
                     //create pet profile
-                    this.axios.post('https://pets-app.azurewebsites.net/user/pet/add', petObject)
+                    httpServices.petInfo.addPet(petObject)
                         .then((response) => {
                             let petId = response.data.data.petId;
                             this.$router.push({

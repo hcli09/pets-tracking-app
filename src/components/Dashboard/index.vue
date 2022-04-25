@@ -187,6 +187,8 @@ import { Plus } from '@element-plus/icons-vue';
 import { CirclePlusFilled } from '@element-plus/icons-vue';
 import SideMenu from '../../common/components/SideMenu/index.vue';
 import { Carousel, Pagination, Slide } from 'vue3-carousel';
+import httpServices from '@services';
+
 
 
 import 'vue3-carousel/dist/carousel.css';
@@ -234,8 +236,7 @@ export default {
         };
     },
     created: function () {
-        //get user profile
-        this.axios.post('https://pets-app.azurewebsites.net/user/dashboard', { uid: this.$data.uid })
+        httpServices.dashboard.user_dashboard({ uid: this.$data.uid })
             .then((response) => {
                 let userObject = response.data.data;
 
@@ -245,7 +246,7 @@ export default {
                 this.$data.userObject.petList = userObject.petList;
             })
             .catch((error) => {
-                console.log(error.message);
+                console.log(error);
             });
     },
 };
