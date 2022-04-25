@@ -64,14 +64,14 @@
 
                         <div class="petforms">
 
-                            <div>
+                            <div class="lc-petforms">
                                 <!-- pet name input -->
                                 <el-form-item label="Pet Name" prop="petName">
                                     <el-input v-model="petForm.petName"></el-input>
                                 </el-form-item>
 
                                 <!-- date of birth datepicker -->
-                                <el-form-item label="Date of Birth" required>
+                                <el-form-item label="Birth Date" required>
                                     <el-form-item prop="petDob">
                                         <el-date-picker type="date" v-model="petForm.petDob" style="width: 100%;"
                                             :disabledDate="disabledDateDob" format="YYYY/MM/DD"
@@ -87,7 +87,7 @@
                                 </el-form-item>
                             </div>
 
-                            <div>
+                            <div class="rc-petforms">
                                 <!-- species breed select -->
                                 <el-form-item label="Species/Breed" prop="speciesAndBreed">
                                     <el-cascader v-model="petForm.speciesAndBreed" :options="speciesAndBreedOptions"
@@ -105,7 +105,7 @@
                                 </el-form-item>
 
                                 <!-- height input -->
-                                <el-form-item label="Height (cm)" prop="height">
+                                <el-form-item class="test" label="Height (cm)" prop="height">
                                     <el-input v-model="petForm.height" v-model.number="petForm.height">
                                     </el-input>
                                 </el-form-item>
@@ -210,8 +210,7 @@ export default {
         }
     },
     created: function () {
-        // TODO: fetch uid and petId from session storage
-
+        // TODO: fetch uid and petId
         console.log(this.$route.query.id);
 
         //fetch breeds and species from backedn, generate species and breeds options to match the cascader format in element plus
@@ -375,11 +374,11 @@ export default {
 }
 
 .el-main {
-    padding: 0px 25px;
+    padding: 20px 25px;
 }
 
 .petinfo-header {
-    height: 15vh;
+    height: 100px;
     position: relative;
     background-color: #F2F2F2;
     padding-left: 3vw;
@@ -441,7 +440,8 @@ export default {
 
 .petinfo-content {
     background-color: white;
-    height: 10vh;
+    height: 67vh;
+    margin: 0 2.5vw;
     padding: 2vh 3vw;
     border-radius: 1rem;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -468,6 +468,27 @@ export default {
     justify-content: space-evenly;
     align-items: center;
     margin: 9vh 0;
+    font-family: Trebuchet MS;
 
+    .lc-petforms {
+        width: 340px;
+    }
+
+}
+</style>
+
+<style>
+.el-form-item__label {
+    color: #76553f;
+    text-align: justify;
+    margin-right: 20px;
+    font-size: medium;
+}
+
+.el-input__inner {
+    box-shadow: 0 0 0 1px #76553f inset;
+    font-family: Trebuchet MS;
+    color: #76553f;
+    font-size: medium;
 }
 </style>
