@@ -13,7 +13,8 @@ export default defineConfig({
             '@common': '/src/common',
             '@utils': '/src/common/utils',
             '@components': '/src/components',
-            '@styles':'/src/styles'
+            '@styles':'/src/styles',
+            '@services':'/src/services',
         },
     },
     css: {

@@ -6,6 +6,7 @@
                 :firstName="userObject.firstName"
                 :lastName="userObject.lastName"
                 :UserAvatar="userObject.image"
+                :pageTitle="pageTitle"
             />
         </el-header>
 
@@ -409,6 +410,7 @@ export default {
                     picURL: 'https://www.rd.com/wp-content/uploads/2020/07/animalmemes-20.jpg?w=1414',
                 },
             ],
+            pageTitle: "Home",
         };
     },
 };

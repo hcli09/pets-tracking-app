@@ -7,6 +7,7 @@ import router from '@/router';
 // vue sidebar menu
 import VueSidebarMenu from 'vue-sidebar-menu';
 
+import axios from 'axios';
 
 import '@styles/side-menu/custom-var.scss';
 
@@ -15,6 +16,9 @@ import 'v-calendar/dist/style.css';
 
 
 // Use v-calendar & v-date-picker components
+
+axios.defaults.baseURL = 'https://pets-app.azurewebsites.net/';
+
 
 const app = createApp(App);
 app.use(VueSidebarMenu);

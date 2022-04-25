@@ -3,7 +3,7 @@
         <!-- left hand side of dashboard top bar -->
         <div class="top-bar-title">
             <img src="@assets/Dashboard/home-logo.svg" style="width: 35px" />
-            Home
+            {{ pageTitle }}
         </div>
 
         <!-- right hand side of the dashboard top bar -->
@@ -33,7 +33,7 @@ import { Setting } from '@element-plus/icons-vue';
 <script>
 export default {
     name: 'PetsTopBar',
-    props: ['firstName', 'lastName', 'UserAvatar'],
+    props: ['firstName', 'lastName', 'UserAvatar', 'pageTitle'],
 
     //print for now
     methods: {
