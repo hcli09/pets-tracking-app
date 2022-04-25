@@ -1,7 +1,7 @@
 <template>
 	<el-dialog
 		v-model="dialogVisible"
-		:title="title"
+		title="Add an event"
 		:show-close="false"
 		custom-class="event-dialog"
 	>
@@ -83,19 +83,9 @@
 <script setup>
 import { reactive, ref, defineProps, defineEmits } from 'vue';
 const props = defineProps({
-	title: {
-		type: String
-	},
 	dialogVisible: {
 		type: Boolean,
 		required: true
-	},
-	numRows: {
-		type: Number,
-		required: true
-	},
-	customisation: {
-		type: Object
 	}
 });
 const emits = defineEmits(['setVisible']);
@@ -162,9 +152,9 @@ const form = reactive({
 	/* box-sizing: border-box; */
 	padding-left: 10px;
 	border-radius: 10px;
-	background-image: url('@assets/dialog/dialog-1.png');
+	background-image: url('@assets/dialog/dialog-3.png');
 	background-size: 430px 509px;
-	background-position: 320px 64px;
+	background-position: 320px 45px;
 	background-repeat: no-repeat;
 }
 </style>

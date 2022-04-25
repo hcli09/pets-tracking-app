@@ -7,45 +7,45 @@ import NotFound from '@/components/NotFound/index.vue';
 import Dashboard from '@/components/Dashboard/index.vue';
 
 const routes = [
-    {
-        path: '/',
-        name: 'Home',
-        component: Home,
-        children: [
-            {
-                path: 'dashboard',
-                component: Dashboard,
-            },
-        ],
-    },
-    {
-        path: '/home',
-        redirect: '/',
-    },
-    {
-        path: '/home',
-        redirect: '/',
-    },
-    {
-        path: '/:catchAll(.*)',
-        name: 'Not Found',
-        component: NotFound,
-    },
-    {
-        path: '/login',
-        name: 'Login',
-        component: Login,
-    },
-    {
-        path: '/register',
-        name: 'Register',
-        component: Register,
-    },
+	{
+		path: '/',
+		name: 'Home',
+		component: Home,
+		children: [
+			{
+				path: '',
+				component: Dashboard
+			}
+		]
+	},
+	{
+		path: '/home',
+		redirect: '/'
+	},
+	{
+		path: '/dashboard',
+		redirect: '/'
+	},
+	{
+		path: '/:catchAll(.*)',
+		name: 'Not Found',
+		component: NotFound
+	},
+	{
+		path: '/login',
+		name: 'Login',
+		component: Login
+	},
+	{
+		path: '/register',
+		name: 'Register',
+		component: Register
+	}
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes,
+	history: createWebHistory(),
+	routes
 });
 
 export default router;
