@@ -6,7 +6,6 @@ import 'element-plus/dist/index.css';
 import App from './App.vue';
 import router from '@/router';
 import axios from 'axios'
-import VueAxios from 'vue-axios'
 import VueSidebarMenu from 'vue-sidebar-menu';
 import '@styles/side-menu/custom-var.scss';
 // axios
@@ -31,4 +30,3 @@ app.use(ElementPlus);
 app.use(createPinia());
 app.use(router);
 app.mount('#app');
-app.use(VueAxios, axios);
