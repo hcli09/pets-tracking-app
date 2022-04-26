@@ -2,21 +2,14 @@
     <el-container class="dashboard-home">
         <!-- Top bar -->
         <el-header style="height: 8vh; padding: 0">
-            <PetsTopBar
-                :firstName="userObject.firstName"
-                :lastName="userObject.lastName"
-                :UserAvatar="userObject.image"
-            />
+            <PetsTopBar :firstName="userObject.firstName" :lastName="userObject.lastName"
+                :UserAvatar="userObject.image" />
         </el-header>
 
         <el-container>
             <!-- side bar -->
             <el-aside style="width: 65px">
-                <!-- <PetsSideBar :petList="userObject.petList" :uid="userObject.uid" /> -->
-                <SideMenu
-                    :petList="userObject.petList"
-                    :uid="userObject.uid"
-                ></SideMenu>
+                <SideMenu :petList="userObject.petList" :uid="userObject.uid"></SideMenu>
             </el-aside>
 
             <!-- Main part -->
@@ -28,35 +21,20 @@
                     <div class="inner-folder-box">
                         <!-- cards showing the folders -->
                         <el-row>
-                            <template
-                                v-for="(folder, index) in userObject.folderList"
-                                :key="folder.id"
-                            >
+                            <template v-for="(folder, index) in userObject.folderList" :key="folder.id">
                                 <el-col :span="3">
                                     <div class="folder-box">
                                         <!-- assign folders with different colors -->
-                                        <img
-                                            v-if="index % 3 === 0"
-                                            class="folder-image"
-                                            src="https://api.iconify.design/bxs/folder.svg?color=%23e9eaf4"
-                                        />
+                                        <img v-if="index % 3 === 0" class="folder-image"
+                                            src="https://api.iconify.design/bxs/folder.svg?color=%23e9eaf4" />
 
-                                        <img
-                                            v-if="index % 3 === 1"
-                                            class="folder-image"
-                                            src="https://api.iconify.design/bxs/folder.svg?color=%23ffeeea"
-                                        />
+                                        <img v-if="index % 3 === 1" class="folder-image"
+                                            src="https://api.iconify.design/bxs/folder.svg?color=%23ffeeea" />
 
-                                        <img
-                                            v-if="index % 3 === 2"
-                                            class="folder-image"
-                                            src="https://api.iconify.design/bxs/folder.svg?color=%23fff9ec"
-                                        />
+                                        <img v-if="index % 3 === 2" class="folder-image"
+                                            src="https://api.iconify.design/bxs/folder.svg?color=%23fff9ec" />
 
-                                        <el-button
-                                            class="folder-name-button"
-                                            type="text"
-                                            >{{ folder.folderName }}
+                                        <el-button class="folder-name-button" type="text">{{ folder.folderName }}
                                         </el-button>
                                     </div>
                                 </el-col>
@@ -65,10 +43,8 @@
                             <!-- add folder -->
                             <el-col :span="3">
                                 <div class="folder-box">
-                                    <img
-                                        class="folder-image"
-                                        src="https://api.iconify.design/bxs/folder-plus.svg?color=%23c0effc"
-                                    />
+                                    <img class="folder-image"
+                                        src="https://api.iconify.design/bxs/folder-plus.svg?color=%23c0effc" />
                                 </div>
                             </el-col>
                         </el-row>
@@ -87,16 +63,9 @@
                                 <v-date-picker v-model="value" locale="eng" />
                             </el-col>
                             <el-col :span="7">
-                                <Carousel
-                                    :autoplay="4000"
-                                    :transition="2000"
-                                    :wrap-around="true"
-                                >
+                                <Carousel :autoplay="4000" :transition="2000" :wrap-around="true">
                                     <Slide v-for="pet in album" :key="pet.id">
-                                        <img
-                                            :src="pet.picURL"
-                                            class="album-pic"
-                                        />
+                                        <img :src="pet.picURL" class="album-pic" />
                                     </Slide>
                                 </Carousel>
                             </el-col>
@@ -104,17 +73,9 @@
                             <!-- events and tasks for today -->
                             <el-col :span="6" class="summary-events-tasks-box">
                                 <el-scrollbar height="270px">
-                                    <el-row
-                                        :span="6"
-                                        class="events-tasks-big-box"
-                                    >
-                                        <b class="start-time-event-task"
-                                            >07:30</b
-                                        >
-                                        <el-card
-                                            shadow="hover"
-                                            class="event-card"
-                                        >
+                                    <el-row :span="6" class="events-tasks-big-box">
+                                        <b class="start-time-event-task">07:30</b>
+                                        <el-card shadow="hover" class="event-card">
                                             <div class="event-small-box">
                                                 <div class="event-task-inside">
                                                     <b>Medication Exam</b>
@@ -125,17 +86,9 @@
                                         </el-card>
                                     </el-row>
 
-                                    <el-row
-                                        :span="6"
-                                        class="events-tasks-big-box"
-                                    >
-                                        <b class="start-time-event-task"
-                                            >09:20</b
-                                        >
-                                        <el-card
-                                            shadow="hover"
-                                            class="event-card"
-                                        >
+                                    <el-row :span="6" class="events-tasks-big-box">
+                                        <b class="start-time-event-task">09:20</b>
+                                        <el-card shadow="hover" class="event-card">
                                             <div class="event-small-box">
                                                 <div class="event-task-inside">
                                                     <b>Vaccination</b>
@@ -146,17 +99,9 @@
                                         </el-card>
                                     </el-row>
 
-                                    <el-row
-                                        :span="6"
-                                        class="events-tasks-big-box"
-                                    >
-                                        <b class="start-time-event-task"
-                                            >Task</b
-                                        >
-                                        <el-card
-                                            shadow="hover"
-                                            class="task-card"
-                                        >
+                                    <el-row :span="6" class="events-tasks-big-box">
+                                        <b class="start-time-event-task">Task</b>
+                                        <el-card shadow="hover" class="task-card">
                                             <div class="task-small-box">
                                                 <b>10 Tablets this week</b>
                                                 <b>Bella</b>
@@ -164,17 +109,9 @@
                                         </el-card>
                                     </el-row>
 
-                                    <el-row
-                                        :span="6"
-                                        class="events-tasks-big-box"
-                                    >
-                                        <b class="start-time-event-task"
-                                            >Task</b
-                                        >
-                                        <el-card
-                                            shadow="hover"
-                                            class="task-card"
-                                        >
+                                    <el-row :span="6" class="events-tasks-big-box">
+                                        <b class="start-time-event-task">Task</b>
+                                        <el-card shadow="hover" class="task-card">
                                             <div class="task-small-box">
                                                 <b>10 Tablets this week</b>
                                                 <b>Bella</b>
@@ -182,17 +119,9 @@
                                         </el-card>
                                     </el-row>
 
-                                    <el-row
-                                        :span="6"
-                                        class="events-tasks-big-box"
-                                    >
-                                        <b class="start-time-event-task"
-                                            >Task</b
-                                        >
-                                        <el-card
-                                            shadow="hover"
-                                            class="task-card"
-                                        >
+                                    <el-row :span="6" class="events-tasks-big-box">
+                                        <b class="start-time-event-task">Task</b>
+                                        <el-card shadow="hover" class="task-card">
                                             <div class="task-small-box">
                                                 <b>10 Tablets this week</b>
                                                 <b>Bella</b>
@@ -200,17 +129,9 @@
                                         </el-card>
                                     </el-row>
 
-                                    <el-row
-                                        :span="6"
-                                        class="events-tasks-big-box"
-                                    >
-                                        <b class="start-time-event-task"
-                                            >Task</b
-                                        >
-                                        <el-card
-                                            shadow="hover"
-                                            class="task-card"
-                                        >
+                                    <el-row :span="6" class="events-tasks-big-box">
+                                        <b class="start-time-event-task">Task</b>
+                                        <el-card shadow="hover" class="task-card">
                                             <div class="task-small-box">
                                                 <b>10 Tablets this week</b>
                                                 <b>Bella</b>
@@ -218,17 +139,9 @@
                                         </el-card>
                                     </el-row>
 
-                                    <el-row
-                                        :span="6"
-                                        class="events-tasks-big-box"
-                                    >
-                                        <b class="start-time-event-task"
-                                            >Task</b
-                                        >
-                                        <el-card
-                                            shadow="hover"
-                                            class="task-card"
-                                        >
+                                    <el-row :span="6" class="events-tasks-big-box">
+                                        <b class="start-time-event-task">Task</b>
+                                        <el-card shadow="hover" class="task-card">
                                             <div class="task-small-box">
                                                 <b>10 Tablets this week</b>
                                                 <b>Bella</b>
@@ -241,29 +154,16 @@
                             <!-- add button for events and tasks -->
                             <el-col :span="3" class="add-events-tasks-box">
                                 <el-row>
-                                    <el-button
-                                        class="add-button"
-                                        color="#76553f"
-                                        style="
+                                    <el-button class="add-button" color="#76553f" style="
                                             border: #737bc1;
                                             margin-bottom: 30px;
-                                        "
-                                        type="primary"
-                                        plain
-                                        :icon="CirclePlusFilled"
-                                    >
+                                        " type="primary" plain :icon="CirclePlusFilled">
                                         Add Event
                                     </el-button>
                                 </el-row>
                                 <el-row>
-                                    <el-button
-                                        class="add-button"
-                                        color="#76553f"
-                                        style="border: #fd6540"
-                                        type="primary"
-                                        plain
-                                        :icon="CirclePlusFilled"
-                                    >
+                                    <el-button class="add-button" color="#76553f" style="border: #fd6540" type="primary"
+                                        plain :icon="CirclePlusFilled">
                                         Add Task
                                     </el-button>
                                 </el-row>
@@ -282,12 +182,13 @@
 <script setup>
 import { ref } from 'vue';
 import PetsTopBar from '@common/components/TopBar/index.vue';
-import PetsSideBar from '@common/components/SideBar/index.vue';
 import { Setting } from '@element-plus/icons-vue';
 import { Plus } from '@element-plus/icons-vue';
 import { CirclePlusFilled } from '@element-plus/icons-vue';
 import SideMenu from '../../common/components/SideMenu/index.vue';
 import { Carousel, Pagination, Slide } from 'vue3-carousel';
+import httpServices from '@services';
+
 
 
 import 'vue3-carousel/dist/carousel.css';
@@ -300,88 +201,12 @@ const value = ref(new Date());
 export default {
     data() {
         return {
+            uid: "4EL4hp_qRUYMzzal_G29f",
             userObject: {
-                uid: 10086,
-                email: 'lulalulei@gmail.com',
-                firstName: 'Bruce',
-                lastName: 'Wayne',
-                phone: null,
-                address: null,
+                firstName: '',
+                lastName: '',
                 image: 'https://cdn-icons-png.flaticon.com/512/1320/1320933.png',
-                petList: [
-                    {
-                        pid: 1,
-                        petName: 'Bella',
-                        petAvatar:
-                            'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-                    },
-                    {
-                        pid: 2,
-                        petName: 'Lucy ',
-                        petAvatar:
-                            'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
-                    },
-                    {
-                        pid: 3,
-                        petName: 'Oliver',
-                        petAvatar:
-                            'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
-                    },
-                    {
-                        pid: 4,
-                        petName: 'Rocky',
-                        petAvatar:
-                            'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-                    },
-                    {
-                        pid: 5,
-                        petName: 'Lily',
-                        petAvatar:
-                            'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
-                    },
-                    {
-                        pid: 6,
-                        petName: 'Roxy',
-                        petAvatar:
-                            'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
-                    },
-                    {
-                        pid: 7,
-                        petName: 'Emma',
-                        petAvatar:
-                            'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-                    },
-                    {
-                        pid: 8,
-                        petName: 'Annie',
-                        petAvatar:
-                            'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
-                    },
-                    {
-                        pid: 9,
-                        petName: 'Teddy',
-                        petAvatar:
-                            'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-                    },
-                    {
-                        pid: 10,
-                        petName: 'Cody',
-                        petAvatar:
-                            'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
-                    },
-                    {
-                        pid: 11,
-                        petName: 'Max',
-                        petAvatar:
-                            'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
-                    },
-                    {
-                        pid: 12,
-                        petName: 'Angel',
-                        petAvatar:
-                            'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-                    },
-                ],
+                petList: [],
                 taskList: [],
                 eventList: [],
                 folderList: [
@@ -409,6 +234,20 @@ export default {
                 },
             ],
         };
+    },
+    created: function () {
+        httpServices.dashboard.user_dashboard({ uid: this.$data.uid })
+            .then((response) => {
+                let userObject = response.data.data;
+
+                //edit page, assign pet object to pet form
+                this.$data.userObject.firstName = userObject.firstName;
+                this.$data.userObject.lastName = userObject.lastName;
+                this.$data.userObject.petList = userObject.petList;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     },
 };
 </script>
@@ -478,7 +317,8 @@ export default {
             width: 1vh;
             font-weight: bold;
         }
-        .el-button > span {
+
+        .el-button>span {
             font-weight: 16px;
         }
     }

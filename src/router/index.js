@@ -5,6 +5,9 @@ import Login from '@/components/Login/index.vue';
 import Register from '@/components/Register/index.vue';
 import NotFound from '@/components/NotFound/index.vue';
 import Dashboard from '@/components/Dashboard/index.vue';
+import EditPet from '@/components/EditPet/index.vue';
+import CreatePet from '@/components/CreatePet/index.vue';
+
 
 const routes = [
     {
@@ -31,6 +34,17 @@ const routes = [
         component: Login,
     },
     {
+
+        path: '/editpet',
+        name: 'EditPet',
+        component: EditPet,
+    },
+    {
+        path: '/createpet',
+        name: 'CreatePet',
+        component: CreatePet,
+    },
+    {
         path: '/register',
         name: 'Register',
         component: Register,
@@ -39,6 +53,7 @@ const routes = [
         path: '/',
         name: 'Home',
         component: Home,
+
     },
 ];
 
