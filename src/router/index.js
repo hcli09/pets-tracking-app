@@ -8,6 +8,8 @@ import Dashboard from '@/components/Dashboard/index.vue';
 import Settings from '@/components/Settings/index.vue';
 import UserProfile from '@/components/UserProfile/index.vue';
 import EditUserProfile from '@/components/EditUserProfile/index.vue';
+import EditPet from '@/components/EditPet/index.vue';
+import CreatePet from '@/components/CreatePet/index.vue';
 
 
 const routes = [
@@ -51,6 +53,17 @@ const routes = [
         path: '/login',
         name: 'Login',
         component: Login,
+    },
+    {
+
+        path: '/editpet',
+        name: 'EditPet',
+        component: EditPet,
+    },
+    {
+        path: '/createpet',
+        name: 'CreatePet',
+        component: CreatePet,
     },
     {
         path: '/register',
