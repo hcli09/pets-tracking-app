@@ -24,7 +24,7 @@
                 <!-- Dashboard, Calender and folders -->
                 <!-- folders -->
 
-                <router-view></router-view>
+                <router-view @changeUserAvater="changeAvatar"></router-view>
             </el-main>
             <!-- end of main part for dashboard -->
         </el-container>
@@ -45,6 +45,7 @@ import 'vue3-carousel/dist/carousel.css';
 
 const remarks = ref({ '2021-1-13': 'some tings' });
 const value = ref(new Date());
+
 </script>
 
 <script>
@@ -160,6 +161,12 @@ export default {
                 },
             ],
         };
+    },
+    methods: {
+        changeAvatar(url) {
+            this.userObject.image = url;
+            console.log("url of the topbar's avatar changed", url);
+        }        
     },
 };
 </script>

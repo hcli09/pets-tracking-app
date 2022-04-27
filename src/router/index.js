@@ -20,6 +20,18 @@ const routes = [
                 path: 'dashboard',
                 component: Dashboard,
             },
+            {
+                path: 'userprofile',
+                component: UserProfile,
+            },
+            {
+                path: 'editprofile',
+                component: EditUserProfile,                
+            }, 
+            {
+                path: 'settings',
+                component: Settings,                
+            },                        
         ],
     },
     {

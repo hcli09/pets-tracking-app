@@ -11,7 +11,7 @@
                         <div class="basic-info">
                             <div class="basic-info-title-container">
                                 <h1 class="basic-info-title">BASIC INFO</h1>
-                                <el-button type="primary">Upload new avatar</el-button>
+                                
                             </div>
 
                             <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="120px"
@@ -21,9 +21,6 @@
                                 </el-form-item>
                                 <el-form-item label="Last Name" prop="lastName">
                                     <el-input v-model="ruleForm.lastName" />
-                                </el-form-item>
-                                <el-form-item label="Username" prop="username">
-                                    <el-input v-model="ruleForm.username" />
                                 </el-form-item>
                                 <el-form-item label="Password" prop="password">
                                     <el-input v-model="ruleForm.password" />
@@ -74,13 +71,12 @@ let userAvatarURL = ""
 const formSize = ref('default')
 const ruleFormRef = ref()
 const ruleForm = reactive({
-    firstName: 'John',
-    lastName: 'Doe',
-    username: 'jdoe666',
-    password: '12345678',
-    phone: '1234567890',
-    email: 'john.doe@gmail.com',
-    location: 'Canberra, Australia',
+    firstName: '',
+    lastName: '',
+    password: '',
+    phone: '',
+    email: '',
+    location: '',
     petSitterStatus: '',
 
 })
@@ -91,9 +87,6 @@ const rules = reactive({
     //   ],
     //   lastName: [
     //     { required: true, message: 'Please input last name', trigger: 'blur' },
-    //   ],
-    //   username: [
-    //     { required: true, message: 'Please input username', trigger: 'blur' },
     //   ],
     password: [
         { required: true, message: 'Please input password', trigger: 'blur' },
@@ -131,7 +124,6 @@ const resetForm = (formEl) => {
 
 
 let activeName = 'settings'
-let userName = 'John Doe'
 let email = 'john.doe@gmail.com'
 let phone = '1234567890'
 let petSitterStatus = 'No'
@@ -181,6 +173,8 @@ axios.post('https://pets-app.azurewebsites.net/user/profile', { uid: "EpLV3L5Qql
             /* 13/10 */
         ;
         font-weight: normal;
+        color: #76553f;
+        margin-bottom: 1vh;
     }
 }
 
@@ -303,6 +297,7 @@ axios.post('https://pets-app.azurewebsites.net/user/profile', { uid: "EpLV3L5Qql
         padding-left: 2.5rem
             /* 25/10 */
         ;
+        margin-top: 2vh;
 
         .basic-info-title-container {
             display: flex;

@@ -1,99 +1,30 @@
 <template>
+    <div>
 
+        <div class="upper-box">
+            <el-row>
+                <el-col :span="4">
+                    <div class="avatar-container">
+                        <img
+                            class="avatar-image"
+                            :src="user.image"
+                            alt="user avatar image"
+                        />
+                    </div>
 
-    <el-container class="profile-container">
-        <!-- Top bar -->
-        <el-header style="height: 8vh; padding: 0">
-            <PetsTopBar
-                :firstName="userObject.firstName"
-                :lastName="userObject.lastName"
-                :UserAvatar="userObject.image"
-                :pageTitle="pageTitle"
-            />
-        </el-header>
-
-        <el-container>
-            <!-- side bar -->
-            <el-aside style="width: 65px">
-                <!-- <PetsSideBar :petList="userObject.petList" :uid="userObject.uid" /> -->
-                <SideMenu
-                    :petList="userObject.petList"
-                    :uid="userObject.uid"
-                ></SideMenu>
-            </el-aside>
-
-            <!-- Main part -->
-            <el-main style="background-color: #f2f4f7">
-                <div class="upper-box">
-                    <el-row>
-                        <el-col :span="4">
-                            <div class="avatar-container">
-                                <img
-                                    class="avatar-image"
-                                    src="https://cdn-icons-png.flaticon.com/512/1320/1320933.png"
-                                    alt="user avatar image"
-                                />
-                            </div>
-
-                        </el-col>
-                        <el-col :span="8">
-                            <div class="name-and-button-container">
-                                <div class="name">{{ userObject.firstName + " "+ userObject.lastName }}</div>
-                                <div class="button-group">
-
-
-                                    <!-- <el-upload
-                                        class="avatar-uploader"
-                                        action="https://api.uomg.com/api/image.sogou"
-                                        :show-file-list="false"
-                                        :on-success="handleAvatarSuccess"
-                                        :before-upload="beforeAvatarUpload"
-                                    >
-                                        <el-button
-                                            class=""
-                                            color="#76553f"
-                                            style="
-                                                border: #737bc1;
-                                                margin-bottom: 30px;
-                                            "
-                                            type="primary"
-                                            plain
-                                            :icon="CameraFilled"
-                                        >
-                                            Upload new avatar
-                                        </el-button>                                        
-                                    </el-upload> -->
-
-
-                                    <el-upload
-                                        
-                                        class="upload-demo"
-                                        action="https://api.uomg.com/api/image.sogou"
-                                        :show-file-list="false"
-                                        :on-success="handleAvatarSuccess"
-                                        :before-upload="beforeAvatarUpload"
-                                        :auto-upload="true"
-                                    >
-
-                                            <el-button
-                                                class=""
-                                                color="#76553f"
-                                                style="
-                                                    border: #737bc1;
-                                                    margin-bottom: 30px;
-                                                "
-                                                type="primary"
-                                                plain
-                                                :icon="CameraFilled"
-                                            >
-                                                Upload new avatar
-                                            </el-button>                                          
-
-
-                                    </el-upload>                                    
-
-
-
+                </el-col>
+                <el-col :span="8">
+                    <div class="name-and-button-container">
+                        <div class="name">{{ user.firstName + " "+ user.lastName }}</div>
+                        <div class="button-group">
+                            <el-upload                        
+                                class="upload-demo"
+                                action="https://api.uomg.com/api/image.sogou"
+                                :show-file-list="false"
+                                :on-success="handleAvatarSuccess"
+                                :before-upload="beforeAvatarUpload"
+                                :auto-upload="true"
+                            >
                                     <el-button
                                         class=""
                                         color="#76553f"
@@ -103,67 +34,79 @@
                                         "
                                         type="primary"
                                         plain
-                                        :icon="Edit"                                    
+                                        :icon="CameraFilled"
                                     >
-                                        Edit profile
-                                    </el-button>
-                                </div>
-                            </div>
-                        </el-col>
-                    </el-row>
+                                        Upload new avatar
+                                    </el-button>                                          
+                            </el-upload>                                    
+
+                            <el-button
+                                class=""
+                                color="#76553f"
+                                style="
+                                    border: #737bc1;
+                                    margin-bottom: 30px;
+                                "
+                                type="primary"
+                                plain
+                                :icon="Edit"                 
+                                @click="linkToEditProfile"                   
+                            >
+                                Edit profile
+                            </el-button>
+                        </div>
+                    </div>
+                </el-col>
+            </el-row>
+        </div>
+
+        <div class="middle-box">
+            <div class="info-box">
+                <div class="heading-line">
+                    <img class="email-icon"  src="@assets/user-profile/email.png" alt="">
+                    <div class="info-title">Email</div>
                 </div>
-
-                <div class="middle-box">
-                    <div class="info-box">
-                        <div class="heading-line">
-                            <img class="email-icon"  src="@assets/user-profile/email.png" alt="">
-                            <div class="info-title">Email</div>
-                        </div>
-                        <div class="info-line">
-                            u7168673@anu.edu.au
-                        </div>
-                    </div>
-                    <div class="info-box">
-                        <div class="heading-line">
-                            <el-icon size="3vh"><PhoneFilled /></el-icon>
-                            <div class="info-title">Phone</div>
-                        </div>
-                        <div class="info-line">
-                            12345678
-                        </div>                                                
-                    </div>
-                    <div class="info-box">
-                        <div class="heading-line">
-                            <el-icon size="3vh"><LocationFilled /></el-icon>
-                            <div class="info-title">Location</div>
-                        </div>
-                        <div class="info-line">
-                            12345678
-                        </div>                        
-                    </div>
+                <div class="info-line">
+                    {{ user.email }}
                 </div>
-
-                <div class="bottom-box">
-                    <div class="pet" v-for="(item, index) in userObject.petList" :key="index">  
-                        <div class="pet-avatar-wrapper">
-                            <img :src="item.petAvatar" alt="an image of the pet's avatar">
-                        </div>                      
-                        
-                        <div class="pet-name"> {{item.petName}} </div>                        
-                    </div>
+            </div>
+            <div class="info-box">
+                <div class="heading-line">
+                    <el-icon size="3vh"><PhoneFilled /></el-icon>
+                    <div class="info-title">Phone</div>
                 </div>
+                <div class="info-line">
+                    {{ user.phone }}
+                </div>                                                
+            </div>
+            <div class="info-box">
+                <div class="heading-line">
+                    <el-icon size="3vh"><LocationFilled /></el-icon>
+                    <div class="info-title">Location</div>
+                </div>
+                <div class="info-line">
+                    {{ user.address }}
+                </div>                        
+            </div>
+        </div>
 
+        <div class="bottom-box">
+            <div class="pet" v-for="(item, index) in user.petList" :key="index">  
+                <div class="pet-avatar-wrapper">
+                    <img :src="item.petAvatar" alt="an image of the pet's avatar">
+                </div>                      
+                
+                <div class="pet-name"> {{item.petName}} </div>                        
+            </div>
+        </div>
 
-            </el-main>
-            <!-- end of main part for dashboard -->
-        </el-container>
-    </el-container>
+    </div>
 
 
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import httpServices from '@services';
 import router from '@/router';
 import { PhoneFilled } from '@element-plus/icons-vue';
@@ -185,13 +128,102 @@ import 'vue3-carousel/dist/carousel.css';
 
 const upload = ref()
 
-// some responsive data needed
-const userAvatar = ref()
-const userName = ref()
-const petList = ref()
-const email = ref()
-const phone = ref()
-const petSitterStatus = ref(false)
+
+const user = reactive({
+    uid: '4EL4hp_qRUYMzzal_G29f',
+    email: '',
+    firstName: '',
+    lastName: '',
+    phone: null,
+    address: null,
+    image: '',
+    petList: [],
+})
+
+// const user = reactive({
+//     uid: 10086,
+//     email: 'lulalulei@gmail.com',
+//     firstName: 'Bruce',
+//     lastName: 'Wayne',
+//     phone: 12345678,
+//     address: "Sydney",
+//     image: 'https://cdn-icons-png.flaticon.com/512/1320/1320933.png',
+//     petList: [
+//         {
+//             pid: 1,
+//             petName: 'Bella',
+//             petAvatar:
+//                 'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
+//         },
+//         {
+//             pid: 2,
+//             petName: 'Lucy ',
+//             petAvatar:
+//                 'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
+//         },
+//         {
+//             pid: 3,
+//             petName: 'Oliver',
+//             petAvatar:
+//                 'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
+//         },
+//         {
+//             pid: 4,
+//             petName: 'Rocky',
+//             petAvatar:
+//                 'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
+//         },
+//         {
+//             pid: 5,
+//             petName: 'Lily',
+//             petAvatar:
+//                 'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
+//         },
+//         {
+//             pid: 6,
+//             petName: 'Roxy',
+//             petAvatar:
+//                 'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
+//         },
+//         {
+//             pid: 7,
+//             petName: 'Emma',
+//             petAvatar:
+//                 'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
+//         },
+//         {
+//             pid: 8,
+//             petName: 'Annie',
+//             petAvatar:
+//                 'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
+//         },
+//         {
+//             pid: 9,
+//             petName: 'Teddy',
+//             petAvatar:
+//                 'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
+//         },
+//         {
+//             pid: 10,
+//             petName: 'Cody',
+//             petAvatar:
+//                 'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
+//         },
+//         {
+//             pid: 11,
+//             petName: 'Max',
+//             petAvatar:
+//                 'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
+//         },
+//         {
+//             pid: 12,
+//             petName: 'Angel',
+//             petAvatar:
+//                 'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
+//         },
+//     ],    
+// })
+
 
 //get user's data
 onMounted(() => {
@@ -203,125 +235,130 @@ const getUserProfile = async() => {
     const res = await httpServices.userProfile.getUserProfile({
         uid: '4EL4hp_qRUYMzzal_G29f',
     });
-    userAvatar.value = res.data.data.image;
-    userName.value = res.data.data.firstName + " " + res.data.data.lastName;
-    petList.value = res.data.data.petList;
-    email.value = res.data.data.email;
-    phone.value = res.data.data.phone;
-    petSitterStatus.value = res.data.data.isPetSitter;
+    user.image = res.data.data.image;
+    user.firstName = res.data.data.firstName;
+    user.lastName = res.data.data.lastName;
+    user.petList = res.data.data.petList;
+    user.email = res.data.data.email;
+    user.phone = res.data.data.phone;
+    user.isPetSitter = res.data.data.isPetSitter;
+    user.address = res.data.data.address;
     console.log('res', res);
-    console.log('firstName:', res.data.data.firstName);
+    console.log('firstName:', user.firstName);
 }
 
 const getAllUsers = async() => {
     const res = await httpServices.userProfile.getAllUsers();
-    console.log("res all users", res);
+    console.log("all users", res);
 }
 
 const linkToEditProfile = () => {
-    router.push('/userprofile/edit')
+    router.push('/editprofile')
 }
 
-const pageTitle = "Profile"
+const emit = defineEmits(['changeUserAvater'])
 
-const userObject = {
-    uid: 10086,
-    email: 'lulalulei@gmail.com',
-    firstName: 'Bruce',
-    lastName: 'Wayne',
-    phone: null,
-    address: null,
-    image: 'https://cdn-icons-png.flaticon.com/512/1320/1320933.png',
-    petList: [
-        {
-            pid: 1,
-            petName: 'Bella',
-            petAvatar:
-                'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-        },
-        {
-            pid: 2,
-            petName: 'Lucy ',
-            petAvatar:
-                'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
-        },
-        {
-            pid: 3,
-            petName: 'Oliver',
-            petAvatar:
-                'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
-        },
-        {
-            pid: 4,
-            petName: 'Rocky',
-            petAvatar:
-                'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-        },
-        {
-            pid: 5,
-            petName: 'Lily',
-            petAvatar:
-                'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
-        },
-        {
-            pid: 6,
-            petName: 'Roxy',
-            petAvatar:
-                'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
-        },
-        {
-            pid: 7,
-            petName: 'Emma',
-            petAvatar:
-                'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-        },
-        {
-            pid: 8,
-            petName: 'Annie',
-            petAvatar:
-                'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
-        },
-        {
-            pid: 9,
-            petName: 'Teddy',
-            petAvatar:
-                'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-        },
-        {
-            pid: 10,
-            petName: 'Cody',
-            petAvatar:
-                'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
-        },
-        {
-            pid: 11,
-            petName: 'Max',
-            petAvatar:
-                'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
-        },
-        {
-            pid: 12,
-            petName: 'Angel',
-            petAvatar:
-                'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-        },
-    ],
-    taskList: [],
-    eventList: [],
-    folderList: [
-        { folderid: 1, folderName: 'Invoice' },
-        { folderid: 2, folderName: 'Medication Report' },
-        { folderid: 3, folderName: 'Vaccination History' },
-    ],
-}
+
+
+// const userObject = {
+//     uid: 10086,
+//     email: 'lulalulei@gmail.com',
+//     firstName: 'Bruce',
+//     lastName: 'Wayne',
+//     phone: null,
+//     address: null,
+//     image: 'https://cdn-icons-png.flaticon.com/512/1320/1320933.png',
+//     petList: [
+//         {
+//             pid: 1,
+//             petName: 'Bella',
+//             petAvatar:
+//                 'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
+//         },
+//         {
+//             pid: 2,
+//             petName: 'Lucy ',
+//             petAvatar:
+//                 'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
+//         },
+//         {
+//             pid: 3,
+//             petName: 'Oliver',
+//             petAvatar:
+//                 'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
+//         },
+//         {
+//             pid: 4,
+//             petName: 'Rocky',
+//             petAvatar:
+//                 'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
+//         },
+//         {
+//             pid: 5,
+//             petName: 'Lily',
+//             petAvatar:
+//                 'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
+//         },
+//         {
+//             pid: 6,
+//             petName: 'Roxy',
+//             petAvatar:
+//                 'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
+//         },
+//         {
+//             pid: 7,
+//             petName: 'Emma',
+//             petAvatar:
+//                 'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
+//         },
+//         {
+//             pid: 8,
+//             petName: 'Annie',
+//             petAvatar:
+//                 'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
+//         },
+//         {
+//             pid: 9,
+//             petName: 'Teddy',
+//             petAvatar:
+//                 'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
+//         },
+//         {
+//             pid: 10,
+//             petName: 'Cody',
+//             petAvatar:
+//                 'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
+//         },
+//         {
+//             pid: 11,
+//             petName: 'Max',
+//             petAvatar:
+//                 'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
+//         },
+//         {
+//             pid: 12,
+//             petName: 'Angel',
+//             petAvatar:
+//                 'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
+//         },
+//     ],
+//     taskList: [],
+//     eventList: [],
+//     folderList: [
+//         { folderid: 1, folderName: 'Invoice' },
+//         { folderid: 2, folderName: 'Medication Report' },
+//         { folderid: 3, folderName: 'Vaccination History' },
+//     ],
+// }
 
 
 const handleAvatarSuccess = (
   response,
   uploadFile
 ) => {
-    console.log("upload", uploadFile)
-    userObject.image = URL.createObjectURL(uploadFile.raw)
+    user.image = URL.createObjectURL(uploadFile.raw)
+    emit('changeUserAvater', URL.createObjectURL(uploadFile.raw))
+    console.log("upload", user.image)
 }
 
 const beforeAvatarUpload = (rawFile) => {
@@ -339,12 +376,12 @@ const beforeAvatarUpload = (rawFile) => {
 </script>
 
 <style lang="scss" scoped>
-.profile-container {
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    width: 99%;
-    background-color: #f2f4f7;
+// .profile-container {
+//     position: absolute;
+//     top: 0px;
+//     bottom: 0px;
+//     width: 99%;
+//     background-color: #f2f4f7;
 
     .upper-box {
         height: 17.5vh;
@@ -451,6 +488,6 @@ const beforeAvatarUpload = (rawFile) => {
         }
     }
 
-}
+// }
 
 </style>

@@ -1,17 +1,37 @@
 <template>
     <div class="edit-profile-container">
-        <h1>Edit profile</h1>
-        <h1>Profile picture</h1>
-        <el-upload
-            class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
+        <h1 class="edit-profile-heading">Edit profile</h1>
+
+        <div class="avatar-container">
+            <img
+                class="avatar-image"
+                :src="imageURL"
+                alt="user avatar image"
+            />
+        </div>
+
+        <el-upload                        
+            class="upload-demo"
+            action="https://api.uomg.com/api/image.sogou"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
+            :auto-upload="true"
         >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
-        </el-upload>
+                <el-button
+                    class=""
+                    color="#76553f"
+                    style="
+                        border: #737bc1;
+                        margin-bottom: 30px;
+                    "
+                    type="primary"
+                    plain
+                    :icon="CameraFilled"
+                >
+                    Upload new avatar
+                </el-button>                                          
+        </el-upload> 
 
 
 
@@ -58,16 +78,31 @@ import httpServices from '@services';
 import router from '@/router';
 import { ElMessage } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
+import { CameraFilled } from '@element-plus/icons-vue';
 
+
+// const user = reactive({
+//     uid: '4EL4hp_qRUYMzzal_G29f',
+//     email: '',
+//     firstName: '',
+//     lastName: '',
+//     phone: null,
+//     address: null,
+//     image: '',
+// })
+
+const imageURL = ref('https://cdn-icons-png.flaticon.com/512/1320/1320933.png')
 const formSize = ref('default')
 const ruleFormRef = ref()
 const ruleForm = reactive({
-    firstName: '',
-    lastName: '',
-    phone: '',
-    location: '',
-    petSitterStatus: false,
+    firstName: 'Bruce',
+    lastName: 'Wayne',
+    phone: '12345678',
+    location: 'Sydney',
+    petSitterStatus: 'No',
 })
+
+const emit = defineEmits(['changeUserAvater'])
 
 const rules = reactive({
     firstName: [
@@ -109,14 +144,16 @@ onMounted(() => {
 
 const getUserProfile = async() => {
     const res = await httpServices.userProfile.getUserProfile({
-        uid: 'EpLV3L5QqlanlrmH7dzjw',
+        uid: '4EL4hp_qRUYMzzal_G29f',
     });
     ruleForm.firstName = res.data.data.firstName;
     ruleForm.lastName = res.data.data.lastName;
     ruleForm.phone = res.data.data.phone;
     ruleForm.email = res.data.data.email;
     ruleForm.location = res.data.data.address;
-    ruleForm.petSitterStatus = res.data.data.isPetSitter;
+    ruleForm.petSitterStatus = res.data.data.isPetSitter?'Yes':'No';
+
+    imageURL.value = res.data.data.image;
 
     console.log('res', res);
     console.log('form', ruleForm.value);
@@ -126,12 +163,15 @@ const getUserProfile = async() => {
 const editUserProfile = async() => {
     console.log("upload first name", ruleForm.firstName)
     let status = false;
-    if (ruleForm.petSitterStatus) {
+    if (ruleForm.petSitterStatus.value) {
         status = true;
+    }
+    else {
+        status = false;
     }
 
     const res = await httpServices.userProfileEdit.editUserProfile({
-        uid: 'EpLV3L5QqlanlrmH7dzjw',
+        uid: '4EL4hp_qRUYMzzal_G29f',
         firstName: ruleForm.firstName,
         lastName: ruleForm.lastName,
         phone: ruleForm.phone,
@@ -139,18 +179,23 @@ const editUserProfile = async() => {
         isPetSitter: status,
     });
 
+    if(res.data.status == 200) {
+        linkToProfile();
+    }
+
     console.log('res', res);
     
 }
 
 
-const imageUrl = ref('')
+
 
 const handleAvatarSuccess = (
   response,
   uploadFile
 ) => {
-  imageUrl.value = URL.createObjectURL(uploadFile.raw)
+  imageURL.value = URL.createObjectURL(uploadFile.raw)
+  emit('changeUserAvater', URL.createObjectURL(uploadFile.raw))
 }
 
 const beforeAvatarUpload = (rawFile) => {
@@ -164,9 +209,28 @@ const beforeAvatarUpload = (rawFile) => {
   return true
 }
 
+const linkToProfile = () => {
+    router.push('/userprofile')
+}
+
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.edit-profile-container {
+
+    .edit-profile-heading {
+        font-size: 3vh;
+        color: #785741;
+        margin-bottom: 2vh;
+    }
+    .avatar-container {
+        .avatar-image {
+            width: 22vh;
+            margin-bottom: 2vh;
+        }
+    }
+}
+
 .avatar-uploader .avatar {
   width: 178px;
   height: 178px;
