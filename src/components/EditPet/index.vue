@@ -52,10 +52,9 @@
 
                         <!-- pet avatar to be updated later -->
                         <div class="petavatar">
-                            <el-upload class="avatar-uploader" action="https://api.uomg.com/api/image.sogou"
-                                :show-file-list="false" :on-success="handleAvatarSuccess"
-                                :before-upload="beforeAvatarUpload">
-                                <img v-if="petAvatar" :src="petAvatar" class="avatar" alt="upload">
+                            <el-upload class="avatar-uploader" action="" :show-file-list="false"
+                                :before-upload="beforeAvatarUpload" :http-request="Upload">
+                                <img v-if="petAvatar_temp_url" :src="petAvatar_temp_url" class="avatar" alt="upload">
                                 <img v-else src="https://pic.onlinewebfonts.com/svg/img_212908.png"
                                     class="avatar-uploader-icon">
                             </el-upload>
@@ -130,7 +129,9 @@
 import PetsTopBar from '@common/components/TopBar/index.vue'
 import SideMenu from '../../common/components/SideMenu/index.vue';
 import httpServices from '@services';
-
+import { FireBaseStorage as storage } from "@services/firebase.js";
+import { ref as ref_upload, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage, ref as ref_delete, deleteObject } from "firebase/storage";
 </script>
 
 <script>
@@ -174,6 +175,7 @@ export default {
             },
             // pet avatar, get from backend to show on the edit page, after editing then send to backend
             petAvatar: '',
+            petAvatar_temp_url: '',
 
             // rules for pet form input
             rules: {
@@ -253,10 +255,19 @@ export default {
                     this.$data.petForm.height = (petobject.height === 0 ? null : petobject.height);
                     this.$data.petForm.speciesAndBreed = [petobject.species, petobject.breed];
                     this.$data.petAvatar = petobject.petAvatar;
+
+                    const storageRef = ref_upload(storage, this.$data.petAvatar);
+                    getDownloadURL(storageRef).then(url => {
+                        console.log(url);
+                        this.$data.petAvatar_temp_url = url;
+                    });
+
                 })
                 .catch((error) => {
                     console.log(error.message);
                 });
+
+
 
         //get user profile
         httpServices.dashboard.user_dashboard({ uid: this.$data.uid })
@@ -272,11 +283,15 @@ export default {
                 console.log(error.message);
             });
 
+
     },
 
 
 
     methods: {
+        Upload() {
+
+        },
         handleClose(done) {
             done();
         },
@@ -300,14 +315,14 @@ export default {
                         weight: (petForm.weight == null || petForm.weight === '') ? 0 : petForm.weight,
                         height: (petForm.height == null || petForm.height === '') ? 0 : petForm.height,
 
-                        //avatar url
+                        //avatar name
                         petAvatar: this.$data.petAvatar,
                     };
 
                     //update pet profile
                     httpServices.petInfo.updatePet(petObject)
                         .then((response) => {
-                            console.log(response.data.message)
+                            console.log(response.data.data)
                             location.reload();
                         })
                         .catch((error) => {
@@ -324,6 +339,7 @@ export default {
         // clear all inputs
         resetForm(petForm) {
             this.$refs[petForm].resetFields();
+            this.petAvatar_temp_url = "";
         },
 
         // Delete pet
@@ -335,6 +351,13 @@ export default {
                         path: '/dashboard',
                     })
                 });
+            const storage = getStorage();
+            // Create a reference to the file to delete
+            const desertRef = ref_delete(storage, this.$data.petAvatar);
+            // Delete the file
+            deleteObject(desertRef).then(() => {
+                // File deleted successfully
+            });
         },
 
         handleChange(value) {
@@ -342,10 +365,22 @@ export default {
         },
 
         //avatar
-        handleAvatarSuccess(res, file) {
-            this.petAvatar = URL.createObjectURL(file.raw);
-        },
+
         beforeAvatarUpload(file) {
+            //get current timstamp, timestamp will always be unique for each user
+            const currentDate = new Date();
+            const timestamp = currentDate.getTime();
+
+            this.$data.petAvatar = this.$data.uid + '_petAvatar' + '_' + timestamp;
+            const storageRef = ref_upload(storage, this.$data.petAvatar);
+            uploadBytes(storageRef, file).then(() => {
+                getDownloadURL(storageRef).then(res => {
+                    console.log(res);
+                    this.petAvatar_temp_url = res;
+                });
+            });
+
+
             const isJPG = file.type === 'image/jpeg';
             const isLt2M = file.size / 1024 / 1024 < 2;
 

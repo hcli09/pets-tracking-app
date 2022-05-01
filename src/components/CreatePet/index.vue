@@ -38,10 +38,9 @@
 
                         <!-- pet avatar -->
                         <div class="petavatar">
-                            <el-upload class="avatar-uploader" action="https://api.uomg.com/api/image.sogou"
-                                :show-file-list="false" :on-success="handleAvatarSuccess"
-                                :before-upload="beforeAvatarUpload">
-                                <img v-if="petAvatar" :src="petAvatar" class="avatar" alt="upload">
+                            <el-upload class="avatar-uploader" action="" :show-file-list="false"
+                                :before-upload="beforeAvatarUpload" :http-request="Upload">
+                                <img v-if="petAvatar_temp_url" :src="petAvatar_temp_url" class="avatar" alt="upload">
                                 <img v-else src="https://pic.onlinewebfonts.com/svg/img_212908.png"
                                     class="avatar-uploader-icon">
                             </el-upload>
@@ -117,6 +116,9 @@ import httpServices from '@services';
 </script>
 
 <script>
+import { FireBaseStorage as storage } from "@services/firebase.js";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
 //check height and weight
 var checknumber = (rule, value, callback) => {
 
@@ -153,8 +155,9 @@ export default {
                 weight: null,
                 height: null,
             },
-            // pet avatar, get from backend to show on the edit page, after editing then send to backend
+
             petAvatar: '',
+            petAvatar_temp_url: '',
 
             // rules for pet form input
             rules: {
@@ -193,10 +196,7 @@ export default {
 
 
     created: function () {
-        // TODO: fetch uid from session storage
-
         //fetch breeds and species from backedn, generate species and breeds options to match the cascader format in element plus
-
         httpServices.petInfo.getSpecies()
             .then((response) => {
                 let species_list = response.data.data;
@@ -241,6 +241,10 @@ export default {
 
 
     methods: {
+
+        Upload() {
+
+        },
         //send petforms to backend
         submitForm(petForm) {
             this.$refs[petForm].validate((valid) => {
@@ -259,14 +263,15 @@ export default {
                         weight: petForm.weight == null || petForm.weight === '' ? 0 : petForm.weight,
                         height: petForm.height == null || petForm.height === '' ? 0 : petForm.height,
 
-                        //avatar url
+                        //Unique pet avatar name
                         petAvatar: this.$data.petAvatar,
                     };
 
                     //create pet profile
                     httpServices.petInfo.addPet(petObject)
                         .then((response) => {
-                            let petId = response.data.data.petId;
+                            // let petId = response.data.data.petId;
+                            console.log(petObject);
                             this.$router.push({
                                 path: '/dashboard',
                             })
@@ -282,6 +287,7 @@ export default {
         //clear all inputs
         resetForm(petForm) {
             this.$refs[petForm].resetFields();
+            this.petAvatar_temp_url = "";
         },
 
 
@@ -289,11 +295,22 @@ export default {
             console.log(value);
         },
 
-        //avatar
-        handleAvatarSuccess(res, file) {
-            this.petAvatar = URL.createObjectURL(file.raw);
-        },
+
         beforeAvatarUpload(file) {
+
+            //get current timstamp, timestamp will always be unique for each user
+            const currentDate = new Date();
+            const timestamp = currentDate.getTime();
+
+            this.$data.petAvatar = this.$data.uid + '_petAvatar' + '_' + timestamp;
+            const storageRef = ref(storage, this.$data.petAvatar);
+            uploadBytes(storageRef, file).then(() => {
+                getDownloadURL(storageRef).then(res => {
+                    console.log(res);
+                    this.petAvatar_temp_url = res;
+                });
+            });
+
             const isJPG = file.type === 'image/jpeg';
             const isLt2M = file.size / 1024 / 1024 < 2;
 
