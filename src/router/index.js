@@ -12,11 +12,17 @@ import CreatePet from '@/components/CreatePet/index.vue';
 const routes = [
     {
         path: '/',
-        name: 'Dashboard',
-        component: Dashboard,
+        name: 'Home',
+        component: Home,
+        children: [
+            {
+                path: 'dashboard',
+                component: Dashboard,
+            },
+        ],
     },
     {
-        path: '/dashboard',
+        path: '/home',
         redirect: '/',
     },
     {
@@ -48,12 +54,6 @@ const routes = [
         path: '/register',
         name: 'Register',
         component: Register,
-    },
-    {
-        path: '/',
-        name: 'Home',
-        component: Home,
-
     },
 ];
 

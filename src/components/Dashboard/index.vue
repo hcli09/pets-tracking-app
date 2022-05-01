@@ -1,200 +1,217 @@
 <template>
-    <el-container class="dashboard-home">
-        <!-- Top bar -->
-        <el-header style="height: 8vh; padding: 0">
-            <PetsTopBar :firstName="userObject.firstName" :lastName="userObject.lastName"
-                :UserAvatar="userObject.image" />
-        </el-header>
+    <div class="outer-folder-box">
+        <span class="main-title-text">Records</span>
+        <div class="inner-folder-box">
+            <!-- cards showing the folders -->
+            <el-row>
+                <template
+                    v-for="(folder, index) in userObject.folderList"
+                    :key="folder.id"
+                >
+                    <el-col :span="3">
+                        <div class="folder-box">
+                            <!-- assign folders with different colors -->
+                            <img
+                                v-if="index % 3 === 0"
+                                class="folder-image"
+                                src="https://api.iconify.design/bxs/folder.svg?color=%23e9eaf4"
+                            />
 
-        <el-container>
-            <!-- side bar -->
-            <el-aside style="width: 65px">
-                <SideMenu :petList="userObject.petList" :uid="userObject.uid"></SideMenu>
-            </el-aside>
+                            <img
+                                v-if="index % 3 === 1"
+                                class="folder-image"
+                                src="https://api.iconify.design/bxs/folder.svg?color=%23ffeeea"
+                            />
 
-            <!-- Main part -->
-            <el-main style="background-color: #f2f4f7">
-                <!-- Dashboard, Calender and folders -->
-                <!-- folders -->
-                <div class="outer-folder-box">
-                    <span class="main-title-text">Records</span>
-                    <div class="inner-folder-box">
-                        <!-- cards showing the folders -->
-                        <el-row>
-                            <template v-for="(folder, index) in userObject.folderList" :key="folder.id">
-                                <el-col :span="3">
-                                    <div class="folder-box">
-                                        <!-- assign folders with different colors -->
-                                        <img v-if="index % 3 === 0" class="folder-image"
-                                            src="https://api.iconify.design/bxs/folder.svg?color=%23e9eaf4" />
+                            <img
+                                v-if="index % 3 === 2"
+                                class="folder-image"
+                                src="https://api.iconify.design/bxs/folder.svg?color=%23fff9ec"
+                            />
 
-                                        <img v-if="index % 3 === 1" class="folder-image"
-                                            src="https://api.iconify.design/bxs/folder.svg?color=%23ffeeea" />
+                            <el-button class="folder-name-button" type="text"
+                                >{{ folder.folderName }}
+                            </el-button>
+                        </div>
+                    </el-col>
+                </template>
 
-                                        <img v-if="index % 3 === 2" class="folder-image"
-                                            src="https://api.iconify.design/bxs/folder.svg?color=%23fff9ec" />
+                <!-- add folder -->
+                <el-col :span="3">
+                    <div class="folder-box">
+                        <img
+                            class="folder-image"
+                            src="https://api.iconify.design/bxs/folder-plus.svg?color=%23c0effc"
+                        />
+                    </div>
+                </el-col>
+            </el-row>
+        </div>
+    </div>
 
-                                        <el-button class="folder-name-button" type="text">{{ folder.folderName }}
-                                        </el-button>
+    <!-- Events and tasks -->
+    <div class="outer-folder-box">
+        <span class="main-title-text">Events and Tasks</span>
+        <div class="outer-events-tasks-box">
+            <el-row class="inner-events-tasks-box" :gutter="25">
+                <!-- calender -->
+                <el-col :span="6">
+                    <!-- <el-calendar class="calender" v-model="value" /> -->
+
+                    <v-date-picker v-model="value" locale="eng" />
+                </el-col>
+                <el-col :span="7">
+                    <Carousel
+                        :autoplay="4000"
+                        :transition="2000"
+                        :wrap-around="true"
+                    >
+                        <Slide v-for="pet in album" :key="pet.id">
+                            <img :src="pet.picURL" class="album-pic" />
+                        </Slide>
+                    </Carousel>
+                </el-col>
+
+                <!-- events and tasks for today -->
+                <el-col :span="6" class="summary-events-tasks-box">
+                    <el-scrollbar height="270px">
+                        <el-row :span="6" class="events-tasks-big-box">
+                            <b class="start-time-event-task">07:30</b>
+                            <el-card shadow="hover" class="event-card">
+                                <div class="event-small-box">
+                                    <div class="event-task-inside">
+                                        <b>Medication Exam</b>
+                                        <p>07:30-08:15</p>
                                     </div>
-                                </el-col>
-                            </template>
-
-                            <!-- add folder -->
-                            <el-col :span="3">
-                                <div class="folder-box">
-                                    <img class="folder-image"
-                                        src="https://api.iconify.design/bxs/folder-plus.svg?color=%23c0effc" />
+                                    <b>Bella</b>
                                 </div>
-                            </el-col>
+                            </el-card>
                         </el-row>
-                    </div>
-                </div>
 
-                <!-- Events and tasks -->
-                <div class="outer-folder-box">
-                    <span class="main-title-text">Events and Tasks</span>
-                    <div class="outer-events-tasks-box">
-                        <el-row class="inner-events-tasks-box" :gutter="25">
-                            <!-- calender -->
-                            <el-col :span="6">
-                                <!-- <el-calendar class="calender" v-model="value" /> -->
-
-                                <v-date-picker v-model="value" locale="eng" />
-                            </el-col>
-                            <el-col :span="7">
-                                <Carousel :autoplay="4000" :transition="2000" :wrap-around="true">
-                                    <Slide v-for="pet in album" :key="pet.id">
-                                        <img :src="pet.picURL" class="album-pic" />
-                                    </Slide>
-                                </Carousel>
-                            </el-col>
-
-                            <!-- events and tasks for today -->
-                            <el-col :span="6" class="summary-events-tasks-box">
-                                <el-scrollbar height="270px">
-                                    <el-row :span="6" class="events-tasks-big-box">
-                                        <b class="start-time-event-task">07:30</b>
-                                        <el-card shadow="hover" class="event-card">
-                                            <div class="event-small-box">
-                                                <div class="event-task-inside">
-                                                    <b>Medication Exam</b>
-                                                    <p>07:30-08:15</p>
-                                                </div>
-                                                <b>Bella</b>
-                                            </div>
-                                        </el-card>
-                                    </el-row>
-
-                                    <el-row :span="6" class="events-tasks-big-box">
-                                        <b class="start-time-event-task">09:20</b>
-                                        <el-card shadow="hover" class="event-card">
-                                            <div class="event-small-box">
-                                                <div class="event-task-inside">
-                                                    <b>Vaccination</b>
-                                                    <p>09:20-10:10</p>
-                                                </div>
-                                                <b>Lucy</b>
-                                            </div>
-                                        </el-card>
-                                    </el-row>
-
-                                    <el-row :span="6" class="events-tasks-big-box">
-                                        <b class="start-time-event-task">Task</b>
-                                        <el-card shadow="hover" class="task-card">
-                                            <div class="task-small-box">
-                                                <b>10 Tablets this week</b>
-                                                <b>Bella</b>
-                                            </div>
-                                        </el-card>
-                                    </el-row>
-
-                                    <el-row :span="6" class="events-tasks-big-box">
-                                        <b class="start-time-event-task">Task</b>
-                                        <el-card shadow="hover" class="task-card">
-                                            <div class="task-small-box">
-                                                <b>10 Tablets this week</b>
-                                                <b>Bella</b>
-                                            </div>
-                                        </el-card>
-                                    </el-row>
-
-                                    <el-row :span="6" class="events-tasks-big-box">
-                                        <b class="start-time-event-task">Task</b>
-                                        <el-card shadow="hover" class="task-card">
-                                            <div class="task-small-box">
-                                                <b>10 Tablets this week</b>
-                                                <b>Bella</b>
-                                            </div>
-                                        </el-card>
-                                    </el-row>
-
-                                    <el-row :span="6" class="events-tasks-big-box">
-                                        <b class="start-time-event-task">Task</b>
-                                        <el-card shadow="hover" class="task-card">
-                                            <div class="task-small-box">
-                                                <b>10 Tablets this week</b>
-                                                <b>Bella</b>
-                                            </div>
-                                        </el-card>
-                                    </el-row>
-
-                                    <el-row :span="6" class="events-tasks-big-box">
-                                        <b class="start-time-event-task">Task</b>
-                                        <el-card shadow="hover" class="task-card">
-                                            <div class="task-small-box">
-                                                <b>10 Tablets this week</b>
-                                                <b>Bella</b>
-                                            </div>
-                                        </el-card>
-                                    </el-row>
-                                </el-scrollbar>
-                            </el-col>
-
-                            <!-- add button for events and tasks -->
-                            <el-col :span="3" class="add-events-tasks-box">
-                                <el-row>
-                                    <el-button class="add-button" color="#76553f" style="
-                                            border: #737bc1;
-                                            margin-bottom: 30px;
-                                        " type="primary" plain :icon="CirclePlusFilled">
-                                        Add Event
-                                    </el-button>
-                                </el-row>
-                                <el-row>
-                                    <el-button class="add-button" color="#76553f" style="border: #fd6540" type="primary"
-                                        plain :icon="CirclePlusFilled">
-                                        Add Task
-                                    </el-button>
-                                </el-row>
-                            </el-col>
+                        <el-row :span="6" class="events-tasks-big-box">
+                            <b class="start-time-event-task">09:20</b>
+                            <el-card shadow="hover" class="event-card">
+                                <div class="event-small-box">
+                                    <div class="event-task-inside">
+                                        <b>Vaccination</b>
+                                        <p>09:20-10:10</p>
+                                    </div>
+                                    <b>Lucy</b>
+                                </div>
+                            </el-card>
                         </el-row>
-                    </div>
-                </div>
 
-                <router-view></router-view>
-            </el-main>
-            <!-- end of main part for dashboard -->
-        </el-container>
-    </el-container>
+                        <el-row :span="6" class="events-tasks-big-box">
+                            <b class="start-time-event-task">Task</b>
+                            <el-card shadow="hover" class="task-card">
+                                <div class="task-small-box">
+                                    <b>10 Tablets this week</b>
+                                    <b>Bella</b>
+                                </div>
+                            </el-card>
+                        </el-row>
+
+                        <el-row :span="6" class="events-tasks-big-box">
+                            <b class="start-time-event-task">Task</b>
+                            <el-card shadow="hover" class="task-card">
+                                <div class="task-small-box">
+                                    <b>10 Tablets this week</b>
+                                    <b>Bella</b>
+                                </div>
+                            </el-card>
+                        </el-row>
+
+                        <el-row :span="6" class="events-tasks-big-box">
+                            <b class="start-time-event-task">Task</b>
+                            <el-card shadow="hover" class="task-card">
+                                <div class="task-small-box">
+                                    <b>10 Tablets this week</b>
+                                    <b>Bella</b>
+                                </div>
+                            </el-card>
+                        </el-row>
+
+                        <el-row :span="6" class="events-tasks-big-box">
+                            <b class="start-time-event-task">Task</b>
+                            <el-card shadow="hover" class="task-card">
+                                <div class="task-small-box">
+                                    <b>10 Tablets this week</b>
+                                    <b>Bella</b>
+                                </div>
+                            </el-card>
+                        </el-row>
+
+                        <el-row :span="6" class="events-tasks-big-box">
+                            <b class="start-time-event-task">Task</b>
+                            <el-card shadow="hover" class="task-card">
+                                <div class="task-small-box">
+                                    <b>10 Tablets this week</b>
+                                    <b>Bella</b>
+                                </div>
+                            </el-card>
+                        </el-row>
+                    </el-scrollbar>
+                </el-col>
+
+                <!-- add button for events and tasks -->
+                <el-col :span="3" class="add-events-tasks-box">
+                    <el-row>
+                        <el-button
+                            class="add-button"
+                            color="#76553f"
+                            style="border: #737bc1; margin-bottom: 30px"
+                            type="primary"
+                            plain
+                            :icon="CirclePlusFilled"
+                            @click="setEventDialogVisible"
+                        >
+                            Add Event
+                        </el-button>
+
+                        <EventsDialog
+                            :dialogVisible="eventDialogVisible"
+                            @setVisible="setEventDialogVisible"
+                            :customisation="eventDialog"
+                            :numRows="numRowsEvent"
+                            title="Add an event"
+                        />
+                    </el-row>
+                    <el-row>
+                        <el-button
+                            class="add-button"
+                            color="#76553f"
+                            style="border: #fd6540"
+                            type="primary"
+                            plain
+                            :icon="CirclePlusFilled"
+                        >
+                            Add Task
+                        </el-button>
+                    </el-row>
+                </el-col>
+            </el-row>
+        </div>
+    </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import PetsTopBar from '@common/components/TopBar/index.vue';
-import { Setting } from '@element-plus/icons-vue';
-import { Plus } from '@element-plus/icons-vue';
-import { CirclePlusFilled } from '@element-plus/icons-vue';
-import SideMenu from '../../common/components/SideMenu/index.vue';
+import { reactive, ref } from 'vue';
 import { Carousel, Pagination, Slide } from 'vue3-carousel';
-import httpServices from '@services';
+import EventsDialog from '@common/components/EventsDialog/index.vue';
 
-
-
-import 'vue3-carousel/dist/carousel.css';
+// import 'vue3-carousel/dist/carousel.css';
 
 const remarks = ref({ '2021-1-13': 'some tings' });
 const value = ref(new Date());
+const eventDialogVisible = ref(false);
+const setEventDialogVisible = () => {
+    eventDialogVisible.value = !eventDialogVisible.value;
+    console.log(eventDialogVisible.value);
+};
+const numRowsEvent = ref(5);
+const eventDialog = reactive({
+    titleText: 'Event Title',
+});
 </script>
 
 <script>
