@@ -39,6 +39,14 @@ import { Plus } from '@element-plus/icons-vue';
 import { CirclePlusFilled } from '@element-plus/icons-vue';
 import SideMenu from '../../common/components/SideMenu/index.vue';
 import { Carousel, Pagination, Slide } from 'vue3-carousel';
+import httpServices from '@services';
+import { FireBaseStorage as storage } from '@services/firebase.js';
+
+import {
+	ref as ref_upload,
+	uploadBytes,
+	getDownloadURL
+} from 'firebase/storage';
 
 import 'vue3-carousel/dist/carousel.css';
 
@@ -50,88 +58,13 @@ const value = ref(new Date());
 export default {
 	data() {
 		return {
+			uid: '4EL4hp_qRUYMzzal_G29f',
+			temp_url: '',
 			userObject: {
-				uid: 10086,
-				email: 'lulalulei@gmail.com',
-				firstName: 'Bruce',
-				lastName: 'Wayne',
-				phone: null,
-				address: null,
+				firstName: '',
+				lastName: '',
 				image: 'https://cdn-icons-png.flaticon.com/512/1320/1320933.png',
-				petList: [
-					{
-						pid: 1,
-						petName: 'Bella',
-						petAvatar:
-							'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg'
-					},
-					{
-						pid: 2,
-						petName: 'Lucy ',
-						petAvatar:
-							'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png'
-					},
-					{
-						pid: 3,
-						petName: 'Oliver',
-						petAvatar:
-							'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg'
-					},
-					{
-						pid: 4,
-						petName: 'Rocky',
-						petAvatar:
-							'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg'
-					},
-					{
-						pid: 5,
-						petName: 'Lily',
-						petAvatar:
-							'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png'
-					},
-					{
-						pid: 6,
-						petName: 'Roxy',
-						petAvatar:
-							'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg'
-					},
-					{
-						pid: 7,
-						petName: 'Emma',
-						petAvatar:
-							'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg'
-					},
-					{
-						pid: 8,
-						petName: 'Annie',
-						petAvatar:
-							'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png'
-					},
-					{
-						pid: 9,
-						petName: 'Teddy',
-						petAvatar:
-							'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg'
-					},
-					{
-						pid: 10,
-						petName: 'Cody',
-						petAvatar:
-							'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png'
-					},
-					{
-						pid: 11,
-						petName: 'Max',
-						petAvatar:
-							'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg'
-					},
-					{
-						pid: 12,
-						petName: 'Angel',
-						petAvatar:
-							'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg'
-					}
-				],
+				petList: [],
 				taskList: [],
 				eventList: [],
 				folderList: [
@@ -159,6 +92,52 @@ export default {
 				}
 			]
 		};
+	},
+
+	created: function () {
+		httpServices.dashboard
+			.user_dashboard({ uid: this.$data.uid })
+			.then(response => {
+				let userObject = response.data.data;
+				//edit page, assign pet object to pet form
+				this.$data.userObject.firstName = userObject.firstName;
+				this.$data.userObject.lastName = userObject.lastName;
+				this.$data.userObject.petList = userObject.petList;
+
+				for (
+					var index = 0;
+					index < this.$data.userObject.petList.length;
+					index++
+				) {
+					// this.$data.userObject.petList[i].petAvatar_Url =
+					// 	this.$data.userObject.petList[i].petAvatar;
+					// console.log(this.$data.userObject.petList[index]);
+
+					const storageRef = ref_upload(
+						storage,
+						this.$data.userObject.petList[index].petAvatar
+					);
+					// to be solved
+					getDownloadURL(storageRef).then(async url => {
+						// console.log(storageRef);
+
+						// console.log(this.$data.userObject.petList[0]);
+
+						for (let i in this.$data.userObject.petList) {
+							if (
+								this.$data.userObject.petList[i].petAvatar ===
+								storageRef.fullPath
+							) {
+								this.$data.userObject.petList[i].petAvatar_Url =
+									url;
+							}
+						}
+					});
+				}
+			})
+			.catch(error => {
+				console.log(error);
+			});
 	}
 };
 </script>

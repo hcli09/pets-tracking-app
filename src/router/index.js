@@ -7,59 +7,57 @@ import NotFound from '@/components/NotFound/index.vue';
 import Dashboard from '@/components/Dashboard/index.vue';
 import EditPet from '@/components/EditPet/index.vue';
 import CreatePet from '@/components/CreatePet/index.vue';
-
+import InvoiceFolder from '@/components/InvoiceFolder/index.vue';
 
 const routes = [
-    {
-        path: '/',
-        name: 'Home',
-        component: Home,
-        children: [
-            {
-                path: 'dashboard',
-                component: Dashboard,
-            },
-        ],
-    },
-    {
-        path: '/home',
-        redirect: '/',
-    },
-    {
-        path: '/home',
-        redirect: '/',
-    },
-    {
-        path: '/:catchAll(.*)',
-        name: 'Not Found',
-        component: NotFound,
-    },
-    {
-        path: '/login',
-        name: 'Login',
-        component: Login,
-    },
-    {
+	{
+		path: '/',
+		name: 'Home',
+		component: Home,
+		children: [
+			{
+				path: 'dashboard',
+				component: Dashboard
+			},
+			{
+				path: '/editpet',
+				component: EditPet
+			},
+			{
+				path: '/createpet',
+				component: CreatePet
+			},
+			{
+				path: '/invoice',
+				component: InvoiceFolder
+			}
+		]
+	},
+	{
+		path: '/home',
+		redirect: '/'
+	},
+	{
+		path: '/:catchAll(.*)',
+		name: 'Not Found',
+		component: NotFound
+	},
+	{
+		path: '/login',
+		name: 'Login',
+		component: Login
+	},
 
-        path: '/editpet',
-        name: 'EditPet',
-        component: EditPet,
-    },
-    {
-        path: '/createpet',
-        name: 'CreatePet',
-        component: CreatePet,
-    },
-    {
-        path: '/register',
-        name: 'Register',
-        component: Register,
-    },
+	{
+		path: '/register',
+		name: 'Register',
+		component: Register
+	}
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes,
+	history: createWebHistory(),
+	routes
 });
 
 export default router;
