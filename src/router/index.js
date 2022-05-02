@@ -7,7 +7,7 @@ import NotFound from '@/components/NotFound/index.vue';
 import Dashboard from '@/components/Dashboard/index.vue';
 import EditPet from '@/components/EditPet/index.vue';
 import CreatePet from '@/components/CreatePet/index.vue';
-import InvoiceFolder from '@/components/InvoiceFolder/index.vue';
+import Invoice from '@/components/Invoice/index.vue';
 
 const routes = [
 	{
@@ -29,7 +29,7 @@ const routes = [
 			},
 			{
 				path: '/invoice',
-				component: InvoiceFolder
+				component: Invoice
 			}
 		]
 	},
