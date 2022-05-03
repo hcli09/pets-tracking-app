@@ -60,6 +60,7 @@
             </el-row>
         </div>
 
+        <h1 class="profile-heading">Basic Information</h1>
         <div class="middle-box">
             <div class="info-box">
                 <div class="heading-line">
@@ -90,6 +91,7 @@
             </div>
         </div>
 
+        <h1 class="profile-heading">Pets</h1>
         <div class="bottom-box">
             <div class="pet" v-for="(item, index) in user.petList" :key="index">  
                 <div class="pet-avatar-wrapper">
@@ -259,100 +261,6 @@ const linkToEditProfile = () => {
 
 const emit = defineEmits(['changeUserAvater'])
 
-
-
-// const userObject = {
-//     uid: 10086,
-//     email: 'lulalulei@gmail.com',
-//     firstName: 'Bruce',
-//     lastName: 'Wayne',
-//     phone: null,
-//     address: null,
-//     image: 'https://cdn-icons-png.flaticon.com/512/1320/1320933.png',
-//     petList: [
-//         {
-//             pid: 1,
-//             petName: 'Bella',
-//             petAvatar:
-//                 'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-//         },
-//         {
-//             pid: 2,
-//             petName: 'Lucy ',
-//             petAvatar:
-//                 'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
-//         },
-//         {
-//             pid: 3,
-//             petName: 'Oliver',
-//             petAvatar:
-//                 'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
-//         },
-//         {
-//             pid: 4,
-//             petName: 'Rocky',
-//             petAvatar:
-//                 'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-//         },
-//         {
-//             pid: 5,
-//             petName: 'Lily',
-//             petAvatar:
-//                 'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
-//         },
-//         {
-//             pid: 6,
-//             petName: 'Roxy',
-//             petAvatar:
-//                 'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
-//         },
-//         {
-//             pid: 7,
-//             petName: 'Emma',
-//             petAvatar:
-//                 'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-//         },
-//         {
-//             pid: 8,
-//             petName: 'Annie',
-//             petAvatar:
-//                 'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
-//         },
-//         {
-//             pid: 9,
-//             petName: 'Teddy',
-//             petAvatar:
-//                 'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-//         },
-//         {
-//             pid: 10,
-//             petName: 'Cody',
-//             petAvatar:
-//                 'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
-//         },
-//         {
-//             pid: 11,
-//             petName: 'Max',
-//             petAvatar:
-//                 'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
-//         },
-//         {
-//             pid: 12,
-//             petName: 'Angel',
-//             petAvatar:
-//                 'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-//         },
-//     ],
-//     taskList: [],
-//     eventList: [],
-//     folderList: [
-//         { folderid: 1, folderName: 'Invoice' },
-//         { folderid: 2, folderName: 'Medication Report' },
-//         { folderid: 3, folderName: 'Vaccination History' },
-//     ],
-// }
-
-
 const handleAvatarSuccess = (
   response,
   uploadFile
@@ -391,11 +299,12 @@ const beforeAvatarUpload = (rawFile) => {
         color: #76553f;
         font-family: Trebuchet MS;
         font-size: 3vh;
-        margin-bottom: 2vh;;
+        margin-bottom: 1vh;;
     }
     .upper-box {
         height: 17.5vh;
         padding-left: 5vh;
+        margin-bottom: 1vh;
         border-radius: 10px;
         background-color: white;
         display: flex;
@@ -435,8 +344,8 @@ const beforeAvatarUpload = (rawFile) => {
     }
 
     .middle-box {
-        margin-top: 3vh;
         padding: 5vh 15vh;
+        margin-bottom: 1vh;
         height: 27vh;
         border-radius: 10px;
         background-color: white;
@@ -466,7 +375,6 @@ const beforeAvatarUpload = (rawFile) => {
     }
 
     .bottom-box {
-        margin-top: 3vh;
         padding: 5vh 10vh;
         border-radius: 10px;
         background-color: white;     

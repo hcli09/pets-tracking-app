@@ -29,32 +29,6 @@
             <!-- end of main part for dashboard -->
         </el-container>
     </el-container>
-	<el-container class="dashboard-home">
-		<!-- Top bar -->
-		<el-header style="height: 8vh; padding: 0">
-			<PetsTopBar
-				:firstName="userObject.firstName"
-				:lastName="userObject.lastName"
-				:UserAvatar="userObject.image"
-			/>
-		</el-header>
-
-		<el-container>
-			<!-- Side bar -->
-			<el-aside style="width: 65px">
-				<!-- <PetsSideBar :petList="userObject.petList" :uid="userObject.uid" /> -->
-				<SideMenu
-					:petList="userObject.petList"
-					:uid="userObject.uid"
-				></SideMenu>
-			</el-aside>
-
-			<!-- Main part -->
-			<el-main style="background-color: #f2f4f7">
-				<router-view></router-view>
-			</el-main>
-		</el-container>
-	</el-container>
 </template>
 
 <script setup>
@@ -195,7 +169,7 @@ export default {
     data() {
         return {
             userObject: {
-                uid: 10086,
+                uid: '4EL4hp_qRUYMzzal_G29f',
                 email: 'lulalulei@gmail.com',
                 firstName: 'Bruce',
                 lastName: 'Wayne',

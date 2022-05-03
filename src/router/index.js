@@ -12,7 +12,7 @@ import UserProfile from '@/components/UserProfile/index.vue';
 import EditUserProfile from '@/components/EditUserProfile/index.vue';
 import EditPet from '@/components/EditPet/index.vue';
 import CreatePet from '@/components/CreatePet/index.vue';
-import Record from '@/components/Record/index.vue';
+import VaccinationHistory from '@/components/VaccinationHistory/index.vue';
 
 
 const routes = [
@@ -38,8 +38,8 @@ const routes = [
                 component: Settings               
             },
             {
-                path: 'record',
-                component: Record
+                path: 'vaccinationhistory',
+                component: VaccinationHistory
             },
             {
 				path: 'calendar',

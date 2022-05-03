@@ -33,10 +33,16 @@ export default {
     //print for now
     methods: {
         clickSettings() {
+            this.$router.push({
+                path: '/settings',
+            })            
             console.log('redirect to setting page');
         },
 
         clickUserAvatar() {
+            this.$router.push({
+                path: '/userprofile',
+            })            
             console.log('redirect to userprofile');
         },
 
