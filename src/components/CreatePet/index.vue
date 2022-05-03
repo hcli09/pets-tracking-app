@@ -303,9 +303,12 @@ export default {
 			const currentDate = new Date();
 			const timestamp = currentDate.getTime();
 
+			//assign a unique name to the pet avatar
 			this.$data.petAvatar =
 				this.$data.uid + '_petAvatar' + '_' + timestamp;
 			const storageRef = ref(storage, this.$data.petAvatar);
+
+			//send image to firebase and get the temporary url of the image
 			uploadBytes(storageRef, file).then(() => {
 				getDownloadURL(storageRef).then(res => {
 					console.log(res);

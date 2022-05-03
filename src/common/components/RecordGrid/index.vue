@@ -15,49 +15,28 @@
 						<div
 							style="position: absolute; top: 0.5vw; right: 0.5vw"
 						>
-							<el-popover
-								placement="right"
-								style="width: 1vw; height: 1vw"
-								trigger="click"
-							>
-								<template #reference>
+							<el-dropdown>
+								<span class="el-dropdown-link">
 									<el-button size="small" type="primary" plain
 										><el-icon><More /></el-icon
 									></el-button>
+								</span>
+								<template #dropdown>
+									<el-dropdown-menu>
+										<el-dropdown-item
+											>View</el-dropdown-item
+										>
+										<el-dropdown-item
+											>Edit</el-dropdown-item
+										>
+										<el-dropdown-item
+											>Delete</el-dropdown-item
+										>
+									</el-dropdown-menu>
 								</template>
-								<div class="expand-buttons">
-									<el-button
-										style="
-											display: block;
-											margin-left: 0.8vw;
-										"
-										type="text"
-										>View</el-button
-									>
-									<el-button
-										style="display: block"
-										type="text"
-										>Edit</el-button
-									>
-									<el-button
-										style="display: block"
-										type="text"
-										>Delete</el-button
-									>
-								</div>
-							</el-popover>
+							</el-dropdown>
 						</div>
-						<!-- <img
-								style="
-									width: 1vw;
-									height: 1vw;
-									position: absolute;
-									top: 1vw;
-									right: 1vw;
-								"
-								src="https://api.iconify.design/fad/h-expand.svg?color=%2376553f"
-								class="image"
-							/> -->
+
 						<img
 							style="width: 6vw; height: 8vw"
 							src="https://api.iconify.design/bxs/file-pdf.svg?color=%2376553f"

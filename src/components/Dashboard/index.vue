@@ -4,38 +4,37 @@
 		<div class="inner-folder-box">
 			<!-- cards showing the folders -->
 			<el-row>
-				<template
-					v-for="(folder, index) in userObject.folderList"
-					:key="folder.id"
-				>
-					<el-col :span="3">
-						<div class="folder-box">
-							<!-- assign folders with different colors -->
-							<img
-								v-if="index % 3 === 0"
-								class="folder-image"
-								src="https://api.iconify.design/bxs/folder.svg?color=%23e9eaf4"
-								onclick="location.href='/invoice';"
-							/>
+				<div class="folder-box">
+					<div class="folder" onclick="location.href='/invoice';">
+						<img
+							class="folder-image"
+							src="https://api.iconify.design/bxs/folder.svg?color=%23e9eaf4"
+						/>
+						<el-button class="folder-name-button" type="text"
+							>Invoice
+						</el-button>
+					</div>
 
-							<img
-								v-if="index % 3 === 1"
-								class="folder-image"
-								src="https://api.iconify.design/bxs/folder.svg?color=%23ffeeea"
-							/>
+					<div class="folder">
+						<img
+							class="folder-image"
+							src="https://api.iconify.design/bxs/folder.svg?color=%23ffeeea"
+						/>
+						<el-button class="folder-name-button" type="text"
+							>Medication Report
+						</el-button>
+					</div>
 
-							<img
-								v-if="index % 3 === 2"
-								class="folder-image"
-								src="https://api.iconify.design/bxs/folder.svg?color=%23fff9ec"
-							/>
-
-							<el-button class="folder-name-button" type="text"
-								>{{ folder.folderName }}
-							</el-button>
-						</div>
-					</el-col>
-				</template>
+					<div class="folder">
+						<img
+							class="folder-image"
+							src="https://api.iconify.design/bxs/folder.svg?color=%23fff9ec"
+						/>
+						<el-button class="folder-name-button" type="text"
+							>Vaccination History
+						</el-button>
+					</div>
+				</div>
 
 				<!-- add folder -->
 				<el-col :span="3">
@@ -320,11 +319,19 @@ export default {
 	.folder-box {
 		display: flex;
 		justify-content: space-between;
-		flex-direction: column;
+		flex-direction: row;
 		align-items: center;
 		padding-left: 2vw;
 		margin-top: 0.5vmax;
 		margin-bottom: 0.5vmax;
+
+		.folder {
+			display: flex;
+			justify-content: space-between;
+			flex-direction: column;
+			align-items: center;
+			margin: 0 2vw;
+		}
 
 		.folder-image {
 			// height: 10vh;
@@ -334,7 +341,7 @@ export default {
 		.folder-name-button {
 			padding-top: 0.1vmax;
 			align-items: center;
-			width: 1vh;
+			width: 1vw;
 			font-weight: bold;
 		}
 
