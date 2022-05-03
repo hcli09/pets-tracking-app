@@ -9,7 +9,7 @@
 			/>
 		</el-header>
 
-		<el-container>
+		<el-container style="height: 500px">
 			<!-- side bar -->
 			<el-aside style="width: 65px">
 				<!-- <PetsSideBar :petList="userObject.petList" :uid="userObject.uid" /> -->

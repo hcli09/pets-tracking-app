@@ -21,7 +21,7 @@
 							src="https://api.iconify.design/bxs/folder.svg?color=%23ffeeea"
 						/>
 						<el-button class="folder-name-button" type="text"
-							>Medication Report
+							>Medication
 						</el-button>
 					</div>
 
@@ -31,7 +31,7 @@
 							src="https://api.iconify.design/bxs/folder.svg?color=%23fff9ec"
 						/>
 						<el-button class="folder-name-button" type="text"
-							>Vaccination History
+							>Vaccination
 						</el-button>
 					</div>
 				</div>

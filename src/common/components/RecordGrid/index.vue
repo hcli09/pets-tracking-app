@@ -146,9 +146,12 @@ export default {
 	justify-content: space-evenly;
 	text-align: top;
 
+	.el-tabs__content {
+		height: 65vh;
+	}
+
 	.folder-grid {
 		width: 80vw;
-		height: 65vh;
 		margin: 0 0 1vw 3vw;
 		text-align: center;
 	}

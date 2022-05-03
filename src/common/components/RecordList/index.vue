@@ -126,25 +126,15 @@ export default {
 </script>
 
 <style lang="scss">
-.record-header {
-	height: 70px;
-	position: relative;
-	padding: 0.5vh 0 0.5vh 0.5vw;
-
-	p {
-		margin-left: 2vw;
-		position: absolute;
-		top: 50%;
-		transform: translate(0, -50%);
-		font-size: large;
-		font-family: Trebuchet MS;
-		color: #76553f;
-	}
-}
 .Record-content {
 	background-color: white;
 	border-radius: 1rem;
 	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+	.el-tabs__content {
+		height: 65vh;
+	}
+
 	.buttons {
 		display: flex;
 		justify-content: space-between;
@@ -192,7 +182,6 @@ export default {
 
 	.folder-list {
 		width: 85vw;
-		height: 65vh;
 		margin: 0 2vw 1vw 3vw;
 		text-align: center;
 	}
