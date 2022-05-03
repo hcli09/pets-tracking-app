@@ -9,4 +9,10 @@ export default {
             data,
         });
     },
+    getLocationList() {
+        return axios({
+            url: '/data/location_list',
+            method: 'post',            
+        });        
+    }
 };

@@ -36,7 +36,7 @@
 
 
 
-        <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="120px"
+        <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="140px"
             label-position="left" class="demo-ruleForm" :size="formSize">
             <el-form-item label="First Name" prop="firstName">
                 <el-input v-model="ruleForm.firstName" />
@@ -45,11 +45,19 @@
                 <el-input v-model="ruleForm.lastName" />
             </el-form-item>
             <el-form-item label="Phone" prop="phone">
-                <el-input v-model="ruleForm.phone" />
+                <el-input v-model.number="ruleForm.phone" />
             </el-form-item>
             <el-form-item label="Location" prop="location">
-                <el-input v-model="ruleForm.location" />
+                <el-select v-model="ruleForm.location" filterable placeholder="Select or search your city">
+                    <el-option
+                    v-for="item in locationList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                    />
+                </el-select>                 
             </el-form-item>
+           
             <el-form-item label="Pet Sitter Status" prop="petSitterStatus">
                 <el-select v-model="ruleForm.petSitterStatus" placeholder="Pet Sitter Status">
                     <el-option label="Yes" value="true" />
@@ -57,8 +65,8 @@
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="submitForm(ruleFormRef)">SAVE</el-button>
-                <el-button @click="resetForm(ruleFormRef)">CANCEL</el-button>
+                <el-button class="save-button" type="primary" @click="submitForm(ruleFormRef)">SAVE</el-button>
+                <el-button @click="resetForm(ruleFormRef)">RESET</el-button>
             </el-form-item>
         </el-form>
 
@@ -73,7 +81,7 @@
 
 <script setup>
 
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref, onMounted, } from 'vue'
 import httpServices from '@services';
 import router from '@/router';
 import { ElMessage } from 'element-plus'
@@ -91,18 +99,24 @@ import { CameraFilled } from '@element-plus/icons-vue';
 //     image: '',
 // })
 
-const imageURL = ref('https://cdn-icons-png.flaticon.com/512/1320/1320933.png')
+const imageURL = ref('')
 const formSize = ref('default')
 const ruleFormRef = ref()
 const ruleForm = reactive({
-    firstName: 'Bruce',
-    lastName: 'Wayne',
-    phone: '12345678',
-    location: 'Sydney',
-    petSitterStatus: 'No',
+    firstName: '',
+    lastName: '',
+    phone: '',
+    location: '',
+    petSitterStatus: '',
 })
 
-const emit = defineEmits(['changeUserAvater'])
+const value = ref('')
+// const locationList = reactive({
+//     list: []
+// })
+const locationList = ref([])
+
+const emit = defineEmits(['changeUserAvater','changeUserInfo'])
 
 const rules = reactive({
     firstName: [
@@ -113,6 +127,7 @@ const rules = reactive({
     ],
     phone: [
         // { required: true, message: 'Please input phone number', trigger: 'blur' },
+        { type: 'number', message: 'Please input correct phone number' },
     ],
     petSitterStatus: [
         //   { required: true, message: 'Please select your pet sitter status', trigger: 'change' }
@@ -137,10 +152,27 @@ const resetForm = (formEl) => {
     formEl.resetFields()
 }
 
+
+
 //get user's data
 onMounted(() => {
     getUserProfile();
+    getLocationList();
 })
+
+const getLocationList = async() => {
+    const res = await httpServices.userProfileEdit.getLocationList();
+    let tempLocationList = []
+    // console.log("location list: ", res.data.data[0])
+    for (let item of res.data.data) {
+        // console.log("item", item)
+        locationList.value.push({value: item.cityName, label: item.cityName})
+    }
+    // locationList.value = tempLocationList
+    // console.log("location list: ", res.data.data);
+    console.log("locationList: ", locationList);
+    // return tempLocationList
+}
 
 const getUserProfile = async() => {
     const res = await httpServices.userProfile.getUserProfile({
@@ -148,7 +180,7 @@ const getUserProfile = async() => {
     });
     ruleForm.firstName = res.data.data.firstName;
     ruleForm.lastName = res.data.data.lastName;
-    ruleForm.phone = res.data.data.phone;
+    ruleForm.phone = Number(res.data.data.phone);
     ruleForm.email = res.data.data.email;
     ruleForm.location = res.data.data.address;
     ruleForm.petSitterStatus = res.data.data.isPetSitter?'Yes':'No';
@@ -174,12 +206,17 @@ const editUserProfile = async() => {
         uid: '4EL4hp_qRUYMzzal_G29f',
         firstName: ruleForm.firstName,
         lastName: ruleForm.lastName,
-        phone: ruleForm.phone,
+        phone: ruleForm.phone.toString(),
         address: ruleForm.location,
         isPetSitter: status,
     });
 
     if(res.data.status == 200) {
+        emit('changeUserInfo', ruleForm.firstName, ruleForm.lastName);
+        ElMessage({
+            message: 'Profile updated.',
+            type: 'success',
+        }) 
         linkToProfile();
     }
 
@@ -196,6 +233,10 @@ const handleAvatarSuccess = (
 ) => {
   imageURL.value = URL.createObjectURL(uploadFile.raw)
   emit('changeUserAvater', URL.createObjectURL(uploadFile.raw))
+  ElMessage({
+      message: 'New avatar uploaded.',
+      type: 'success',
+    }) 
 }
 
 const beforeAvatarUpload = (rawFile) => {
@@ -219,8 +260,9 @@ const linkToProfile = () => {
 .edit-profile-container {
 
     .edit-profile-heading {
+        color: #76553f;
+        font-family: Trebuchet MS;
         font-size: 3vh;
-        color: #785741;
         margin-bottom: 2vh;
     }
     .avatar-container {
@@ -229,6 +271,10 @@ const linkToProfile = () => {
             margin-bottom: 2vh;
         }
     }
+}
+
+.save-button {
+    margin-left: 3vh;
 }
 
 .avatar-uploader .avatar {

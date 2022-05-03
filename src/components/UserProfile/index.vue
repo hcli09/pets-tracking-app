@@ -1,6 +1,6 @@
 <template>
     <div>
-
+        <h1 class="profile-heading">Profile</h1>
         <div class="upper-box">
             <el-row>
                 <el-col :span="4">
@@ -63,7 +63,7 @@
         <div class="middle-box">
             <div class="info-box">
                 <div class="heading-line">
-                    <img class="email-icon"  src="@assets/user-profile/email.png" alt="">
+                    <el-icon><message /></el-icon>
                     <div class="info-title">Email</div>
                 </div>
                 <div class="info-line">
@@ -229,6 +229,7 @@ const user = reactive({
 onMounted(() => {
     getAllUsers();
     getUserProfile();
+    emit('changeUserAvater', user.image)
 })
 
 const getUserProfile = async() => {
@@ -358,6 +359,10 @@ const handleAvatarSuccess = (
 ) => {
     user.image = URL.createObjectURL(uploadFile.raw)
     emit('changeUserAvater', URL.createObjectURL(uploadFile.raw))
+    ElMessage({
+        message: 'New avatar uploaded.',
+        type: 'success',
+    })    
     console.log("upload", user.image)
 }
 
@@ -382,7 +387,12 @@ const beforeAvatarUpload = (rawFile) => {
 //     bottom: 0px;
 //     width: 99%;
 //     background-color: #f2f4f7;
-
+    .profile-heading {
+        color: #76553f;
+        font-family: Trebuchet MS;
+        font-size: 3vh;
+        margin-bottom: 2vh;;
+    }
     .upper-box {
         height: 17.5vh;
         padding-left: 5vh;
@@ -409,6 +419,7 @@ const beforeAvatarUpload = (rawFile) => {
             margin-top: 3vh;
             .name {
                 color: #76553f;
+                font-family: Trebuchet MS;
             }
             .button-group {
                 margin-top: 2vh;
@@ -438,13 +449,14 @@ const beforeAvatarUpload = (rawFile) => {
 
         
         .info-box {
-            
+            color: #76553f;
+            font-family: Trebuchet MS;
             .heading-line {
                 display: flex;
-                .email-icon {
-                    height: 3vh;
-                    width: 3vh;
-                }
+                // .email-icon {
+                //     height: 3vh;
+                //     width: 3vh;
+                // }
                 .info-title {
                     margin-left: 1vh;
                 }
@@ -483,6 +495,8 @@ const beforeAvatarUpload = (rawFile) => {
                 }
             }
             .pet-name {
+                color: #76553f;
+                font-family: Trebuchet MS;                
                 text-align: center;
             }
         }
