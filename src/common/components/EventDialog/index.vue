@@ -42,20 +42,48 @@
 
 			<!-- Date and time -->
 			<el-form-item label="Date and time" :label-width="formLabelWidth">
-				<el-date-picker
-					v-model="form.date"
-					type="date"
-					placeholder="Pick a day"
-					style="width: 28%; margin-right: 5px"
-				/>
-				<el-time-picker
-					v-model="form.time"
-					is-range
-					range-separator="to"
-					start-placeholder="Start time"
-					end-placeholder="End time"
-					style="width: 42%"
-				/>
+				<div
+					:style="{
+						display: 'flex',
+						alignItems: 'center',
+						marginBottom: '10px'
+					}"
+				>
+					<el-date-picker
+						v-model="form.startDate"
+						type="date"
+						placeholder="Start date"
+						style="width: 28%; margin-right: 5px"
+					/>
+
+					<el-time-picker
+						v-model="form.startTime"
+						is-range
+						format="HH:mm"
+						range-separator="to"
+						start-placeholder="Start time"
+						end-placeholder="End time"
+						style="width: 42%"
+					/>
+				</div>
+
+				<div :style="{ display: 'flex', alignItems: 'center' }">
+					<el-date-picker
+						v-model="form.endDate"
+						type="date"
+						placeholder="End date"
+						style="width: 28%; margin-right: 5px"
+					/>
+					<el-time-picker
+						v-model="form.endTime"
+						is-range
+						format="HH:mm"
+						range-separator="to"
+						start-placeholder="Start time"
+						end-placeholder="End time"
+						style="width: 42%"
+					/>
+				</div>
 			</el-form-item>
 
 			<!-- Description -->
@@ -130,6 +158,28 @@ const form = reactive({
 	resource: '',
 	desc: ''
 });
+const colors = [
+	{
+		name: 'Blue',
+		bgColor: '#eff6ff',
+		textColor: '#1e40af'
+	},
+	{
+		name: 'Indigo',
+		bgColor: '#eef2ff',
+		textColor: '#3730a3'
+	},
+	{
+		name: 'Teal',
+		bgColor: '#f0fdfa',
+		textColor: '#115e59'
+	},
+	{
+		name: 'Rose',
+		bgColor: '#fff1f2',
+		textColor: '#9f1239'
+	}
+];
 </script>
 
 <style lang="scss" scoped>
@@ -145,6 +195,12 @@ const form = reactive({
 .dialog-footer button:first-child {
 	margin-right: 10px;
 }
+
+.span-color {
+	&:hover {
+		background: transparent;
+	}
+}
 </style>
 
 <style>
@@ -154,7 +210,7 @@ const form = reactive({
 	border-radius: 10px;
 	background-image: url('@assets/dialog/dialog-3.png');
 	background-size: 430px 509px;
-	background-position: 320px 45px;
+	background-position: 320px 85px;
 	background-repeat: no-repeat;
 }
 </style>

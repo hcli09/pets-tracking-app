@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
+import './index.css';  // importing tailwind css must come before element plus
 import ElementPlus from 'element-plus';
 import * as ElIcons from '@element-plus/icons-vue';
 import 'element-plus/dist/index.css';
@@ -22,7 +23,7 @@ import 'v-calendar/dist/style.css';
 // ElementIcon
 const app = createApp(App);
 Object.keys(ElIcons).forEach(key => {
-    app.component(key, ElIcons[key]);
+	app.component(key, ElIcons[key]);
 });
 app.use(VueSidebarMenu);
 // app.component('VueClock', VueClock);

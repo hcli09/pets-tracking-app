@@ -39,6 +39,7 @@
 				<el-time-picker
 					v-model="form.time"
 					is-range
+					format="HH:mm"
 					range-separator="to"
 					start-placeholder="Start time"
 					end-placeholder="End time"
@@ -142,7 +143,7 @@ const form = reactive({
 	border-radius: 10px;
 	background-image: url('@assets/dialog/dialog-2.png');
 	background-size: 460px 509px;
-	background-position: -120px 10px;
+	background-position: -120px 48px;
 	background-repeat: no-repeat;
 }
 </style>

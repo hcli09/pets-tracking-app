@@ -5,6 +5,7 @@ import Login from '@/components/Login/index.vue';
 import Register from '@/components/Register/index.vue';
 import NotFound from '@/components/NotFound/index.vue';
 import Dashboard from '@/components/Dashboard/index.vue';
+import Calendar from '@/components/Calendar/index.vue';
 
 const routes = [
 	{
@@ -15,6 +16,10 @@ const routes = [
 			{
 				path: '',
 				component: Dashboard
+			},
+			{
+				path: 'calendar',
+				component: Calendar
 			}
 		]
 	},
