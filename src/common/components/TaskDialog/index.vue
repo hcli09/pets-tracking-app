@@ -1,17 +1,17 @@
 <template>
 	<el-dialog
 		v-model="dialogVisible"
-		:title="title"
+		title="Add a task"
 		:show-close="false"
-		custom-class="event-dialog"
+		custom-class="task-dialog"
 	>
 		<el-form :model="form">
 			<!-- Event Title -->
-			<el-form-item label="Event Title" :label-width="formLabelWidth">
+			<el-form-item label="Task Title" :label-width="formLabelWidth">
 				<el-input
 					v-model="form.title"
 					autocomplete="off"
-					placeholder="Please input event title"
+					placeholder="Please input task title"
 					style="width: 71%"
 				/>
 			</el-form-item>
@@ -28,18 +28,6 @@
 				</el-select>
 			</el-form-item>
 
-			<!-- Event Type -->
-			<el-form-item label="Event Type" :label-width="formLabelWidth">
-				<el-select
-					v-model="form.eventType"
-					placeholder="Please select an event type"
-					style="width: 71%"
-				>
-					<el-option label="Vaccination" value="vaccination" />
-					<el-option label="Pet Grocery" value="petGrocery" />
-				</el-select>
-			</el-form-item>
-
 			<!-- Date and time -->
 			<el-form-item label="Date and time" :label-width="formLabelWidth">
 				<el-date-picker
@@ -51,6 +39,7 @@
 				<el-time-picker
 					v-model="form.time"
 					is-range
+					format="HH:mm"
 					range-separator="to"
 					start-placeholder="Start time"
 					end-placeholder="End time"
@@ -83,19 +72,9 @@
 <script setup>
 import { reactive, ref, defineProps, defineEmits } from 'vue';
 const props = defineProps({
-	title: {
-		type: String
-	},
 	dialogVisible: {
 		type: Boolean,
 		required: true
-	},
-	numRows: {
-		type: Number,
-		required: true
-	},
-	customisation: {
-		type: Object
 	}
 });
 const emits = defineEmits(['setVisible']);
@@ -158,13 +137,13 @@ const form = reactive({
 </style>
 
 <style>
-.event-dialog {
+.task-dialog {
 	/* box-sizing: border-box; */
 	padding-left: 10px;
 	border-radius: 10px;
-	background-image: url('@assets/dialog/dialog-1.png');
-	background-size: 430px 509px;
-	background-position: 320px 64px;
+	background-image: url('@assets/dialog/dialog-2.png');
+	background-size: 460px 509px;
+	background-position: -120px 48px;
 	background-repeat: no-repeat;
 }
 </style>

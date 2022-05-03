@@ -5,6 +5,8 @@ import Login from '@/components/Login/index.vue';
 import Register from '@/components/Register/index.vue';
 import NotFound from '@/components/NotFound/index.vue';
 import Dashboard from '@/components/Dashboard/index.vue';
+import Calendar from '@/components/Calendar/index.vue';
+
 import Settings from '@/components/Settings/index.vue';
 import UserProfile from '@/components/UserProfile/index.vue';
 import EditUserProfile from '@/components/EditUserProfile/index.vue';
@@ -20,66 +22,70 @@ const routes = [
         component: Home,
         children: [
             {
-                path: 'dashboard',
-                component: Dashboard,
+                path: '',
+                component: Dashboard
             },
             {
                 path: 'userprofile',
-                component: UserProfile,
+                component: UserProfile
             },
             {
                 path: 'editprofile',
-                component: EditUserProfile,                
+                component: EditUserProfile                
             }, 
             {
                 path: 'settings',
-                component: Settings,                
+                component: Settings               
             },
             {
                 path: 'record',
-                component: Record,
-            },                        
-        ],
+                component: Record
+            },
+            {
+				path: 'calendar',
+				component: Calendar
+			}                        
+        ]
     },
     {
         path: '/home',
-        redirect: '/',
+        redirect: '/'
     },
     {
-        path: '/home',
-        redirect: '/',
-    },
+		path: '/dashboard',
+		redirect: '/'
+	},
     {
         path: '/:catchAll(.*)',
         name: 'Not Found',
-        component: NotFound,
+        component: NotFound
     },
     {
         path: '/login',
         name: 'Login',
-        component: Login,
+        component: Login
     },
     {
 
         path: '/editpet',
         name: 'EditPet',
-        component: EditPet,
+        component: EditPet
     },
     {
         path: '/createpet',
         name: 'CreatePet',
-        component: CreatePet,
+        component: CreatePet
     },
     {
         path: '/register',
         name: 'Register',
-        component: Register,
-    },
+        component: Register
+    }
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes,
+	history: createWebHistory(),
+	routes
 });
 
 export default router;
