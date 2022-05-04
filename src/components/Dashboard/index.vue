@@ -5,7 +5,7 @@
 			<!-- cards showing the folders -->
 			<el-row>
 				<div class="folder-box">
-					<div class="folder" onclick="location.href='/invoice';">
+					<div class="folder" @click="toInvoice">
 						<img
 							class="folder-image"
 							src="https://api.iconify.design/bxs/folder.svg?color=%23e9eaf4"
@@ -133,6 +133,7 @@ import EventSummary from '@common/components/EventSummary/index.vue';
 import TaskSummary from '../../common/components/TaskSummary/index.vue';
 
 import httpServices from '@services';
+import router from '../../router';
 
 // import 'vue3-carousel/dist/carousel.css';
 
@@ -151,6 +152,10 @@ const setEventDialogVisible = () => {
 
 const setTaskDialogVisible = () => {
 	taskDialogVisible.value = !taskDialogVisible.value;
+};
+
+const toInvoice = () => {
+	router.push('/invoice');
 };
 </script>
 
@@ -294,7 +299,6 @@ export default {
 	justify-content: center;
 	align-items: center;
 	overflow: hidden;
-
 
 	.album-pic {
 		width: 275px;
