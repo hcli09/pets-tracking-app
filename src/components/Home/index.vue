@@ -20,7 +20,7 @@
             </el-aside>
 
             <!-- Main part -->
-            <el-main style="background-color: #f2f4f7">
+            <el-main style="background-color: #f2f4f7;height:92vh;overflow:scroll">
                 <!-- Dashboard, Calender and folders -->
                 <!-- folders -->
 
