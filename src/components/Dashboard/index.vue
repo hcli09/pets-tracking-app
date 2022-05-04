@@ -25,7 +25,7 @@
 						</el-button>
 					</div>
 
-					<div class="folder">
+					<div class="folder" @click="toVaccination">
 						<img
 							class="folder-image"
 							src="https://api.iconify.design/bxs/folder.svg?color=%23fff9ec"
@@ -157,6 +157,9 @@ const setTaskDialogVisible = () => {
 const toInvoice = () => {
 	router.push('/invoice');
 };
+const toVaccination = () => {
+	router.push('/vaccinationhistory');
+}
 </script>
 
 <script>

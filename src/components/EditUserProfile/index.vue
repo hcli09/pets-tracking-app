@@ -10,6 +10,8 @@
             />
         </div>
 
+
+<!-- upload avatar -->
         <el-upload                        
             class="upload-demo"
             action="https://api.uomg.com/api/image.sogou"
@@ -226,7 +228,10 @@ const editUserProfile = async() => {
 
 
 
-
+/**
+ * when upload is sussessful, emit an event to change the avatar in topbar
+ * then display a message
+ */
 const handleAvatarSuccess = (
   response,
   uploadFile
@@ -239,9 +244,12 @@ const handleAvatarSuccess = (
     }) 
 }
 
+/**
+ * check if the file uploaded is JGP or PNG, otherwise cannot be uploaded
+ */
 const beforeAvatarUpload = (rawFile) => {
-  if (rawFile.type !== 'image/jpeg') {
-    ElMessage.error('Avatar picture must be JPG format!')
+  if (rawFile.type !== 'image/jpeg' && rawFile.type !== 'image/png') {
+    ElMessage.error('Avatar picture must be JPG or PNG file!')
     return false
   } else if (rawFile.size / 1024 / 1024 > 2) {
     ElMessage.error('Avatar picture size can not exceed 2MB!')

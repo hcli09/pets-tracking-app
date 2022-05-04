@@ -24,7 +24,7 @@
                 <!-- Dashboard, Calender and folders -->
                 <!-- folders -->
 
-                <router-view @changeUserAvater="changeAvatar" @changeUserInfo="changeInfo"></router-view>
+                <router-view @changeUserAvater="getUserInfo" @changeUserInfo="getUserInfo"></router-view>
             </el-main>
             <!-- end of main part for dashboard -->
         </el-container>
@@ -252,6 +252,8 @@ export default {
 			});
 	},
     methods: {
+		// these two functions are used for temporary needs, 
+		// once the real upload image function is updated, they should be replaced
         changeAvatar(url) {
             this.userObject.image = url;
             console.log("url of the topbar's avatar changed", url);
@@ -260,7 +262,19 @@ export default {
             this.userObject.firstName = firstName;
             this.userObject.lastName = lastName;
         },
-            
+		// this function send a request and get the most up-to-date user infomation (when user infomation is changed)
+        getUserInfo() {
+			httpServices.dashboard
+			.user_dashboard({ uid: this.$data.uid })
+			.then(response => {
+				let userObject = response.data.data;
+				//edit page, assign pet object to pet form
+				this.$data.userObject.firstName = userObject.firstName;
+				this.$data.userObject.lastName = userObject.lastName;
+				// update user avatar
+				
+			})
+		}    
     },
 };
 </script>

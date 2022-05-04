@@ -1,10 +1,14 @@
 <template>
     <div>
         <h1 class="profile-heading">Profile</h1>
+
+<!-- upper white box with avatar -->
+
         <div class="upper-box">
             <el-row>
                 <el-col :span="4">
                     <div class="avatar-container">
+<!-- user avater -->
                         <img
                             class="avatar-image"
                             :src="user.image"
@@ -61,6 +65,9 @@
         </div>
 
         <h1 class="profile-heading">Basic Information</h1>
+
+<!-- middle white box with basic info -->
+
         <div class="middle-box">
             <div class="info-box">
                 <div class="heading-line">
@@ -92,6 +99,9 @@
         </div>
 
         <h1 class="profile-heading">Pets</h1>
+
+<!-- bottom white box with pets list -->
+
         <div class="bottom-box">
             <div class="pet" v-for="(item, index) in user.petList" :key="index">  
                 <div class="pet-avatar-wrapper">
@@ -229,7 +239,7 @@ const user = reactive({
 
 //get user's data
 onMounted(() => {
-    getAllUsers();
+    // getAllUsers();
     getUserProfile();
     emit('changeUserAvater', user.image)
 })
@@ -261,6 +271,10 @@ const linkToEditProfile = () => {
 
 const emit = defineEmits(['changeUserAvater'])
 
+/**
+ * when upload is sussessful, emit an event to change the avatar in topbar
+ * then display a message
+ */
 const handleAvatarSuccess = (
   response,
   uploadFile
@@ -274,9 +288,12 @@ const handleAvatarSuccess = (
     console.log("upload", user.image)
 }
 
+/**
+ * check if the file uploaded is JGP or PNG, otherwise cannot be uploaded
+ */
 const beforeAvatarUpload = (rawFile) => {
-  if (rawFile.type !== 'image/jpeg') {
-    ElMessage.error('Avatar picture must be JPG format!')
+  if (rawFile.type !== 'image/jpeg' && rawFile.type !== 'image/png') {
+    ElMessage.error('Avatar picture must be JPG or PNG file!')
     return false
   } else if (rawFile.size / 1024 / 1024 > 2) {
     ElMessage.error('Avatar picture size can not exceed 2MB!')

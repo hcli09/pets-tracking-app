@@ -26,7 +26,7 @@
                                     <el-input v-model="ruleForm.password" />
                                 </el-form-item> -->
                                 <el-form-item label="Phone" prop="phone">
-                                    <el-input v-model="ruleForm.phone" />
+                                    <el-input v-model.number="ruleForm.phone" />
                                 </el-form-item>
                                 <!-- <el-form-item label="Email" prop="email">
                                     <el-input v-model="ruleForm.email" />
@@ -107,6 +107,7 @@ const rules = reactive({
     ],
     phone: [
         // { required: true, message: 'Please input phone number', trigger: 'blur' },
+        { type: 'number', message: 'Please input correct phone number' },
     ],
     // email: [
     //     { required: true, message: 'Please input email address', trigger: 'blur' },
@@ -219,7 +220,7 @@ const getUserProfile = async() => {
     ruleForm.lastName = res.data.data.lastName;
     // user.petList = res.data.data.petList;
     // ruleForm.email = res.data.data.email;
-    ruleForm.phone = res.data.data.phone;
+    ruleForm.phone = Number(res.data.data.phone);
     ruleForm.petSitterStatus = res.data.data.isPetSitter?'Yes':'No';
     ruleForm.location = res.data.data.address;
     console.log('res', res);
