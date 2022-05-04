@@ -9,6 +9,9 @@
 		"lint": "eslint . --ext .vue,.js"
 	},
 	"dependencies": {
+		"vue-pdf": "^4.3.0",
+		"firebase": "^9.7.0",
+		"@element-plus/icons": "0.0.11",
 		"element-plus": "^2.1.8",
 		"pinia": "^2.0.13",
 		"axios": "^0.26.1",

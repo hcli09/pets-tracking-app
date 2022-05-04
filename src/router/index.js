@@ -5,6 +5,9 @@ import Login from '@/components/Login/index.vue';
 import Register from '@/components/Register/index.vue';
 import NotFound from '@/components/NotFound/index.vue';
 import Dashboard from '@/components/Dashboard/index.vue';
+import EditPet from '@/components/EditPet/index.vue';
+import CreatePet from '@/components/CreatePet/index.vue';
+import Invoice from '@/components/Invoice/index.vue';
 import Calendar from '@/components/Calendar/index.vue';
 
 const routes = [
@@ -14,12 +17,24 @@ const routes = [
 		component: Home,
 		children: [
 			{
-				path: '',
+				path: 'dashboard',
 				component: Dashboard
 			},
 			{
 				path: 'calendar',
 				component: Calendar
+			},
+			{
+				path: '/editpet',
+				component: EditPet
+			},
+			{
+				path: '/createpet',
+				component: CreatePet
+			},
+			{
+				path: '/invoice',
+				component: Invoice
 			}
 		]
 	},
