@@ -14,34 +14,52 @@
 					<span>{{ title }}</span>
 					<p>{{ isEvent ? timeRange : '' }}</p>
 				</div>
-				<div class="pet-name">
-					<img :src="pets[0].avatarUrl" alt="" />
-					<span class="name">
+				<el-tooltip
+					class="box-item"
+					effect="dark"
+					:content="`with ${pets.map(pet => pet.name).join(', ')}`"
+					placement="right"
+				>
+					<div class="pet-name">
+						<template v-if="pets.length < 2">
+							<img
+								class="first-img"
+								:src="pets[0].avatarUrl"
+								alt=""
+							/>
+						</template>
+						<template v-else>
+							<div>
+								<img :src="pets[0].avatarUrl" alt="" />
+								<img
+									class="following-imgs"
+									v-for="pet in pets.slice(1)"
+									:src="pet.avatarUrl"
+									alt=""
+								/>
+							</div>
+
+							<!-- <img :src="pets[1].avatarUrl" alt="" /> -->
+
+							<!-- <img
+								class="following-imgs"
+								v-for="pet in pets.slice(1)"
+								:src="pet.avatarUrl"
+								alt=""
+							/> -->
+						</template>
+						<!-- <span class="name">
 						{{ pets[0].name }}
-					</span>
-					<template v-if="pets.length > 1">
-						<el-tooltip
-							class="box-item"
-							effect="dark"
-							:content="`with ${pets
-								.slice(1)
-								.map(pet => pet.name)}`"
-							placement="right"
-						>
-							<div
-								class="more-than-one"
-								style="font-size: 6"
-							></div>
-						</el-tooltip>
-					</template>
-				</div>
+					</span> -->
+					</div>
+				</el-tooltip>
 			</div>
 		</el-card>
 	</el-row>
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, toRaw } from 'vue';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 const props = defineProps({
@@ -59,10 +77,10 @@ const bgColors = {
 };
 const textWhite = 'color: white';
 
-const { type, timeRange, title, className, pets, dates } = props.customData;
+let { type, timeRange, title, className, pets, dates } = props.customData;
 const { index } = props;
 
-console.log(index, type);
+pets = toRaw(pets);
 const isEvent = type == 'event';
 
 const toCalendar = () => {
@@ -124,34 +142,41 @@ const toCalendar = () => {
 				font-size: 1.5vmin;
 			}
 			.pet-name {
+				position: relative;
+
 				display: inline-flex;
-				flex-direction: column;
+				// flex-direction: column;
 				align-items: center;
 				font-weight: bold;
 				box-sizing: border-box;
-				padding-left: 10px;
-				position: relative;
+				margin-left: 10px;
+				width: 70px;
+				height: 35px;
+				// border: 1px solid #908f8c;
 
 				.name {
 					font-size: 14px;
 				}
-				.more-than-one {
-					position: absolute;
-					bottom: 12px;
-					right: -8px;
-					font-size: 12px;
-					width: 6px;
-					height: 6px;
-					background: royalblue;
-					color: #fff;
-					border-radius: 50%;
-					display: inline-flex;
-					justify-content: center;
-					align-items: center;
-				}
 				img {
-					width: 30px;
+					width: 35px;
 					border-radius: 5px;
+					position: absolute;
+					left: 0;
+					top: 0;
+					z-index: 99;
+					background: #fff;
+					// left: 30px;
+					// bottom: 30px;
+					// transform: translate(-50%, -50%);
+					// right: 0;
+					&.first-img {
+						left: 50%;
+						transform: translate(-50%, 0);
+					}
+					&.following-imgs {
+						left: 24px;
+						z-index: 9;
+					}
 				}
 			}
 		}

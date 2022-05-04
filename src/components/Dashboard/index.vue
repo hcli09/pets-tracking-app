@@ -72,7 +72,7 @@
 						<el-button
 							class="add-button"
 							color="#76553f"
-							style="border: #737bc1; margin-bottom: 30px"
+							style="border: #737bc1"
 							type="primary"
 							plain
 							:icon="CirclePlusFilled"
@@ -103,6 +103,18 @@
 							@setVisible="setTaskDialogVisible"
 						/>
 					</el-row>
+					<el-row>
+						<el-button
+							class="add-button"
+							color="#76553f"
+							style="border: #fd6540"
+							type="primary"
+							:icon="Calendar"
+							plain
+						>
+							<router-link to="/calendar">Calendar</router-link>
+						</el-button>
+					</el-row>
 				</el-col>
 			</el-row>
 		</div>
@@ -112,6 +124,8 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { Carousel, Pagination, Slide } from 'vue3-carousel';
+import { CirclePlusFilled, Calendar } from '@element-plus/icons-vue';
+
 import EventDialog from '@common/components/EventDialog/index.vue';
 import TaskDialog from '@common/components/TaskDialog/index.vue';
 import EventTaskBox from '../../common/components/EventTaskBox/index.vue';
@@ -381,6 +395,7 @@ export default {
 		width: 7rem;
 		height: 3rem;
 		border-radius: 1rem;
+		margin-bottom: 20px;
 	}
 }
 </style>
