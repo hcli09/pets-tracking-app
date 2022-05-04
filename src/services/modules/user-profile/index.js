@@ -9,4 +9,11 @@ export default {
             data,
         });
     },
+    getAllUsers(data) {
+        return axios({
+            url: '/user/all',
+            method: 'post',
+            data,
+        })
+    }
 };

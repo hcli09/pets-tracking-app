@@ -1,41 +1,46 @@
 <template>
-	<el-container class="dashboard-home">
-		<!-- Top bar -->
-		<el-header style="height: 8vh; padding: 0">
-			<PetsTopBar
-				:firstName="userObject.firstName"
-				:lastName="userObject.lastName"
-				:UserAvatar="userObject.image"
-			/>
-		</el-header>
+    <el-container class="dashboard-home">
+        <!-- Top bar -->
+        <el-header style="height: 8vh; padding: 0">
+            <PetsTopBar
+                :firstName="userObject.firstName"
+                :lastName="userObject.lastName"
+                :UserAvatar="userObject.image"
+            />
+        </el-header>
 
-		<el-container>
-			<!-- Side bar -->
-			<el-aside style="width: 65px">
-				<!-- <PetsSideBar :petList="userObject.petList" :uid="userObject.uid" /> -->
-				<SideMenu
-					:petList="userObject.petList"
-					:uid="userObject.uid"
-				></SideMenu>
-			</el-aside>
+        <el-container>
+            <!-- side bar -->
+            <el-aside style="width: 65px">
+                <!-- <PetsSideBar :petList="userObject.petList" :uid="userObject.uid" /> -->
+                <SideMenu
+                    :petList="userObject.petList"
+                    :uid="userObject.uid"
+                ></SideMenu>
+            </el-aside>
 
-			<!-- Main part -->
-			<el-main style="background-color: #f2f4f7">
-				<router-view></router-view>
-			</el-main>
-		</el-container>
-	</el-container>
+            <!-- Main part -->
+            <el-main style="background-color: #f2f4f7;height:92vh;overflow:scroll">
+                <!-- Dashboard, Calender and folders -->
+                <!-- folders -->
+
+                <router-view @changeUserAvater="changeAvatar" @changeUserInfo="changeInfo"></router-view>
+            </el-main>
+            <!-- end of main part for dashboard -->
+        </el-container>
+    </el-container>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
+import { onMounted } from 'vue';
+import httpServices from '@services';
 import PetsTopBar from '@common/components/TopBar/index.vue';
 import { Setting } from '@element-plus/icons-vue';
 import { Plus } from '@element-plus/icons-vue';
 import { CirclePlusFilled } from '@element-plus/icons-vue';
 import SideMenu from '../../common/components/SideMenu/index.vue';
 import { Carousel, Pagination, Slide } from 'vue3-carousel';
-import httpServices from '@services';
 import { FireBaseStorage as storage } from '@services/firebase.js';
 
 import {
@@ -48,6 +53,117 @@ import 'vue3-carousel/dist/carousel.css';
 
 const remarks = ref({ '2021-1-13': 'some tings' });
 const value = ref(new Date());
+
+const userObject = reactive(
+    {
+                uid: 10086,
+                email: 'lulalulei@gmail.com',
+                firstName: 'Bruce',
+                lastName: 'Wayne',
+                phone: null,
+                address: null,
+                image: 'https://cdn-icons-png.flaticon.com/512/1320/1320933.png',
+                petList: [
+                    {
+                        pid: 1,
+                        petName: 'Bella',
+                        petAvatar:
+                            'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
+                    },
+                    {
+                        pid: 2,
+                        petName: 'Lucy ',
+                        petAvatar:
+                            'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
+                    },
+                    {
+                        pid: 3,
+                        petName: 'Oliver',
+                        petAvatar:
+                            'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
+                    },
+                    {
+                        pid: 4,
+                        petName: 'Rocky',
+                        petAvatar:
+                            'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
+                    },
+                    {
+                        pid: 5,
+                        petName: 'Lily',
+                        petAvatar:
+                            'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
+                    },
+                    {
+                        pid: 6,
+                        petName: 'Roxy',
+                        petAvatar:
+                            'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
+                    },
+                    {
+                        pid: 7,
+                        petName: 'Emma',
+                        petAvatar:
+                            'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
+                    },
+                    {
+                        pid: 8,
+                        petName: 'Annie',
+                        petAvatar:
+                            'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
+                    },
+                    {
+                        pid: 9,
+                        petName: 'Teddy',
+                        petAvatar:
+                            'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
+                    },
+                    {
+                        pid: 10,
+                        petName: 'Cody',
+                        petAvatar:
+                            'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
+                    },
+                    {
+                        pid: 11,
+                        petName: 'Max',
+                        petAvatar:
+                            'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
+                    },
+                    {
+                        pid: 12,
+                        petName: 'Angel',
+                        petAvatar:
+                            'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
+                    },
+                ],
+                taskList: [],
+                eventList: [],
+                folderList: [
+                    { folderid: 1, folderName: 'Invoice' },
+                    { folderid: 2, folderName: 'Medication Report' },
+                    { folderid: 3, folderName: 'Vaccination History' },
+                ],
+            }
+);
+
+
+onMounted(() => {
+    // getUserProfile();
+})
+
+// const getUserProfile = async() => {
+//     const res = await httpServices.userProfile.getUserProfile({
+//         uid: '4EL4hp_qRUYMzzal_G29f',
+//     });
+//     userObject.image = res.data.data.image;
+//     userObject.firstName = res.data.data.firstName;
+//     userObject.lastName = res.data.data.lastName;
+//     userObject.petList = res.data.data.petList;
+//     console.log('res', res);
+//     console.log('firstName:', userObject.firstName);
+// }
+
 </script>
 
 <script>
@@ -134,7 +250,18 @@ export default {
 			.catch(error => {
 				console.log(error);
 			});
-	}
+	},
+    methods: {
+        changeAvatar(url) {
+            this.userObject.image = url;
+            console.log("url of the topbar's avatar changed", url);
+        },
+        changeInfo(firstName, lastName) {
+            this.userObject.firstName = firstName;
+            this.userObject.lastName = lastName;
+        },
+            
+    },
 };
 </script>
 

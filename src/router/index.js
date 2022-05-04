@@ -9,6 +9,10 @@ import EditPet from '@/components/EditPet/index.vue';
 import CreatePet from '@/components/CreatePet/index.vue';
 import Invoice from '@/components/Invoice/index.vue';
 import Calendar from '@/components/Calendar/index.vue';
+import Settings from '@/components/Settings/index.vue';
+import UserProfile from '@/components/UserProfile/index.vue';
+import EditUserProfile from '@/components/EditUserProfile/index.vue';
+import VaccinationHistory from '@/components/VaccinationHistory/index.vue';
 
 const routes = [
 	{
@@ -35,7 +39,23 @@ const routes = [
 			{
 				path: '/invoice',
 				component: Invoice
-			}
+			},
+            {
+                path: 'userprofile',
+                component: UserProfile
+            },
+            {
+                path: 'editprofile',
+                component: EditUserProfile                
+            }, 
+            {
+                path: 'settings',
+                component: Settings               
+            },
+            {
+                path: 'vaccinationhistory',
+                component: VaccinationHistory
+            }
 		]
 	},
 	{
