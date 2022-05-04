@@ -380,9 +380,7 @@ export default {
 				.deletePet({ uid: this.$data.uid, petId: this.$data.petId })
 				.then(response => {
 					// console.log(response.message)
-					this.$router.push({
-						path: '/dashboard'
-					});
+					location.href = '/dashboard';
 				});
 			const storage = getStorage();
 			// Create a reference to the file to delete
@@ -400,6 +398,23 @@ export default {
 		//avatar
 
 		beforeAvatarUpload(file) {
+			const isJPG = file.type === 'image/jpeg';
+			const isLt2M = file.size / 1024 / 1024 < 2;
+
+			if (!isJPG) {
+				this.$message.error(
+					'Upload avatar image can only be in JPG format!'
+				);
+				return false;
+			}
+
+			if (!isLt2M) {
+				this.$message.error(
+					'Upload avatar image size cannot exceed 2MB!'
+				);
+				return false;
+			}
+
 			//get current timstamp, timestamp will always be unique for each user
 			const currentDate = new Date();
 			const timestamp = currentDate.getTime();
@@ -413,21 +428,6 @@ export default {
 					this.petAvatar_temp_url = res;
 				});
 			});
-
-			const isJPG = file.type === 'image/jpeg';
-			const isLt2M = file.size / 1024 / 1024 < 2;
-
-			if (!isJPG) {
-				this.$message.error(
-					'Upload avatar image can only be in JPG format!'
-				);
-			}
-			if (!isLt2M) {
-				this.$message.error(
-					'Upload avatar image size cannot exceed 2MB!'
-				);
-			}
-			return isJPG && isLt2M;
 		}
 	}
 };

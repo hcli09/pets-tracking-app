@@ -1,34 +1,43 @@
 <template>
-    <el-container class="dashboard-home">
-        <!-- Top bar -->
-        <el-header style="height: 8vh; padding: 0">
-            <PetsTopBar
-                :firstName="userObject.firstName"
-                :lastName="userObject.lastName"
-                :UserAvatar="userObject.image"
-            />
-        </el-header>
+	<el-container class="dashboard-home">
+		<!-- Top bar -->
+		<el-header style="height: 8vh; padding: 0">
+			<PetsTopBar
+				:firstName="userObject.firstName"
+				:lastName="userObject.lastName"
+				:UserAvatar="temp_user_url"
+			/>
+		</el-header>
 
-        <el-container>
-            <!-- side bar -->
-            <el-aside style="width: 65px">
-                <!-- <PetsSideBar :petList="userObject.petList" :uid="userObject.uid" /> -->
-                <SideMenu
-                    :petList="userObject.petList"
-                    :uid="userObject.uid"
-                ></SideMenu>
-            </el-aside>
+		<el-container>
+			<!-- side bar -->
+			<el-aside style="width: 65px">
+				<!-- <PetsSideBar :petList="userObject.petList" :uid="userObject.uid" /> -->
+				<SideMenu
+					:petList="userObject.petList"
+					:uid="userObject.uid"
+				></SideMenu>
+			</el-aside>
 
-            <!-- Main part -->
-            <el-main style="background-color: #f2f4f7;height:92vh;overflow:scroll">
-                <!-- Dashboard, Calender and folders -->
-                <!-- folders -->
+			<!-- Main part -->
+			<el-main
+				style="
+					background-color: #f2f4f7;
+					height: 92vh;
+					overflow: scroll;
+				"
+			>
+				<!-- Dashboard, Calender and folders -->
+				<!-- folders -->
 
-                <router-view @changeUserAvater="getUserInfo" @changeUserInfo="getUserInfo"></router-view>
-            </el-main>
-            <!-- end of main part for dashboard -->
-        </el-container>
-    </el-container>
+				<router-view
+					@changeUserAvater="getUserInfo"
+					@changeUserInfo="getUserInfo"
+				></router-view>
+			</el-main>
+			<!-- end of main part for dashboard -->
+		</el-container>
+	</el-container>
 </template>
 
 <script setup>
@@ -45,6 +54,7 @@ import { FireBaseStorage as storage } from '@services/firebase.js';
 
 import {
 	ref as ref_upload,
+	ref as ref_user,
 	uploadBytes,
 	getDownloadURL
 } from 'firebase/storage';
@@ -54,103 +64,9 @@ import 'vue3-carousel/dist/carousel.css';
 const remarks = ref({ '2021-1-13': 'some tings' });
 const value = ref(new Date());
 
-// const userObject = reactive(
-//     {
-//                 uid: 10086,
-//                 email: 'lulalulei@gmail.com',
-//                 firstName: 'Bruce',
-//                 lastName: 'Wayne',
-//                 phone: null,
-//                 address: null,
-//                 image: 'https://cdn-icons-png.flaticon.com/512/1320/1320933.png',
-//                 petList: [
-//                     {
-//                         pid: 1,
-//                         petName: 'Bella',
-//                         petAvatar:
-//                             'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-//                     },
-//                     {
-//                         pid: 2,
-//                         petName: 'Lucy ',
-//                         petAvatar:
-//                             'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
-//                     },
-//                     {
-//                         pid: 3,
-//                         petName: 'Oliver',
-//                         petAvatar:
-//                             'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
-//                     },
-//                     {
-//                         pid: 4,
-//                         petName: 'Rocky',
-//                         petAvatar:
-//                             'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-//                     },
-//                     {
-//                         pid: 5,
-//                         petName: 'Lily',
-//                         petAvatar:
-//                             'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
-//                     },
-//                     {
-//                         pid: 6,
-//                         petName: 'Roxy',
-//                         petAvatar:
-//                             'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
-//                     },
-//                     {
-//                         pid: 7,
-//                         petName: 'Emma',
-//                         petAvatar:
-//                             'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-//                     },
-//                     {
-//                         pid: 8,
-//                         petName: 'Annie',
-//                         petAvatar:
-//                             'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
-//                     },
-//                     {
-//                         pid: 9,
-//                         petName: 'Teddy',
-//                         petAvatar:
-//                             'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-//                     },
-//                     {
-//                         pid: 10,
-//                         petName: 'Cody',
-//                         petAvatar:
-//                             'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png',
-//                     },
-//                     {
-//                         pid: 11,
-//                         petName: 'Max',
-//                         petAvatar:
-//                             'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg',
-//                     },
-//                     {
-//                         pid: 12,
-//                         petName: 'Angel',
-//                         petAvatar:
-//                             'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg',
-//                     },
-//                 ],
-//                 taskList: [],
-//                 eventList: [],
-//                 folderList: [
-//                     { folderid: 1, folderName: 'Invoice' },
-//                     { folderid: 2, folderName: 'Medication Report' },
-//                     { folderid: 3, folderName: 'Vaccination History' },
-//                 ],
-//             }
-// );
-
-
 onMounted(() => {
-    // getUserProfile();
-})
+	// getUserProfile();
+});
 
 // const getUserProfile = async() => {
 //     const res = await httpServices.userProfile.getUserProfile({
@@ -163,7 +79,6 @@ onMounted(() => {
 //     console.log('res', res);
 //     console.log('firstName:', userObject.firstName);
 // }
-
 </script>
 
 <script>
@@ -172,6 +87,7 @@ export default {
 		return {
 			uid: '4EL4hp_qRUYMzzal_G29f',
 			temp_url: '',
+			temp_user_url: '',
 			userObject: {
 				firstName: '',
 				lastName: '',
@@ -215,26 +131,19 @@ export default {
 				this.$data.userObject.firstName = userObject.firstName;
 				this.$data.userObject.lastName = userObject.lastName;
 				this.$data.userObject.petList = userObject.petList;
+				this.$data.userObject.image = userObject.image;
 
+				//get url for pet avatars
 				for (
 					var index = 0;
 					index < this.$data.userObject.petList.length;
 					index++
 				) {
-					// this.$data.userObject.petList[i].petAvatar_Url =
-					// 	this.$data.userObject.petList[i].petAvatar;
-					// console.log(this.$data.userObject.petList[index]);
-
 					const storageRef = ref_upload(
 						storage,
 						this.$data.userObject.petList[index].petAvatar
 					);
-					// to be solved
 					getDownloadURL(storageRef).then(async url => {
-						// console.log(storageRef);
-
-						// console.log(this.$data.userObject.petList[0]);
-
 						for (let i in this.$data.userObject.petList) {
 							if (
 								this.$data.userObject.petList[i].petAvatar ===
@@ -246,36 +155,45 @@ export default {
 						}
 					});
 				}
+
+				//get user avatar
+				const storageRef_user = ref_user(
+					storage,
+					this.$data.userObject.image
+				);
+				getDownloadURL(storageRef_user).then(url => {
+					console.log(url);
+					this.$data.temp_user_url = url;
+				});
 			})
 			.catch(error => {
 				console.log(error);
 			});
 	},
-    methods: {
-		// these two functions are used for temporary needs, 
+	methods: {
+		// these two functions are used for temporary needs,
 		// once the real upload image function is updated, they should be replaced
-        changeAvatar(url) {
-            this.userObject.image = url;
-            console.log("url of the topbar's avatar changed", url);
-        },
-        changeInfo(firstName, lastName) {
-            this.userObject.firstName = firstName;
-            this.userObject.lastName = lastName;
-        },
+		changeAvatar(url) {
+			this.userObject.image = url;
+			console.log("url of the topbar's avatar changed", url);
+		},
+		changeInfo(firstName, lastName) {
+			this.userObject.firstName = firstName;
+			this.userObject.lastName = lastName;
+		}
 		// this function send a request and get the most up-to-date user infomation (when user infomation is changed)
-        getUserInfo() {
-			httpServices.dashboard
-			.user_dashboard({ uid: this.$data.uid })
-			.then(response => {
-				let userObject = response.data.data;
-				//edit page, assign pet object to pet form
-				this.$data.userObject.firstName = userObject.firstName;
-				this.$data.userObject.lastName = userObject.lastName;
-				// update user avatar
-				
-			})
-		}    
-    },
+		// getUserInfo() {
+		// 	httpServices.dashboard
+		// 		.user_dashboard({ uid: this.$data.uid })
+		// 		.then(response => {
+		// 			let userObject = response.data.data;
+		// 			//edit page, assign pet object to pet form
+		// 			this.$data.userObject.firstName = userObject.firstName;
+		// 			this.$data.userObject.lastName = userObject.lastName;
+		// 			// update user avatar
+		// 		});
+		// }
+	}
 };
 </script>
 
