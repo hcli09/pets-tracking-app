@@ -435,7 +435,7 @@ export default {
 
 <style lang="scss">
 .petinfo-header {
-	height: 100px;
+	height: 10vh;
 	position: relative;
 	padding-left: 3vw;
 	margin-bottom: 1vh;
