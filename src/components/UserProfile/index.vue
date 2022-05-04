@@ -361,9 +361,9 @@ const beforeAvatarUpload = (rawFile) => {
     }
 
     .middle-box {
-        padding: 5vh 15vh;
+        padding: 3vh 15vh;
         margin-bottom: 1vh;
-        height: 27vh;
+        height: 30vh;        
         border-radius: 10px;
         background-color: white;
         display: flex;
