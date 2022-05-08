@@ -21,7 +21,7 @@ const routes = [
 		component: Home,
 		children: [
 			{
-				path: 'dashboard',
+				path: '',
 				component: Dashboard
 			},
 			{
@@ -40,22 +40,22 @@ const routes = [
 				path: '/invoice',
 				component: Invoice
 			},
-            {
-                path: 'userprofile',
-                component: UserProfile
-            },
-            {
-                path: 'editprofile',
-                component: EditUserProfile                
-            }, 
-            {
-                path: 'settings',
-                component: Settings               
-            },
-            {
-                path: 'vaccinationhistory',
-                component: VaccinationHistory
-            }
+			{
+				path: 'userprofile',
+				component: UserProfile
+			},
+			{
+				path: 'editprofile',
+				component: EditUserProfile
+			},
+			{
+				path: 'settings',
+				component: Settings
+			},
+			{
+				path: 'vaccinationhistory',
+				component: VaccinationHistory
+			}
 		]
 	},
 	{

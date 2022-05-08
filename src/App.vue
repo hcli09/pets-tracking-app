@@ -4,27 +4,29 @@
 </script>
 
 <template>
-    <!-- <HelloWorld msg="Hello Vue 3 + Vite" /> -->
-    <router-view></router-view>
+	<!-- <HelloWorld msg="Hello Vue 3 + Vite" /> -->
+	<router-view></router-view>
 </template>
 
 <style lang="scss">
 * {
-    margin: 0;
-    padding: 0;
-    // font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
-    //     'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	// font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+	//     'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
 }
 
 #app {
-    /* font-family: Avenir, Helvetica, Arial, sans-serif;
+	/* font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
     margin-top: 60px; */
-    font-family: 'Helvetica Neue', Helvetica, 'Hiragino Sans GB',
-        'Microsoft YaHei', Arial, sans-serif;
+	font-family: 'Helvetica Neue', Helvetica, 'Hiragino Sans GB',
+		'Microsoft YaHei', Arial, sans-serif;
+	margin: 0;
+	padding: 0;
 }
 // $--color-primary: #76553f;
 
