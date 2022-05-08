@@ -20,21 +20,17 @@
 			</el-aside>
 
 			<!-- Main part -->
-			<el-main
-				style="
-					background-color: #f2f4f7;
-					height: 92vh;
-					overflow: scroll;
-				"
-			>
-				<!-- Dashboard, Calender and folders -->
-				<!-- folders -->
+			<el-scrollbar height="92vh" class="main-scroll">
+				<el-main style="background-color: #f2f4f7">
+					<!-- Dashboard, Calender and folders -->
+					<!-- folders -->
 
-				<router-view
-					@changeUserAvater="getUserInfo"
-					@changeUserInfo="getUserInfo"
-				></router-view>
-			</el-main>
+					<router-view
+						@changeUserAvater="getUserInfo"
+						@changeUserInfo="getUserInfo"
+					></router-view>
+				</el-main>
+			</el-scrollbar>
 			<!-- end of main part for dashboard -->
 		</el-container>
 	</el-container>
@@ -198,6 +194,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// .main-scroll :deep(.el-scrollbar__view:nth-of-type(1)) {
+// 	width: calc(100vw - 75px);
+// }
 .dashboard-home {
 	position: absolute;
 	top: 0px;
@@ -207,6 +206,7 @@ export default {
 }
 
 .el-main {
+	width: calc(100vw - 75px);
 	padding: 20px 25px;
 }
 

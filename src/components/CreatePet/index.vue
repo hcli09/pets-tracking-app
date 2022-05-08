@@ -439,7 +439,7 @@ export default {
 }
 
 .el-input__inner {
-	box-shadow: 0 0 0 1px #76553f inset;
+	/* box-shadow: 0 0 0 1px #76553f inset; */
 	font-family: Trebuchet MS;
 	color: #76553f;
 	font-size: medium;
