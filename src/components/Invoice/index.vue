@@ -19,10 +19,13 @@
 		</el-tabs>
 
 		<!-- add new document pop up window -->
-		<el-radio-group style="position: absolute; right: 10px; top: 3px"
-			><el-radio-button @click="dialogFormVisible = true" label="Add"
-				><el-icon><Plus /></el-icon></el-radio-button
-		></el-radio-group>
+
+		<el-button
+			@click="dialogFormVisible = true"
+			label="Add"
+			style="position: absolute; right: 10px; top: 3px; color: #76553f"
+			><el-icon><Plus /></el-icon
+		></el-button>
 		<el-dialog
 			width="600px"
 			title="Add Document"
@@ -135,31 +138,11 @@ export default {
 			}
 		};
 	},
-	methods: {
-		filterTag(value, row) {
-			return row.tag === value;
-		},
-		filterHandler(value, row, column) {
-			const property = column['property'];
-			return row[property] === value;
-		},
-		handleEdit(index, row) {
-			console.log(index, row);
-		},
-		handleDelete(index, row) {
-			console.log(index, row);
-		},
-		handleView(index, row) {
-			console.log(index, row);
-		},
-		handlePreview(file) {
-			console.log(file);
-		}
-	}
+	methods: {}
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .record-header {
 	height: 70px;
 	position: relative;
@@ -216,7 +199,8 @@ export default {
 		padding-top: 0;
 		padding-right: 35px;
 	}
+	.el-tabs__nav-scroll {
+		background-color: #f1eeec;
+	}
 }
 </style>
-
-<style></style>

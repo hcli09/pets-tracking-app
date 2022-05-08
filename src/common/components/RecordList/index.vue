@@ -1,16 +1,23 @@
 <template>
-	<el-table
-		row-key="date"
-		ref="filterTable"
-		:data="tableData"
-		class="folder-list"
-	>
-		<!-- Document title -->
-		<el-table-column prop="documentTitle" align="center" label="Title">
-		</el-table-column>
+	<div class="record-box">
+		<el-table
+			row-key="date"
+			ref="filterTable"
+			:data="tableData"
+			class="folder-list"
+		>
+			<!-- Document title -->
+			<el-table-column
+				prop="documentTitle"
+				align="center"
+				label="Title"
+				sortable
+				column-key="documentTitle"
+			>
+			</el-table-column>
 
-		<!-- pet Name -->
-		<el-table-column
+			<!-- pet Name -->
+			<!-- <el-table-column
 			prop="petName"
 			label="Pet"
 			align="center"
@@ -24,47 +31,88 @@
 			<template #default="scope">
 				<el-tag disable-transitions>{{ scope.row.tag }}</el-tag>
 			</template>
-		</el-table-column>
+		</el-table-column> -->
+			<el-table-column
+				prop="petName"
+				label="Pet"
+				align="center"
+				sortable
+				column-key="Pet"
+			>
+			</el-table-column>
 
-		<!-- Date -->
-		<el-table-column
-			prop="date"
-			label="Date"
-			sortable
-			align="center"
-			column-key="date"
-		>
-		</el-table-column>
+			<!-- Date -->
+			<el-table-column
+				prop="date"
+				label="Date"
+				sortable
+				align="center"
+				column-key="date"
+			>
+			</el-table-column>
 
-		<el-table-column label="Operations" align="center">
-			<template #default="scope">
-				<el-button
-					size="small"
-					@click="handleView(scope.$index, scope.row)"
-					style="background: #f1eeec"
-					>View</el-button
+			<!-- Operations -->
+			<el-table-column label="Operations" align="center">
+				<template #default="scope">
+					<el-button
+						size="small"
+						@click="handleView(scope.$index, scope.row)"
+						style="background: #f1eeec"
+						>View</el-button
+					>
+					<el-button
+						size="small"
+						@click="handleEdit(scope.$index, scope.row)"
+						style="background: #f1eeec"
+						>Edit</el-button
+					>
+					<el-button
+						size="small"
+						@click="handleDelete(scope.$index, scope.row)"
+						style="background: #f1eeec"
+						>Delete</el-button
+					>
+				</template>
+			</el-table-column>
+		</el-table>
+
+		<div class="right-filter">
+			<div class="datepicker">
+				<p>Date Filter</p>
+				<el-date-picker
+					v-model="value1"
+					type="daterange"
+					range-separator="to"
+					start-placeholder="Start"
+					end-placeholder="End"
+					align="center"
+					size="mini"
 				>
-				<el-button
-					size="small"
-					@click="handleEdit(scope.$index, scope.row)"
-					style="background: #f1eeec"
-					>Edit</el-button
-				>
-				<el-button
-					size="small"
-					@click="handleDelete(scope.$index, scope.row)"
-					style="background: #f1eeec"
-					>Delete</el-button
-				>
-			</template>
-		</el-table-column>
-	</el-table>
+				</el-date-picker>
+			</div>
+
+			<div class="pet-filter">
+				<p>Pet Filter</p>
+				<el-select v-model="value" placeholder="Select Pet">
+					<el-option
+						v-for="item in options"
+						:key="item.value"
+						:label="item.label"
+						:value="item.value"
+					>
+					</el-option>
+				</el-select>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
 export default {
 	data() {
 		return {
+			options: '',
+			value1: '',
 			tableData: [
 				{
 					date: '2016-05-02',
@@ -126,64 +174,68 @@ export default {
 </script>
 
 <style lang="scss">
-.Record-content {
-	background-color: white;
-	border-radius: 1rem;
-	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+.record-box {
+	display: flex;
+	justify-content: space-between;
+}
+.el-tabs__content {
+	height: 65vh;
+}
+.folder-list {
+	margin: 0 2vw 1vw 3vw;
+	text-align: center;
+	display: flex;
+	justify-content: space-around;
 
-	.el-tabs__content {
-		height: 65vh;
+	.el-button > span {
+		color: #76553f;
+		font-style: Trebuchet MS;
 	}
 
-	.buttons {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		// border-bottom: #f2f2f2 solid;
-		padding: 2vw 0 1vw 0;
-		margin: 0 3vw;
+	.cell {
+		color: #76553f;
+		font-family: 'Trebuchet MS';
+	}
+}
 
-		.document-dialog-datepet {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
-		.document-dialog-upload {
-			text-align: center;
-		}
-
-		.el-form-item__label {
+.right-filter {
+	.datepicker {
+		margin-top: 8px;
+		p {
 			color: #76553f;
-			text-align: justify;
-			margin-right: 1px;
-			font-size: medium;
+			margin: 0 2px;
+			font-family: 'Trebuchet MS';
+			font-size: 14px;
+			font-weight: bold;
 		}
+		.el-range-editor {
+			width: 200px;
+			margin-top: 5px;
+			padding-right: 1px;
 
-		.el-dialog__body {
-			margin: 0 1vw;
-			padding-bottom: 0;
-		}
-
-		.el-dialog__header {
-			background-color: #f1eeec;
-			margin-right: 0;
-			.el-dialog__title {
-				color: #76553f;
-				text-align: justify;
-
-				font-size: medium;
+			.el-range-input {
+				font-size: small;
 			}
 		}
-		.el-dialog__footer {
-			padding-top: 0;
-			padding-right: 35px;
+		.el-range-separator {
+			color: #76553f;
 		}
 	}
 
-	.folder-list {
-		width: 85vw;
-		margin: 0 2vw 1vw 3vw;
-		text-align: center;
+	.pet-filter {
+		margin-top: 15px;
+		p {
+			color: #76553f;
+			margin: 0 2px;
+			font-family: 'Trebuchet MS';
+			font-size: 14px;
+			font-weight: bold;
+		}
+		.el-input__inner {
+			margin-top: 5px;
+			width: 200px;
+			font-size: small;
+		}
 	}
 }
 </style>

@@ -62,16 +62,33 @@
 				</el-col>
 			</el-scrollbar>
 		</div>
-		<div class="filter-order">
-			<p>Pet</p>
-			<el-checkbox-group v-model="checkList">
-				<el-checkbox style="display: block" label="Lucy"></el-checkbox>
-				<el-checkbox
-					style="display: block"
-					label="Oliver"
-				></el-checkbox>
-				<el-checkbox style="display: block" label="Bella"></el-checkbox>
-			</el-checkbox-group>
+		<div class="right-filter">
+			<div class="datepicker">
+				<p>Date Filter</p>
+				<el-date-picker
+					v-model="value1"
+					type="daterange"
+					range-separator="to"
+					start-placeholder="Start"
+					end-placeholder="End"
+					align="center"
+					size="mini"
+				>
+				</el-date-picker>
+			</div>
+
+			<div class="pet-filter">
+				<p>Pet Filter</p>
+				<el-select v-model="value" placeholder="Select Pet">
+					<el-option
+						v-for="item in options"
+						:key="item.value"
+						:label="item.label"
+						:value="item.value"
+					>
+					</el-option>
+				</el-select>
+			</div>
 		</div>
 	</div>
 </template>
@@ -145,30 +162,13 @@ export default {
 	display: flex;
 	justify-content: space-evenly;
 	text-align: top;
-
-	.el-tabs__content {
-		height: 65vh;
-	}
-
 	.folder-grid {
 		width: 80vw;
 		margin: 0 0 1vw 3vw;
 		text-align: center;
 	}
-
-	.filter-order {
-		padding-left: 0;
-		margin-top: 1.5vw;
-
-		p {
-			margin-bottom: 1vw;
-			font-family: Trebuchet MS;
-			color: #76553f;
-		}
-		.el-checkbox__label {
-			font-family: Trebuchet MS;
-			color: #76553f;
-		}
+	.el-tabs__content {
+		height: 65vh;
 	}
 }
 
@@ -182,6 +182,47 @@ export default {
 		font-size: 0.8vw;
 		font-family: Trebuchet MS;
 		color: #76553f;
+	}
+}
+
+.right-filter {
+	.datepicker {
+		margin-top: 8px;
+		p {
+			color: #76553f;
+			margin: 0 2px;
+			font-family: 'Trebuchet MS';
+			font-size: 14px;
+			font-weight: bold;
+		}
+		.el-range-editor {
+			width: 200px;
+			margin-top: 5px;
+			padding-right: 1px;
+
+			.el-range-input {
+				font-size: small;
+			}
+		}
+		.el-range-separator {
+			color: #76553f;
+		}
+	}
+
+	.pet-filter {
+		margin-top: 15px;
+		p {
+			color: #76553f;
+			margin: 0 2px;
+			font-family: 'Trebuchet MS';
+			font-size: 14px;
+			font-weight: bold;
+		}
+		.el-input__inner {
+			margin-top: 5px;
+			width: 200px;
+			font-size: small;
+		}
 	}
 }
 </style>
