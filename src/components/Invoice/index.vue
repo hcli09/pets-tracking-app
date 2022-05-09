@@ -162,7 +162,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .record-header {
 	height: 70px;
 	position: relative;

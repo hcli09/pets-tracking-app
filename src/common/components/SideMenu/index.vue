@@ -19,7 +19,7 @@ export default {
 					icon: {
 						element: 'img',
 						class: '',
-						attributes: { src: `${pet.petAvatar_Url}` }
+						attributes: { src: `${pet.petAvatar}` }
 					}
 				};
 			})
@@ -61,7 +61,7 @@ export default {
 					icon: {
 						element: 'img',
 						class: '',
-						attributes: { src: `${pet.petAvatar_Url}` }
+						attributes: { src: `${pet.petAvatar}` }
 					}
 				};
 			});

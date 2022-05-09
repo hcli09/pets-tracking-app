@@ -320,7 +320,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .folder-content {
 	display: flex;
 	justify-content: space-evenly;

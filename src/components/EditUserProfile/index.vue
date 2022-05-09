@@ -4,8 +4,8 @@
 
 		<div class="avatar-container">
 			<img
-				v-if="ruleForm.imageURL"
-				:src="ruleForm.imageURL"
+				v-if="ruleForm.image"
+				:src="ruleForm.image"
 				alt="upload"
 				class="avatar-image"
 			/>
@@ -120,7 +120,6 @@ import { CameraFilled } from '@element-plus/icons-vue';
 // })
 
 const uid = '4EL4hp_qRUYMzzal_G29f';
-const imageURL = ref('');
 const formSize = ref('default');
 const ruleFormRef = ref();
 const ruleForm = reactive({
@@ -129,8 +128,7 @@ const ruleForm = reactive({
 	phone: '',
 	location: '',
 	petSitterStatus: '',
-	image: '',
-	imageURL: ''
+	image: ''
 });
 
 const value = ref('');
@@ -204,18 +202,12 @@ const getUserProfile = async () => {
 	ruleForm.email = res.data.data.email;
 	ruleForm.location = res.data.data.address;
 	ruleForm.petSitterStatus = res.data.data.isPetSitter ? 'Yes' : 'No';
-
-	// imageURL.value = res.data.data.image;
+	//get user avatar URL
+	ruleForm.image = res.data.data.image;
 
 	// console.log('res', res);
 	// console.log('form', ruleForm.value);
 	// console.log('form first name', ruleForm.firstName);
-	//get user avatar URL
-	ruleForm.image = res.data.data.image;
-	const storageRef = ref_get(storage, ruleForm.image);
-	getDownloadURL(storageRef).then(url => {
-		ruleForm.imageURL = url;
-	});
 };
 
 const editUserProfile = async () => {
@@ -276,26 +268,29 @@ const beforeAvatarUpload = rawFile => {
 	//save user image and get url of the userimage just uploaded
 	const currentDate = new Date();
 	const timestamp = currentDate.getTime();
-	ruleForm.image = uid + '_userAvatar' + '_' + timestamp;
-	const storageRef_user = ref_upload(storage, ruleForm.image);
+
+	const storageRef_user = ref_upload(
+		storage,
+		uid + '_userAvatar' + '_' + timestamp
+	);
 
 	//save user image to firebase
 	uploadBytes(storageRef_user, rawFile).then(() => {
 		//get url from firebase
-		getDownloadURL(storageRef_user).then(res => {
-			console.log(res);
-			ruleForm.imageURL = res;
+		getDownloadURL(storageRef_user).then(url => {
+			ruleForm.image = url;
+			console.log('haha', ruleForm.image);
+			//post user avatar to BE
+			httpServices.userProfile
+				.postUserImage({
+					uid: uid,
+					image: ruleForm.image
+				})
+				.then(response => {
+					console.log(response);
+					location.reload();
+				});
 		});
-		//post user avatar to BE
-		httpServices.userProfile
-			.postUserImage({
-				uid: uid,
-				image: ruleForm.image
-			})
-			.then(response => {
-				console.log(response);
-				location.reload();
-			});
 	});
 };
 
