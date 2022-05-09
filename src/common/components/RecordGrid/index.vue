@@ -2,11 +2,16 @@
 	<div class="folder-content">
 		<div class="folder-grid">
 			<el-scrollbar height="60vh">
-				<el-col v-for="o in 20" :key="o">
+				<el-col
+					:gutter="24"
+					v-for="(record, index) in this.$data.displayedRecordList"
+					:key="index"
+				>
+					<!-- one document -->
 					<el-card
 						style="
-							width: 11vw;
-							height: 12vw;
+							width: 250px;
+							height: 255px;
 							margin-right: 2vw;
 							margin-top: 1vw;
 							position: relative;
@@ -15,7 +20,8 @@
 						<div
 							style="position: absolute; top: 0.5vw; right: 0.5vw"
 						>
-							<el-dropdown>
+							<!-- drop down list -->
+							<el-dropdown trigger="click">
 								<span class="el-dropdown-link">
 									<el-button size="small" type="primary" plain
 										><el-icon><More /></el-icon
@@ -35,18 +41,23 @@
 									</el-dropdown-menu>
 								</template>
 							</el-dropdown>
+							<!-- end of dropdown list -->
 						</div>
 
+						<!-- pdf image -->
 						<img
-							style="width: 6vw; height: 8vw"
+							style="width: 6vw; height: 8vw; margin-left: 1.5vw"
 							src="https://api.iconify.design/bxs/file-pdf.svg?color=%2376553f"
 							class="image"
 						/>
 						<div class="card-bottom">
 							<div style="margin-top: 0.3vw">
-								<p>Invoice 1</p>
-								<p>Mar 30, 2020</p>
+								<b>{{ record.documentTitle }}</b>
+								<p>{{ record.date }}</p>
+								<p>{{ record.petName }}</p>
 							</div>
+
+							<!-- pet avatar -->
 
 							<img
 								style="
@@ -63,32 +74,48 @@
 			</el-scrollbar>
 		</div>
 		<div class="right-filter">
-			<div class="datepicker">
-				<p>Date Filter</p>
-				<el-date-picker
-					v-model="value1"
-					type="daterange"
-					range-separator="to"
-					start-placeholder="Start"
-					end-placeholder="End"
-					align="center"
-					size="mini"
-				>
-				</el-date-picker>
-			</div>
-
-			<div class="pet-filter">
-				<p>Pet Filter</p>
-				<el-select v-model="value" placeholder="Select Pet">
-					<el-option
-						v-for="item in options"
-						:key="item.value"
-						:label="item.label"
-						:value="item.value"
+			<el-form>
+				<el-form-item class="datepicker">
+					<p>Date Filter</p>
+					<el-date-picker
+						v-model="dateRange"
+						type="daterange"
+						range-separator="to"
+						start-placeholder="Start"
+						end-placeholder="End"
+						align="center"
+						size="mini"
+						@change="applyFilter"
 					>
-					</el-option>
-				</el-select>
-			</div>
+					</el-date-picker>
+				</el-form-item>
+
+				<div class="pet-filter">
+					<p>Pet Filter</p>
+					<el-select
+						v-model="petSelected"
+						placeholder="Select Pet"
+						@change="applyFilter"
+					>
+						<el-option
+							v-for="pet in this.$data.petList"
+							:key="pet.petId"
+							:label="pet.petName"
+							:value="pet.petName"
+						>
+						</el-option>
+					</el-select>
+				</div>
+
+				<el-button
+					style="margin-top: 1vw"
+					type="primary"
+					size="mini"
+					plain
+					@click="resetRecordList"
+					>Reset</el-button
+				>
+			</el-form>
 		</div>
 	</div>
 </template>
@@ -97,32 +124,45 @@
 export default {
 	data() {
 		return {
-			tableData: [
+			recordList: [
 				{
-					date: '2016-05-02',
+					date: '2022-05-02',
 					petName: 'Lucy',
 					documentTitle: 'Medical Exam Invoice',
 					tag: 'Lucy'
 				},
 				{
-					date: '2016-05-04',
+					date: '2022-05-04',
 					petName: 'Bella',
-					documentTitle: 'Snack invoice',
+					documentTitle: 'Vaccination',
 					tag: 'Bella'
 				},
 				{
-					date: '2016-05-01',
+					date: '2022-05-01',
 					petName: 'Lucy',
-					documentTitle: 'Vaccination',
+					documentTitle: 'Checkup invoice',
 					tag: 'Lucy'
 				},
 				{
-					date: '2016-05-03',
+					date: '2022-05-03',
 					petName: 'Bella',
-					documentTitle: 'Medicine Invoice',
+					documentTitle: 'Invoice',
 					tag: 'Bella'
 				}
 			],
+			petList: [
+				{
+					petID: 'cxgfchfc',
+					petName: 'Lucy'
+				},
+				{
+					petID: 'ibhbikbh',
+					petName: 'Bella'
+				}
+			],
+			dateRange: '',
+			petSelected: '',
+			displayedRecordList: [],
 			dialogTableVisible: false,
 			dialogFormVisible: false,
 			documentForm: {
@@ -132,6 +172,10 @@ export default {
 				documentName: ''
 			}
 		};
+	},
+	created: function () {
+		// TODO: get recordList from API
+		this.$data.displayedRecordList = this.$data.recordList.slice();
 	},
 	methods: {
 		filterTag(value, row) {
@@ -152,6 +196,87 @@ export default {
 		},
 		handlePreview(file) {
 			console.log(file);
+		},
+		//filter date
+		applyFilter() {
+			this.$data.displayedRecordList = this.$data.recordList.slice();
+			console.log(this.$data.dateRange);
+			console.log(this.$data.petSelected);
+
+			if (this.$data.dateRange !== '' && this.$data.petSelected === '') {
+				let startDate = new Date(
+					this.$data.dateRange[0].toISOString().split('T')[0]
+				);
+				let endDate = new Date(
+					this.$data.dateRange[1].toISOString().split('T')[0]
+				);
+
+				for (let record of this.$data.recordList) {
+					let recordDate = new Date(record.date);
+					if (
+						recordDate.getTime() < startDate.getTime() ||
+						recordDate.getTime() > endDate.getTime()
+					) {
+						var index =
+							this.$data.displayedRecordList.indexOf(record);
+						if (index !== -1) {
+							this.$data.displayedRecordList.splice(index, 1);
+						}
+					}
+				}
+			}
+
+			if (this.$data.petSelected !== '' && this.$data.dateRange === '') {
+				for (let record of this.$data.recordList) {
+					if (record.petName != this.$data.petSelected) {
+						var index =
+							this.$data.displayedRecordList.indexOf(record);
+						if (index !== -1) {
+							this.$data.displayedRecordList.splice(index, 1);
+						}
+					}
+				}
+			}
+
+			if (this.$data.dateRange !== '' && this.$data.petSelected !== '') {
+				let startDate = new Date(
+					this.$data.dateRange[0].toISOString().split('T')[0]
+				);
+				let endDate = new Date(
+					this.$data.dateRange[1].toISOString().split('T')[0]
+				);
+
+				for (let record of this.$data.recordList) {
+					let recordDate = new Date(record.date);
+					console.log(record);
+					if (
+						recordDate.getTime() < startDate.getTime() ||
+						recordDate.getTime() > endDate.getTime() ||
+						record.petName !== this.$data.petSelected
+					) {
+						var index =
+							this.$data.displayedRecordList.indexOf(record);
+						if (index !== -1) {
+							this.$data.displayedRecordList.splice(index, 1);
+						}
+					}
+				}
+			}
+		},
+		// //filter Pet
+		// filterPet() {
+		// 	this.$data.displayedRecordList = [];
+		// 	for (let record of this.$data.recordList) {
+		// 		if (record.petName == this.$data.petSelected) {
+		// 			this.$data.displayedRecordList.push(record);
+		// 		}
+		// 	}
+		// },
+
+		resetRecordList() {
+			this.$data.displayedRecordList = this.$data.recordList.slice();
+			this.$data.dateRange = '';
+			this.$data.petSelected = '';
 		}
 	}
 };
@@ -178,8 +303,13 @@ export default {
 	align-items: center;
 	text-align: left;
 
+	b {
+		font-size: medium;
+		font-family: Trebuchet MS;
+		color: #76553f;
+	}
 	p {
-		font-size: 0.8vw;
+		font-size: small;
 		font-family: Trebuchet MS;
 		color: #76553f;
 	}

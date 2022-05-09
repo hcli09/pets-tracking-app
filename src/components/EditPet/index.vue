@@ -529,19 +529,3 @@ export default {
 	}
 }
 </style>
-
-<style>
-.el-form-item__label {
-	color: #76553f;
-	text-align: justify;
-	margin-right: 20px;
-	font-size: medium;
-}
-
-.el-input__inner {
-	/* box-shadow: 0 0 0 1px #76553f inset; */
-	font-family: Trebuchet MS;
-	color: #76553f;
-	font-size: medium;
-}
-</style>

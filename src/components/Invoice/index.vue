@@ -202,5 +202,8 @@ export default {
 	.el-tabs__nav-scroll {
 		background-color: #f1eeec;
 	}
+	.el-tabs__content {
+		height: 65vh;
+	}
 }
 </style>

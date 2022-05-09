@@ -1,107 +1,109 @@
 <template>
-	<div class="record-box">
-		<el-table
-			row-key="date"
-			ref="filterTable"
-			:data="tableData"
-			class="folder-list"
-		>
-			<!-- Document title -->
-			<el-table-column
-				prop="documentTitle"
-				align="center"
-				label="Title"
-				sortable
-				column-key="documentTitle"
+	<div class="recordlist">
+		<div class="record-box">
+			<el-table
+				row-key="date"
+				ref="filterTable"
+				:data="displayedRecordList"
+				class="folder-list"
 			>
-			</el-table-column>
-
-			<!-- pet Name -->
-			<!-- <el-table-column
-			prop="petName"
-			label="Pet"
-			align="center"
-			:filters="[
-				{ text: 'Lucy', value: 'Lucy' },
-				{ text: 'Bella', value: 'Bella' }
-			]"
-			:filter-method="filterTag"
-			filter-placement="bottom-end"
-		>
-			<template #default="scope">
-				<el-tag disable-transitions>{{ scope.row.tag }}</el-tag>
-			</template>
-		</el-table-column> -->
-			<el-table-column
-				prop="petName"
-				label="Pet"
-				align="center"
-				sortable
-				column-key="Pet"
-			>
-			</el-table-column>
-
-			<!-- Date -->
-			<el-table-column
-				prop="date"
-				label="Date"
-				sortable
-				align="center"
-				column-key="date"
-			>
-			</el-table-column>
-
-			<!-- Operations -->
-			<el-table-column label="Operations" align="center">
-				<template #default="scope">
-					<el-button
-						size="small"
-						@click="handleView(scope.$index, scope.row)"
-						style="background: #f1eeec"
-						>View</el-button
-					>
-					<el-button
-						size="small"
-						@click="handleEdit(scope.$index, scope.row)"
-						style="background: #f1eeec"
-						>Edit</el-button
-					>
-					<el-button
-						size="small"
-						@click="handleDelete(scope.$index, scope.row)"
-						style="background: #f1eeec"
-						>Delete</el-button
-					>
-				</template>
-			</el-table-column>
-		</el-table>
-
-		<div class="right-filter">
-			<div class="datepicker">
-				<p>Date Filter</p>
-				<el-date-picker
-					v-model="value1"
-					type="daterange"
-					range-separator="to"
-					start-placeholder="Start"
-					end-placeholder="End"
+				<!-- Document title -->
+				<el-table-column
+					prop="documentTitle"
 					align="center"
-					size="mini"
+					label="Title"
+					sortable
+					column-key="documentTitle"
 				>
-				</el-date-picker>
-			</div>
+				</el-table-column>
 
-			<div class="pet-filter">
-				<p>Pet Filter</p>
-				<el-select v-model="value" placeholder="Select Pet">
-					<el-option
-						v-for="item in options"
-						:key="item.value"
-						:label="item.label"
-						:value="item.value"
+				<el-table-column
+					prop="petName"
+					label="Pet"
+					align="center"
+					sortable
+					column-key="Pet"
+				>
+				</el-table-column>
+
+				<!-- Date -->
+				<el-table-column
+					prop="date"
+					label="Date"
+					sortable
+					align="center"
+					column-key="date"
+				>
+				</el-table-column>
+
+				<!-- Operations -->
+				<el-table-column label="Operations" align="center">
+					<template #default="scope">
+						<el-button
+							size="small"
+							@click="handleView(scope.$index, scope.row)"
+							style="background: #f1eeec"
+							>View</el-button
+						>
+						<el-button
+							size="small"
+							@click="handleEdit(scope.$index, scope.row)"
+							style="background: #f1eeec"
+							>Edit</el-button
+						>
+						<el-button
+							size="small"
+							@click="handleDelete(scope.$index, scope.row)"
+							style="background: #f1eeec"
+							>Delete</el-button
+						>
+					</template>
+				</el-table-column>
+			</el-table>
+
+			<div class="right-filter">
+				<el-form>
+					<el-form-item class="datepicker">
+						<p>Date Filter</p>
+						<el-date-picker
+							v-model="dateRange"
+							type="daterange"
+							range-separator="to"
+							start-placeholder="Start"
+							end-placeholder="End"
+							align="center"
+							size="mini"
+							@change="applyFilter"
+						>
+						</el-date-picker>
+					</el-form-item>
+
+					<div class="pet-filter">
+						<p>Pet Filter</p>
+						<el-select
+							v-model="petSelected"
+							placeholder="Select Pet"
+							@change="applyFilter"
+						>
+							<el-option
+								v-for="pet in this.$data.petList"
+								:key="pet.petId"
+								:label="pet.petName"
+								:value="pet.petName"
+							>
+							</el-option>
+						</el-select>
+					</div>
+
+					<el-button
+						style="margin-top: 1vw"
+						type="primary"
+						size="mini"
+						plain
+						@click="resetRecordList"
+						>Reset</el-button
 					>
-					</el-option>
-				</el-select>
+				</el-form>
 			</div>
 		</div>
 	</div>
@@ -111,34 +113,45 @@
 export default {
 	data() {
 		return {
-			options: '',
-			value1: '',
-			tableData: [
+			petList: [
 				{
-					date: '2016-05-02',
+					petID: 'cxgfchfc',
+					petName: 'Lucy'
+				},
+				{
+					petID: 'ibhbikbh',
+					petName: 'Bella'
+				}
+			],
+			dateRange: '',
+			petSelected: '',
+			recordList: [
+				{
+					date: '2022-05-02',
 					petName: 'Lucy',
 					documentTitle: 'Medical Exam Invoice',
 					tag: 'Lucy'
 				},
 				{
-					date: '2016-05-04',
+					date: '2022-05-04',
 					petName: 'Bella',
 					documentTitle: 'Vaccination',
 					tag: 'Bella'
 				},
 				{
-					date: '2016-05-01',
+					date: '2022-05-01',
 					petName: 'Lucy',
 					documentTitle: 'Checkup invoice',
 					tag: 'Lucy'
 				},
 				{
-					date: '2016-05-03',
+					date: '2022-05-03',
 					petName: 'Bella',
 					documentTitle: 'Invoice',
 					tag: 'Bella'
 				}
 			],
+			displayedRecordList: [],
 			dialogTableVisible: false,
 			dialogFormVisible: false,
 			documentForm: {
@@ -148,6 +161,10 @@ export default {
 				documentName: ''
 			}
 		};
+	},
+	created: function () {
+		// TODO: get recordList from API
+		this.$data.displayedRecordList = this.$data.recordList;
 	},
 	methods: {
 		filterTag(value, row) {
@@ -168,19 +185,116 @@ export default {
 		},
 		handlePreview(file) {
 			console.log(file);
+		},
+		// //filter date
+		// filterDate() {
+		// 	this.$data.displayedRecordList = [];
+		// 	let startDate = new Date(
+		// 		this.$data.dateRange[0].toISOString().split('T')[0]
+		// 	);
+		// 	let endDate = new Date(
+		// 		this.$data.dateRange[1].toISOString().split('T')[0]
+		// 	);
+
+		// 	for (let record of this.$data.recordList) {
+		// 		let recordDate = new Date(record.date);
+		// 		if (
+		// 			recordDate.getTime() >= startDate.getTime() &&
+		// 			recordDate.getTime() <= endDate.getTime()
+		// 		) {
+		// 			this.$data.displayedRecordList.push(record);
+		// 		}
+		// 	}
+		// },
+		//filter Pet
+		// //filter date
+		applyFilter() {
+			this.$data.displayedRecordList = this.$data.recordList.slice();
+			console.log(this.$data.dateRange);
+			console.log(this.$data.petSelected);
+
+			if (this.$data.dateRange !== '' && this.$data.petSelected === '') {
+				let startDate = new Date(
+					this.$data.dateRange[0].toISOString().split('T')[0]
+				);
+				let endDate = new Date(
+					this.$data.dateRange[1].toISOString().split('T')[0]
+				);
+
+				for (let record of this.$data.recordList) {
+					let recordDate = new Date(record.date);
+					if (
+						recordDate.getTime() < startDate.getTime() ||
+						recordDate.getTime() > endDate.getTime()
+					) {
+						var index =
+							this.$data.displayedRecordList.indexOf(record);
+						if (index !== -1) {
+							this.$data.displayedRecordList.splice(index, 1);
+						}
+					}
+				}
+			}
+
+			if (this.$data.petSelected !== '' && this.$data.dateRange === '') {
+				for (let record of this.$data.recordList) {
+					if (record.petName != this.$data.petSelected) {
+						var index =
+							this.$data.displayedRecordList.indexOf(record);
+						if (index !== -1) {
+							this.$data.displayedRecordList.splice(index, 1);
+						}
+					}
+				}
+			}
+
+			if (this.$data.dateRange !== '' && this.$data.petSelected !== '') {
+				let startDate = new Date(
+					this.$data.dateRange[0].toISOString().split('T')[0]
+				);
+				let endDate = new Date(
+					this.$data.dateRange[1].toISOString().split('T')[0]
+				);
+
+				for (let record of this.$data.recordList) {
+					let recordDate = new Date(record.date);
+					console.log(record);
+					if (
+						recordDate.getTime() < startDate.getTime() ||
+						recordDate.getTime() > endDate.getTime() ||
+						record.petName !== this.$data.petSelected
+					) {
+						var index =
+							this.$data.displayedRecordList.indexOf(record);
+						if (index !== -1) {
+							this.$data.displayedRecordList.splice(index, 1);
+						}
+					}
+				}
+			}
+		},
+		// //filter Pet
+		// filterPet() {
+		// 	this.$data.displayedReco
+		resetRecordList() {
+			this.$data.displayedRecordList = this.$data.recordList;
+			this.$data.dateRange = '';
+			this.$data.petSelected = '';
 		}
 	}
 };
 </script>
 
 <style lang="scss">
+.el-tabs__content {
+	height: 65vh;
+}
+
 .record-box {
 	display: flex;
 	justify-content: space-between;
 }
-.el-tabs__content {
-	height: 65vh;
-}
+
 .folder-list {
 	margin: 0 2vw 1vw 3vw;
 	text-align: center;
