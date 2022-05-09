@@ -130,25 +130,33 @@ export default {
 					date: '2022-05-02',
 					petName: 'Lucy',
 					documentTitle: 'Medical Exam Invoice',
-					tag: 'Lucy'
+					tag: 'Lucy',
+					fileDir:
+						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/invoiceExample1.pdf?alt=media&token=303348a1-3b88-4c43-a6b8-4f5d5e49dcba'
 				},
 				{
 					date: '2022-05-04',
 					petName: 'Bella',
 					documentTitle: 'Vaccination',
-					tag: 'Bella'
+					tag: 'Bella',
+					fileDir:
+						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/git-cheat-sheet-education.pdf?alt=media&token=23ca76e2-d3fe-4d67-8790-a6e3a067de6f'
 				},
 				{
 					date: '2022-05-01',
 					petName: 'Lucy',
 					documentTitle: 'Checkup invoice',
-					tag: 'Lucy'
+					tag: 'Lucy',
+					fileDir:
+						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/git-cheat-sheet-education.pdf?alt=media&token=23ca76e2-d3fe-4d67-8790-a6e3a067de6f'
 				},
 				{
 					date: '2022-05-03',
 					petName: 'Bella',
 					documentTitle: 'Invoice',
-					tag: 'Bella'
+					tag: 'Bella',
+					fileDir:
+						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/git-cheat-sheet-education.pdf?alt=media&token=23ca76e2-d3fe-4d67-8790-a6e3a067de6f'
 				}
 			],
 			displayedRecordList: [],

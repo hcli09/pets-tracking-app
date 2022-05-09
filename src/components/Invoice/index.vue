@@ -23,7 +23,9 @@
 		<el-button
 			@click="dialogFormVisible = true"
 			label="Add"
-			style="position: absolute; right: 10px; top: 3px; color: #76553f"
+			type="primary"
+			plain
+			style="position: absolute; right: 10px; top: 3px"
 			><el-icon><Plus /></el-icon
 		></el-button>
 		<el-dialog
@@ -102,30 +104,48 @@ export default {
 	data() {
 		return {
 			activeName: 'first',
-			tableData: [
+			recordList: [
 				{
-					date: '2016-05-02',
+					date: '2022-05-02',
 					petName: 'Lucy',
 					documentTitle: 'Medical Exam Invoice',
-					tag: 'Lucy'
+					tag: 'Lucy',
+					fileDir:
+						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/invoiceExample1.pdf?alt=media&token=303348a1-3b88-4c43-a6b8-4f5d5e49dcba'
 				},
 				{
-					date: '2016-05-04',
+					date: '2022-05-04',
 					petName: 'Bella',
-					documentTitle: 'Snack invoice',
-					tag: 'Bella'
-				},
-				{
-					date: '2016-05-01',
-					petName: 'Lucy',
 					documentTitle: 'Vaccination',
-					tag: 'Lucy'
+					tag: 'Bella',
+					fileDir:
+						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/git-cheat-sheet-education.pdf?alt=media&token=23ca76e2-d3fe-4d67-8790-a6e3a067de6f'
 				},
 				{
-					date: '2016-05-03',
+					date: '2022-05-01',
+					petName: 'Lucy',
+					documentTitle: 'Checkup invoice',
+					tag: 'Lucy',
+					fileDir:
+						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/git-cheat-sheet-education.pdf?alt=media&token=23ca76e2-d3fe-4d67-8790-a6e3a067de6f'
+				},
+				{
+					date: '2022-05-03',
 					petName: 'Bella',
-					documentTitle: 'Medicine Invoice',
-					tag: 'Bella'
+					documentTitle: 'Invoice',
+					tag: 'Bella',
+					fileDir:
+						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/git-cheat-sheet-education.pdf?alt=media&token=23ca76e2-d3fe-4d67-8790-a6e3a067de6f'
+				}
+			],
+			petList: [
+				{
+					petID: 'cxgfchfc',
+					petName: 'Lucy'
+				},
+				{
+					petID: 'ibhbikbh',
+					petName: 'Bella'
 				}
 			],
 			dialogTableVisible: false,
@@ -142,7 +162,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .record-header {
 	height: 70px;
 	position: relative;
