@@ -51,6 +51,7 @@
 								style="width: 100px; height: 100px"
 								v-if="record.fileFormat == 'Image'"
 								:src="record.fileDir"
+								@click="handleView(record)"
 							></el-image>
 							<vue-pdf-embed
 								v-else
@@ -80,15 +81,6 @@
 		</div>
 		<div class="right-filter">
 			<el-form>
-				<!-- add new document pop up window -->
-				<el-button
-					@click="AdddialogFormVisible = true"
-					label="Add"
-					type="primary"
-					plain
-					style="margin-top: 1vw; margin-right: 0"
-					>Add New
-				</el-button>
 				<el-form-item class="datepicker">
 					<p>Date Filter</p>
 					<el-date-picker
@@ -120,15 +112,27 @@
 						</el-option>
 					</el-select>
 				</div>
-
-				<el-button
-					style="margin-top: 1vw"
-					type="primary"
-					size="mini"
-					plain
-					@click="resetRecordList"
-					>Reset Filter</el-button
-				>
+				<div class="filter_add">
+					<el-button
+						class="rihgt_buttons"
+						style="margin-top: 1vw"
+						type="primary"
+						size="mini"
+						plain
+						@click="resetRecordList"
+						>Reset Filters</el-button
+					>
+					<!-- add new document pop up window -->
+					<el-button
+						class="rihgt_buttons"
+						@click="AdddialogFormVisible = true"
+						label="Add"
+						type="primary"
+						plain
+						style="margin-top: 1vw; margin-right: 0"
+						><el-icon><Plus /></el-icon>Add New
+					</el-button>
+				</div>
 			</el-form>
 		</div>
 	</div>
@@ -216,7 +220,7 @@
 					>Cancel</el-button
 				>
 				<el-button type="primary" @click="documentDelete()"
-					>Confirm</el-button
+					>Delete</el-button
 				>
 			</span>
 		</template>
@@ -316,15 +320,15 @@ import { getStorage, ref as ref_delete, deleteObject } from 'firebase/storage';
 import VuePdfEmbed from 'vue-pdf-embed';
 
 export default {
-	props: ['petList', 'petOptions'],
+	props: ['petList', 'petOptions', 'initial_recordType', 'curr_uid'],
 	components: {
 		VuePdfEmbed
 	},
 	data() {
 		return {
-			uid: '_FENN-aEN9PIjjAMy83Hb',
+			uid: this.curr_uid,
 			recordList: [],
-			recordType: 'Invoice',
+			recordType: this.initial_recordType,
 			//filter related
 			dateRange: '',
 			petSelected: '',
@@ -343,6 +347,7 @@ export default {
 			//delete dialog related
 			deletedialogVisible: false,
 			delete_recordId: '',
+			delete_fileDir: '',
 
 			//edit dialog related
 			EditdialogFormVisible: false,
@@ -365,7 +370,10 @@ export default {
 	created: function () {
 		//get record list
 		httpServices.invoicemed
-			.getAllRecords({ uid: this.$data.uid, recordType: 'Invoice' })
+			.getAllRecords({
+				uid: this.$data.uid,
+				recordType: this.$data.recordType
+			})
 			.then(response => {
 				this.$data.recordList = response.data.data;
 				this.$data.displayedRecordList = this.$data.recordList;
@@ -475,7 +483,7 @@ export default {
 					uid: this.$data.uid,
 					newRecord: {
 						recordId: this.$data.EditdocumentForm.recordId,
-						recordType: this.$data.EditdocumentForm.recordType,
+						recordType: this.$data.recordType,
 						recordTitle: this.$data.EditdocumentForm.recordTitle,
 						date: this.$data.EditdocumentForm.date,
 						fileDir: this.$data.EditdocumentForm.fileDir,
@@ -494,6 +502,7 @@ export default {
 		handleDelete(record) {
 			this.$data.deletedialogVisible = true;
 			this.$data.delete_recordId = record.recordId;
+			this.$data.delete_fileDir = row.fileDir;
 			console.log(this.$data.delete_recordId);
 			console.log(record);
 		},
@@ -507,6 +516,20 @@ export default {
 				})
 				.then(response => {
 					console.log(response);
+					location.reload();
+					const storage = getStorage();
+					// Create a reference to the file to delete
+					const document_ref = decodeURIComponent(
+						this.$data.delete_recordId
+							.split('/')
+							.pop()
+							.split('?')[0]
+					);
+					const desertRef = ref_delete(storage, document_ref);
+					// Delete the file
+					deleteObject(desertRef).then(() => {
+						// File deleted successfully
+					});
 					location.reload();
 				})
 				.catch(error => {
@@ -648,9 +671,6 @@ export default {
 			margin-left: 1.5vw;
 		}
 	}
-	.el-tabs__content {
-		height: 65vh;
-	}
 }
 
 .card-bottom {
@@ -694,29 +714,19 @@ export default {
 
 .right-filter {
 	.datepicker {
+		width: 208px;
 		margin-top: 8px;
 		p {
 			color: #76553f;
 			margin: 0 2px;
 			font-family: 'Trebuchet MS';
-			font-size: 14px;
 			font-weight: bold;
-		}
-		.el-range-editor {
-			width: 200px;
-			margin-top: 5px;
-			padding-right: 1px;
-
-			.el-range-input {
-				font-size: small;
-			}
-		}
-		.el-range-separator {
-			color: #76553f;
+			font-size: 14px;
 		}
 	}
 
 	.pet-filter {
+		width: 208px;
 		margin-top: 15px;
 		p {
 			color: #76553f;
@@ -725,11 +735,19 @@ export default {
 			font-size: 14px;
 			font-weight: bold;
 		}
-		.el-input__inner {
-			margin-top: 5px;
-			width: 200px;
-			font-size: small;
-		}
+	}
+}
+
+.filter_add {
+	display: flex;
+	justify-content: space-evenly;
+	flex-direction: column;
+	align-items: center;
+
+	.rihgt_buttons {
+		margin-left: 0;
+		width: 100px;
+		height: 40px;
 	}
 }
 </style>

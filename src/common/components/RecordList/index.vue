@@ -9,6 +9,7 @@
 			>
 				<!-- Document title -->
 				<el-table-column
+					width="180"
 					prop="recordTitle"
 					align="center"
 					label="Title"
@@ -28,6 +29,7 @@
 
 				<!-- Date -->
 				<el-table-column
+					width="100"
 					prop="date"
 					label="Date"
 					sortable
@@ -94,24 +96,26 @@
 							</el-option>
 						</el-select>
 					</div>
-					<div>
+
+					<div class="filter_add">
 						<el-button
+							class="rihgt_buttons"
 							style="margin-top: 1vw"
 							type="primary"
-							size="mini"
 							plain
 							@click="resetRecordList"
-							>Reset</el-button
+							>Reset Filters</el-button
 						>
 						<!-- add new document pop up window -->
 						<el-button
+							class="rihgt_buttons"
 							@click="AdddialogFormVisible = true"
 							label="Add"
 							type="primary"
 							plain
 							style="margin-top: 1vw"
-							><el-icon><Plus /></el-icon
-						></el-button>
+							><el-icon><Plus /></el-icon> Add New</el-button
+						>
 					</div>
 				</el-form>
 			</div>
@@ -202,7 +206,7 @@
 					>Cancel</el-button
 				>
 				<el-button type="primary" @click="documentDelete()"
-					>Confirm</el-button
+					>Delete</el-button
 				>
 			</span>
 		</template>
@@ -297,16 +301,18 @@ import {
 	getDownloadURL
 } from 'firebase/storage';
 import { getStorage, ref as ref_delete, deleteObject } from 'firebase/storage';
+import { throttleFilter } from '@vueuse/shared';
 </script>
 
 <script>
 export default {
-	props: ['petList', 'petOptions'],
+	props: ['petList', 'petOptions', 'initial_recordType', 'curr_uid'],
+
 	data() {
 		return {
-			uid: '_FENN-aEN9PIjjAMy83Hb',
+			uid: this.curr_uid,
 			recordList: [],
-			recordType: 'Invoice',
+			recordType: this.initial_recordType,
 			//filter related
 			dateRange: '',
 			petSelected: '',
@@ -324,6 +330,7 @@ export default {
 			//delete dialog related
 			deletedialogVisible: false,
 			delete_recordId: '',
+			delete_fileDir: '',
 
 			//view pdf dialog related
 			dialogPDFVisible: false,
@@ -347,7 +354,10 @@ export default {
 	created: function () {
 		//get record list
 		httpServices.invoicemed
-			.getAllRecords({ uid: this.$data.uid, recordType: 'Invoice' })
+			.getAllRecords({
+				uid: this.$data.uid,
+				recordType: this.$data.recordType
+			})
 			.then(response => {
 				this.$data.recordList = response.data.data;
 				this.$data.displayedRecordList = this.$data.recordList;
@@ -402,7 +412,7 @@ export default {
 					uid: this.$data.uid,
 					newRecord: {
 						recordId: this.$data.EditdocumentForm.recordId,
-						recordType: this.$data.EditdocumentForm.recordType,
+						recordType: this.$data.recordType,
 						recordTitle: this.$data.EditdocumentForm.recordTitle,
 						date: this.$data.EditdocumentForm.date,
 						fileDir: this.$data.EditdocumentForm.fileDir,
@@ -422,6 +432,7 @@ export default {
 		handleDelete(index, row) {
 			this.$data.deletedialogVisible = true;
 			this.$data.delete_recordId = row.recordId;
+			this.$data.delete_fileDir = row.fileDir;
 			console.log(index, row);
 			console.log(this.$data.delete_recordId);
 		},
@@ -435,6 +446,20 @@ export default {
 				})
 				.then(response => {
 					console.log(response);
+					location.reload();
+					const storage = getStorage();
+					// Create a reference to the file to delete
+					const document_ref = decodeURIComponent(
+						this.$data.delete_recordId
+							.split('/')
+							.pop()
+							.split('?')[0]
+					);
+					const desertRef = ref_delete(storage, document_ref);
+					// Delete the file
+					deleteObject(desertRef).then(() => {
+						// File deleted successfully
+					});
 					location.reload();
 				})
 				.catch(error => {
@@ -604,11 +629,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.el-tabs__content {
-	height: 65vh;
-}
-
+<style lang="scss" scoped>
 .record-box {
 	display: flex;
 	justify-content: space-between;
@@ -619,20 +640,11 @@ export default {
 	text-align: center;
 	display: flex;
 	justify-content: space-around;
-
-	.el-button > span {
-		color: #76553f;
-		font-style: Trebuchet MS;
-	}
-
-	.cell {
-		color: #76553f;
-		font-family: 'Trebuchet MS';
-	}
 }
 
 .right-filter {
 	.datepicker {
+		width: 208px;
 		margin-top: 8px;
 		p {
 			color: #76553f;
@@ -640,18 +652,6 @@ export default {
 			font-family: 'Trebuchet MS';
 			font-size: 14px;
 			font-weight: bold;
-		}
-		.el-range-editor {
-			width: 200px;
-			margin-top: 5px;
-			padding-right: 1px;
-
-			.el-range-input {
-				font-size: small;
-			}
-		}
-		.el-range-separator {
-			color: #76553f;
 		}
 	}
 
@@ -663,11 +663,6 @@ export default {
 			font-family: 'Trebuchet MS';
 			font-size: 14px;
 			font-weight: bold;
-		}
-		.el-input__inner {
-			margin-top: 5px;
-			width: 200px;
-			font-size: small;
 		}
 	}
 }
@@ -681,26 +676,17 @@ export default {
 	text-align: center;
 }
 
-.el-form-item__label {
-	color: #76553f;
-	text-align: justify;
-	margin-right: 1px;
-	font-size: medium;
-}
+.filter_add {
+	display: flex;
+	justify-content: space-evenly;
+	flex-direction: column;
+	align-items: center;
 
-.el-dialog__body {
-	margin: 0 1vw;
-	padding-bottom: 0;
-}
-
-.el-dialog__footer {
-	padding-top: 0;
-	padding-right: 35px;
-}
-.el-tabs__nav-scroll {
-	background-color: #f1eeec;
-}
-.el-tabs__content {
-	height: 65vh;
+	.rihgt_buttons {
+		margin-left: 0;
+		margin-right: 0;
+		width: 100px;
+		height: 40px;
+	}
 }
 </style>

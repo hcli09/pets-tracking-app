@@ -1,6 +1,6 @@
 <template>
 	<div class="record-header">
-		<p>Invoice</p>
+		<p>Medication Report</p>
 	</div>
 
 	<div class="Record-content">
@@ -44,7 +44,7 @@ export default {
 			activeName: 'first',
 			petList: [],
 			petOptions: [],
-			recordType: 'Invoice'
+			recordType: 'Medication'
 		};
 	},
 	created: function () {
@@ -88,7 +88,6 @@ export default {
 .Record-content {
 	position: relative;
 	background-color: white;
-	border-radius: 1rem;
 	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 </style>

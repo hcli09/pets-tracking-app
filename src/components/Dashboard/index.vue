@@ -15,7 +15,7 @@
 						</el-button>
 					</div>
 
-					<div class="folder">
+					<div class="folder" @click="toMedication">
 						<img
 							class="folder-image"
 							src="https://api.iconify.design/bxs/folder.svg?color=%23ffeeea"
@@ -159,7 +159,10 @@ const toInvoice = () => {
 };
 const toVaccination = () => {
 	router.push('/vaccinationhistory');
-}
+};
+const toMedication = () => {
+	router.push('/medication');
+};
 </script>
 
 <script>
