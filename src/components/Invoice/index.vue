@@ -11,153 +11,55 @@
 			tab-position="top"
 		>
 			<el-tab-pane label="List" name="first"
-				><RecordList></RecordList
+				><RecordList
+					:petList="petList"
+					:petOptions="petOptions"
+				></RecordList
 			></el-tab-pane>
 			<el-tab-pane label="Grid" name="second"
-				><RecordGrid></RecordGrid
+				><RecordGrid
+					:petList="petList"
+					:petOptions="petOptions"
+				></RecordGrid
 			></el-tab-pane>
 		</el-tabs>
-
-		<!-- add new document pop up window -->
-
-		<el-button
-			@click="dialogFormVisible = true"
-			label="Add"
-			type="primary"
-			plain
-			style="position: absolute; right: 10px; top: 3px"
-			><el-icon><Plus /></el-icon
-		></el-button>
-		<el-dialog
-			width="600px"
-			title="Add Document"
-			v-model="dialogFormVisible"
-		>
-			<el-form :model="documentForm">
-				<el-form-item label="Document Title">
-					<el-input
-						v-model="documentForm.documentTitle"
-						placeholder="Enter document title"
-						autocomplete="off"
-					></el-input>
-				</el-form-item>
-
-				<div class="document-dialog-datepet">
-					<el-form-item label="Pet" width="10vw">
-						<el-select
-							v-model="documentForm.petName"
-							placeholder="Select a pet"
-						>
-							<el-option label="Lucy" value="Lucy"></el-option>
-							<el-option label="Bella" value="Bella"></el-option>
-						</el-select>
-					</el-form-item>
-
-					<el-form-item label="Date">
-						<el-date-picker
-							type="date"
-							v-model="documentForm.Date"
-							format="YYYY/MM/DD"
-							value-format="YYYY/MM/DD"
-						>
-						</el-date-picker>
-					</el-form-item>
-				</div>
-
-				<el-upload
-					class="document-dialog-upload"
-					action="https://jsonplaceholder.typicode.com/posts/"
-					:on-preview="handlePreview"
-				>
-					<el-button size="medium" type="primary"
-						>Upload Document</el-button
-					>
-				</el-upload>
-			</el-form>
-			<template #footer>
-				<span class="dialog-footer">
-					<el-button
-						@click="dialogFormVisible = false"
-						type="primary"
-						plain
-						>Cancel</el-button
-					>
-					<el-button
-						@click="dialogFormVisible = false"
-						type="primary"
-						plain
-						>Create</el-button
-					>
-				</span>
-			</template>
-		</el-dialog>
 	</div>
 </template>
 
 <script setup>
 import RecordList from '@common/components/RecordList/index.vue';
 import RecordGrid from '@common/components/RecordGrid/index.vue';
+import httpServices from '@services';
 </script>
 
 <script>
 export default {
 	data() {
 		return {
-			activeName: 'first',
-			recordList: [
-				{
-					date: '2022-05-02',
-					petName: 'Lucy',
-					documentTitle: 'Medical Exam Invoice',
-					tag: 'Lucy',
-					fileDir:
-						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/invoiceExample1.pdf?alt=media&token=303348a1-3b88-4c43-a6b8-4f5d5e49dcba'
-				},
-				{
-					date: '2022-05-04',
-					petName: 'Bella',
-					documentTitle: 'Vaccination',
-					tag: 'Bella',
-					fileDir:
-						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/git-cheat-sheet-education.pdf?alt=media&token=23ca76e2-d3fe-4d67-8790-a6e3a067de6f'
-				},
-				{
-					date: '2022-05-01',
-					petName: 'Lucy',
-					documentTitle: 'Checkup invoice',
-					tag: 'Lucy',
-					fileDir:
-						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/git-cheat-sheet-education.pdf?alt=media&token=23ca76e2-d3fe-4d67-8790-a6e3a067de6f'
-				},
-				{
-					date: '2022-05-03',
-					petName: 'Bella',
-					documentTitle: 'Invoice',
-					tag: 'Bella',
-					fileDir:
-						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/git-cheat-sheet-education.pdf?alt=media&token=23ca76e2-d3fe-4d67-8790-a6e3a067de6f'
-				}
-			],
-			petList: [
-				{
-					petID: 'cxgfchfc',
-					petName: 'Lucy'
-				},
-				{
-					petID: 'ibhbikbh',
-					petName: 'Bella'
-				}
-			],
-			dialogTableVisible: false,
-			dialogFormVisible: false,
-			documentForm: {
-				documentTitle: '',
-				petName: '',
-				date: '',
-				documentName: ''
-			}
+			uid: '_FENN-aEN9PIjjAMy83Hb',
+			activeName: 'second',
+			petList: [],
+			petOptions: []
 		};
 	},
+	created: function () {
+		//get pet list
+		httpServices.invoicemed
+			.getPetList({ uid: this.$data.uid })
+			.then(response => {
+				this.$data.petList = response.data.data;
+				//generate pet options for el-select
+				for (let pet of this.$data.petList) {
+					let temp = { value: pet.petId, label: pet.petName };
+					this.$data.petOptions.push(temp);
+					console.log(this.$data.petOptions);
+				}
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	},
+
 	methods: {}
 };
 </script>
@@ -184,15 +86,6 @@ export default {
 	border-radius: 1rem;
 	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
-	.document-dialog-datepet {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-	.document-dialog-upload {
-		text-align: center;
-	}
-
 	.el-form-item__label {
 		color: #76553f;
 		text-align: justify;
@@ -200,25 +93,6 @@ export default {
 		font-size: medium;
 	}
 
-	.el-dialog__body {
-		margin: 0 1vw;
-		padding-bottom: 0;
-	}
-
-	.el-dialog__header {
-		background-color: #f1eeec;
-		margin-right: 0;
-		.el-dialog__title {
-			color: #76553f;
-			text-align: justify;
-
-			font-size: medium;
-		}
-	}
-	.el-dialog__footer {
-		padding-top: 0;
-		padding-right: 35px;
-	}
 	.el-tabs__nav-scroll {
 		background-color: #f1eeec;
 	}

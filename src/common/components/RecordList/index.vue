@@ -2,18 +2,18 @@
 	<div class="recordlist">
 		<div class="record-box">
 			<el-table
-				row-key="date"
+				row-key="recordId"
 				ref="filterTable"
 				:data="displayedRecordList"
 				class="folder-list"
 			>
 				<!-- Document title -->
 				<el-table-column
-					prop="documentTitle"
+					prop="recordTitle"
 					align="center"
 					label="Title"
 					sortable
-					column-key="documentTitle"
+					column-key="recordTitle"
 				>
 				</el-table-column>
 
@@ -22,7 +22,7 @@
 					label="Pet"
 					align="center"
 					sortable
-					column-key="Pet"
+					column-key="petId"
 				>
 				</el-table-column>
 
@@ -86,7 +86,7 @@
 							@change="applyFilter"
 						>
 							<el-option
-								v-for="pet in this.$data.petList"
+								v-for="pet in petList"
 								:key="pet.petId"
 								:label="pet.petName"
 								:value="pet.petName"
@@ -94,132 +94,442 @@
 							</el-option>
 						</el-select>
 					</div>
-
-					<el-button
-						style="margin-top: 1vw"
-						type="primary"
-						size="mini"
-						plain
-						@click="resetRecordList"
-						>Reset</el-button
-					>
+					<div>
+						<el-button
+							style="margin-top: 1vw"
+							type="primary"
+							size="mini"
+							plain
+							@click="resetRecordList"
+							>Reset</el-button
+						>
+						<!-- add new document pop up window -->
+						<el-button
+							@click="AdddialogFormVisible = true"
+							label="Add"
+							type="primary"
+							plain
+							style="margin-top: 1vw"
+							><el-icon><Plus /></el-icon
+						></el-button>
+					</div>
 				</el-form>
 			</div>
 		</div>
 	</div>
+
+	<!-- add dialog -->
+	<el-dialog
+		width="600px"
+		title="Add Document"
+		v-model="AdddialogFormVisible"
+	>
+		<el-form :model="documentForm">
+			<el-form-item label="Document Title">
+				<el-input
+					v-model="documentForm.recordTitle"
+					placeholder="Enter document title"
+					autocomplete="off"
+				></el-input>
+			</el-form-item>
+
+			<div class="document-dialog-datepet">
+				<el-form-item label="Pet" width="10vw">
+					<el-select
+						v-model="documentForm.petId"
+						placeholder="Select a pet"
+					>
+						<el-option
+							v-for="item in petOptions"
+							:key="item.value"
+							:label="item.label"
+							:value="item.value"
+						>
+						</el-option>
+					</el-select>
+				</el-form-item>
+
+				<el-form-item label="Date">
+					<el-date-picker
+						type="date"
+						v-model="documentForm.date"
+						format="YYYY-MM-DD"
+						value-format="YYYY-MM-DD"
+					>
+					</el-date-picker>
+				</el-form-item>
+			</div>
+
+			<el-upload
+				v-model="documentForm.fileDir"
+				class="document-dialog-upload"
+				action=""
+				:show-file-list="true"
+				:before-upload="AddbeforeAvatarUpload"
+				:http-request="Upload"
+			>
+				<el-button size="medium" type="primary"
+					>Upload Document</el-button
+				>
+			</el-upload>
+		</el-form>
+		<template #footer>
+			<span class="dialog-footer">
+				<el-button
+					@click="AdddialogFormVisible = false"
+					type="primary"
+					plain
+					>Cancel</el-button
+				>
+				<el-button @click="adddocument" type="primary" plain
+					>Create</el-button
+				>
+			</span>
+		</template>
+	</el-dialog>
+
+	<!-- delete dialog -->
+	<el-dialog
+		v-model="deletedialogVisible"
+		title=""
+		width="30%"
+		:before-close="handleClose"
+	>
+		<span>Are you sure to delete this {{ recordType }} ?</span>
+		<template #footer>
+			<span class="dialog-footer">
+				<el-button @click="deletedialogVisible = false"
+					>Cancel</el-button
+				>
+				<el-button type="primary" @click="documentDelete()"
+					>Confirm</el-button
+				>
+			</span>
+		</template>
+	</el-dialog>
+
+	<!-- view pdf related -->
+	<el-dialog :title="view_recordTitle" v-model="dialogPDFVisible">
+		<el-image
+			v-if="view_fileFormat == 'Image'"
+			:src="view_fileDir"
+		></el-image>
+		<vue-pdf-embed v-else :source="view_fileDir" />
+	</el-dialog>
+
+	<!-- edit dialog related -->
+	<el-dialog
+		width="600px"
+		title="Edit Document"
+		v-model="EditdialogFormVisible"
+	>
+		<el-form :model="EditdocumentForm">
+			<el-form-item label="Document Title">
+				<el-input
+					v-model="EditdocumentForm.recordTitle"
+					placeholder="Enter document title"
+					autocomplete="off"
+				></el-input>
+			</el-form-item>
+
+			<div class="document-dialog-datepet">
+				<el-form-item label="Pet" width="10vw">
+					<el-select
+						v-model="EditdocumentForm.petId"
+						placeholder="Select a pet"
+					>
+						<el-option
+							v-for="item in petOptions"
+							:key="item.value"
+							:label="item.label"
+							:value="item.value"
+						>
+						</el-option>
+					</el-select>
+				</el-form-item>
+
+				<el-form-item label="Date">
+					<el-date-picker
+						type="date"
+						v-model="EditdocumentForm.date"
+						format="YYYY-MM-DD"
+						value-format="YYYY-MM-DD"
+					>
+					</el-date-picker>
+				</el-form-item>
+			</div>
+
+			<el-upload
+				v-model="EditdocumentForm.fileDir"
+				class="document-dialog-upload"
+				action=""
+				:show-file-list="true"
+				:before-upload="EditbeforeAvatarUpload"
+				:http-request="Upload"
+			>
+				<el-button size="medium" type="primary"
+					>Replace Document</el-button
+				>
+			</el-upload>
+		</el-form>
+		<template #footer>
+			<span class="dialog-footer">
+				<el-button
+					@click="EditdialogFormVisible = false"
+					type="primary"
+					plain
+					>Cancel</el-button
+				>
+				<el-button @click="editdocument" type="primary" plain
+					>Create</el-button
+				>
+			</span>
+		</template>
+	</el-dialog>
 </template>
+<script setup>
+import VuePdfEmbed from 'vue-pdf-embed';
+import httpServices from '@services';
+import { FireBaseStorage as storage } from '@services/firebase.js';
+import {
+	ref as ref_upload,
+	uploadBytes,
+	getDownloadURL
+} from 'firebase/storage';
+import { getStorage, ref as ref_delete, deleteObject } from 'firebase/storage';
+</script>
 
 <script>
 export default {
+	props: ['petList', 'petOptions'],
 	data() {
 		return {
-			petList: [
-				{
-					petID: 'cxgfchfc',
-					petName: 'Lucy'
-				},
-				{
-					petID: 'ibhbikbh',
-					petName: 'Bella'
-				}
-			],
+			uid: '_FENN-aEN9PIjjAMy83Hb',
+			recordList: [],
+			recordType: 'Invoice',
+			//filter related
 			dateRange: '',
 			petSelected: '',
-			recordList: [
-				{
-					date: '2022-05-02',
-					petName: 'Lucy',
-					documentTitle: 'Medical Exam Invoice',
-					tag: 'Lucy',
-					fileDir:
-						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/invoiceExample1.pdf?alt=media&token=303348a1-3b88-4c43-a6b8-4f5d5e49dcba'
-				},
-				{
-					date: '2022-05-04',
-					petName: 'Bella',
-					documentTitle: 'Vaccination',
-					tag: 'Bella',
-					fileDir:
-						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/git-cheat-sheet-education.pdf?alt=media&token=23ca76e2-d3fe-4d67-8790-a6e3a067de6f'
-				},
-				{
-					date: '2022-05-01',
-					petName: 'Lucy',
-					documentTitle: 'Checkup invoice',
-					tag: 'Lucy',
-					fileDir:
-						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/git-cheat-sheet-education.pdf?alt=media&token=23ca76e2-d3fe-4d67-8790-a6e3a067de6f'
-				},
-				{
-					date: '2022-05-03',
-					petName: 'Bella',
-					documentTitle: 'Invoice',
-					tag: 'Bella',
-					fileDir:
-						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/git-cheat-sheet-education.pdf?alt=media&token=23ca76e2-d3fe-4d67-8790-a6e3a067de6f'
-				}
-			],
 			displayedRecordList: [],
-			dialogTableVisible: false,
-			dialogFormVisible: false,
+			//add diaglog related
+			AdddialogFormVisible: false,
 			documentForm: {
-				documentTitle: '',
-				petName: '',
+				recordTitle: '',
+				petId: '',
 				date: '',
-				documentName: ''
+				fileDir: '',
+				fileFormat: ''
+			},
+
+			//delete dialog related
+			deletedialogVisible: false,
+			delete_recordId: '',
+
+			//view pdf dialog related
+			dialogPDFVisible: false,
+			view_fileDir: '',
+			view_fileFormat: '',
+			view_recordTitle: '',
+
+			//edit dialog related
+			EditdialogFormVisible: false,
+			EditdocumentForm: {
+				recordId: '',
+				recordTitle: '',
+				petId: '',
+				date: '',
+				fileDir: '',
+				fileFormat: ''
 			}
 		};
 	},
-	created: function () {
-		// TODO: get recordList from API
-		this.$data.displayedRecordList = this.$data.recordList;
-	},
-	methods: {
-		filterTag(value, row) {
-			return row.tag === value;
-		},
-		filterHandler(value, row, column) {
-			const property = column['property'];
-			return row[property] === value;
-		},
-		handleEdit(index, row) {
-			console.log(index, row);
-		},
-		handleDelete(index, row) {
-			console.log(index, row);
-		},
-		handleView(index, row) {
-			console.log(index, row);
-		},
-		handlePreview(file) {
-			console.log(file);
-		},
-		// //filter date
-		// filterDate() {
-		// 	this.$data.displayedRecordList = [];
-		// 	let startDate = new Date(
-		// 		this.$data.dateRange[0].toISOString().split('T')[0]
-		// 	);
-		// 	let endDate = new Date(
-		// 		this.$data.dateRange[1].toISOString().split('T')[0]
-		// 	);
 
-		// 	for (let record of this.$data.recordList) {
-		// 		let recordDate = new Date(record.date);
-		// 		if (
-		// 			recordDate.getTime() >= startDate.getTime() &&
-		// 			recordDate.getTime() <= endDate.getTime()
-		// 		) {
-		// 			this.$data.displayedRecordList.push(record);
-		// 		}
-		// 	}
-		// },
-		//filter Pet
-		// //filter date
+	created: function () {
+		//get record list
+		httpServices.invoicemed
+			.getAllRecords({ uid: this.$data.uid, recordType: 'Invoice' })
+			.then(response => {
+				this.$data.recordList = response.data.data;
+				this.$data.displayedRecordList = this.$data.recordList;
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	},
+
+	methods: {
+		//add new invoice
+		adddocument() {
+			this.$data.AdddialogFormVisible = false;
+			console.log(this.$data.documentForm);
+			//add new invoice
+			httpServices.invoicemed
+				.addNewRecord({
+					uid: this.$data.uid,
+					record: {
+						recordType: this.$data.recordType,
+						recordTitle: this.$data.documentForm.recordTitle,
+						date: this.$data.documentForm.date,
+						fileDir: this.$data.documentForm.fileDir,
+						petId: this.$data.documentForm.petId,
+						fileFormat: this.$data.documentForm.fileFormat
+					}
+				})
+				.then(response => {
+					console.log(response);
+					location.reload();
+				})
+				.catch(error => {
+					console.log(error);
+				});
+		},
+		//edit document related
+		handleEdit(index, row) {
+			this.$data.EditdialogFormVisible = true;
+			this.$data.EditdocumentForm.recordTitle = row.recordTitle;
+			this.$data.EditdocumentForm.petId = row.petId;
+			this.$data.EditdocumentForm.date = row.date;
+			this.$data.EditdocumentForm.fileDir = row.fileDir;
+			this.$data.EditdocumentForm.recordId = row.recordId;
+			this.$data.EditdocumentForm.fileFormat = row.fileFormat;
+
+			console.log(this.$data.EditdocumentForm);
+		},
+
+		editdocument() {
+			httpServices.invoicemed
+				.editRecord({
+					uid: this.$data.uid,
+					newRecord: {
+						recordId: this.$data.EditdocumentForm.recordId,
+						recordType: this.$data.EditdocumentForm.recordType,
+						recordTitle: this.$data.EditdocumentForm.recordTitle,
+						date: this.$data.EditdocumentForm.date,
+						fileDir: this.$data.EditdocumentForm.fileDir,
+						petId: this.$data.EditdocumentForm.petId,
+						fileFormat: this.$data.EditdocumentForm.fileFormat
+					}
+				})
+				.then(response => {
+					console.log(response);
+					location.reload();
+				})
+				.catch(error => {
+					console.log(error);
+				});
+		},
+		//delete document related
+		handleDelete(index, row) {
+			this.$data.deletedialogVisible = true;
+			this.$data.delete_recordId = row.recordId;
+			console.log(index, row);
+			console.log(this.$data.delete_recordId);
+		},
+		documentDelete() {
+			this.$data.deletedialogVisible = false;
+			//delete record list
+			httpServices.invoicemed
+				.deleteRecord({
+					uid: this.$data.uid,
+					recordId: this.$data.delete_recordId
+				})
+				.then(response => {
+					console.log(response);
+					location.reload();
+				})
+				.catch(error => {
+					console.log(error);
+				});
+		},
+		//preview document
+		handleView(index, row) {
+			this.$data.view_recordTitle = row.recordTitle;
+			this.$data.view_fileFormat = row.fileFormat;
+			this.$data.view_fileDir = row.fileDir;
+			this.$data.dialogPDFVisible = true;
+			console.log(index, row, this.$data.view_recordTitle);
+		},
+		//Add upload document
+		AddbeforeAvatarUpload(file) {
+			const isJPG =
+				file.type === 'image/png' || file.type === 'image/jpeg';
+			const isPDF = file.type === 'application/pdf';
+
+			const isLt2M = file.size / 1024 / 1024 < 2;
+
+			if (!isJPG && !isPDF) {
+				this.$message.error(
+					'Upload document can only be in Image/PDF format!'
+				);
+				return false;
+			}
+
+			if (!isLt2M) {
+				this.$message.error('Upload document size cannot exceed 2MB!');
+				return false;
+			}
+
+			if (isJPG) {
+				this.$data.documentForm.fileFormat = 'Image';
+			} else {
+				this.$data.documentForm.fileFormat = 'PDF';
+			}
+			//get current timstamp, timestamp will always be unique for each user
+			const currentDate = new Date();
+			const timestamp = currentDate.getTime();
+
+			const storageRef = ref_upload(
+				storage,
+				this.$data.uid + '_invocie' + '_' + timestamp
+			);
+			uploadBytes(storageRef, file).then(() => {
+				getDownloadURL(storageRef).then(url => {
+					this.$data.documentForm.fileDir = url;
+				});
+			});
+		},
+
+		//Edit upload document
+		EditbeforeAvatarUpload(file) {
+			const isJPG =
+				file.type === 'image/png' || file.type === 'image/jpeg';
+			const isPDF = file.type === 'application/pdf';
+
+			const isLt2M = file.size / 1024 / 1024 < 2;
+
+			if (!isJPG && !isPDF) {
+				this.$message.error(
+					'Upload document can only be in Image/PDF format!'
+				);
+				return false;
+			}
+
+			if (!isLt2M) {
+				this.$message.error('Upload document size cannot exceed 2MB!');
+				return false;
+			}
+
+			if (isJPG) {
+				this.$data.EditdocumentForm.fileFormat = 'Image';
+			} else {
+				this.$data.EditdocumentForm.fileFormat = 'PDF';
+			}
+			//get current timstamp, timestamp will always be unique for each user
+			const currentDate = new Date();
+			const timestamp = currentDate.getTime();
+
+			const storageRef = ref_upload(
+				storage,
+				this.$data.uid + '_invocie' + '_' + timestamp
+			);
+			uploadBytes(storageRef, file).then(() => {
+				getDownloadURL(storageRef).then(url => {
+					this.$data.EditdocumentForm.fileDir = url;
+				});
+			});
+		},
 		applyFilter() {
 			this.$data.displayedRecordList = this.$data.recordList.slice();
-			console.log(this.$data.dateRange);
-			console.log(this.$data.petSelected);
 
 			if (this.$data.dateRange !== '' && this.$data.petSelected === '') {
 				let startDate = new Date(
@@ -281,19 +591,20 @@ export default {
 				}
 			}
 		},
-		// //filter Pet
-		// filterPet() {
-		// 	this.$data.displayedReco
 		resetRecordList() {
 			this.$data.displayedRecordList = this.$data.recordList;
 			this.$data.dateRange = '';
 			this.$data.petSelected = '';
+		},
+		Upload() {},
+		handleClose(done) {
+			done();
 		}
 	}
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .el-tabs__content {
 	height: 65vh;
 }
@@ -359,5 +670,37 @@ export default {
 			font-size: small;
 		}
 	}
+}
+
+.document-dialog-datepet {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.document-dialog-upload {
+	text-align: center;
+}
+
+.el-form-item__label {
+	color: #76553f;
+	text-align: justify;
+	margin-right: 1px;
+	font-size: medium;
+}
+
+.el-dialog__body {
+	margin: 0 1vw;
+	padding-bottom: 0;
+}
+
+.el-dialog__footer {
+	padding-top: 0;
+	padding-right: 35px;
+}
+.el-tabs__nav-scroll {
+	background-color: #f1eeec;
+}
+.el-tabs__content {
+	height: 65vh;
 }
 </style>

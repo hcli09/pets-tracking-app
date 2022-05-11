@@ -4,22 +4,20 @@
 			<el-scrollbar height="60vh">
 				<el-col
 					:gutter="24"
-					v-for="(record, index) in this.$data.displayedRecordList"
+					v-for="(record, index) in displayedRecordList"
 					:key="index"
 				>
 					<!-- one document -->
 					<el-card
 						style="
-							width: 250px;
-							height: 255px;
-							margin-right: 2vw;
-							margin-top: 1vw;
+							width: 220px;
+							height: 250px;
+							margin-right: 15px;
+							margin-top: 15px;
 							position: relative;
 						"
 					>
-						<div
-							style="position: absolute; top: 0.5vw; right: 0.5vw"
-						>
+						<div style="position: absolute; top: 10px; right: 10px">
 							<!-- drop down list -->
 							<el-dropdown trigger="click">
 								<span class="el-dropdown-link">
@@ -30,12 +28,15 @@
 								<template #dropdown>
 									<el-dropdown-menu>
 										<el-dropdown-item
+											@click="handleView(record)"
 											>View</el-dropdown-item
 										>
 										<el-dropdown-item
+											@click="handleEdit(record)"
 											>Edit</el-dropdown-item
 										>
 										<el-dropdown-item
+											@click="handleDelete(record)"
 											>Delete</el-dropdown-item
 										>
 									</el-dropdown-menu>
@@ -46,46 +47,32 @@
 
 						<!-- pdf image -->
 						<div class="pdf">
+							<el-image
+								style="width: 100px; height: 100px"
+								v-if="record.fileFormat == 'Image'"
+								:src="record.fileDir"
+							></el-image>
 							<vue-pdf-embed
+								v-else
 								height="10"
-								width="120"
+								width="110"
 								:page="1"
-								class="image"
 								:source="record.fileDir"
-								@click="popoverPDF(index)"
+								@click="handleView(record)"
 							/>
 						</div>
-						<el-dialog
-							v-if="cur == index"
-							:title="record.documentTitle"
-							v-model="dialogPDFVisible"
-						>
-							<vue-pdf-embed :source="record.fileDir" />
-						</el-dialog>
-						<!-- <img
-							style="width: 6vw; height: 8vw; margin-left: 1.5vw"
-							src="https://api.iconify.design/bxs/file-pdf.svg?color=%2376553f"
-							class="image"
-							@click="dialogPDFVisible = true"
-						/> -->
+
 						<div class="card-bottom">
-							<div style="margin-top: 0.3vw">
-								<b>{{ record.documentTitle }}</b>
+							<div class="bottom_text" style="margin-bottom: 0">
+								<b>{{ record.recordTitle }}</b>
 								<p>{{ record.date }}</p>
-								<p>{{ record.petName }}</p>
 							</div>
 
 							<!-- pet avatar -->
-
-							<img
-								style="
-									width: 2vw;
-									height: 2vw;
-									border-radius: 1vw;
-								"
-								src="src/assets/Dashboard/doglucy.jpeg"
-								class="image"
-							/>
+							<div class="pet_name_avatar">
+								<img :src="record.petAvatar" class="avatar" />
+								<p>{{ record.petName }}</p>
+							</div>
 						</div>
 					</el-card>
 				</el-col>
@@ -93,6 +80,15 @@
 		</div>
 		<div class="right-filter">
 			<el-form>
+				<!-- add new document pop up window -->
+				<el-button
+					@click="AdddialogFormVisible = true"
+					label="Add"
+					type="primary"
+					plain
+					style="margin-top: 1vw; margin-right: 0"
+					>Add New
+				</el-button>
 				<el-form-item class="datepicker">
 					<p>Date Filter</p>
 					<el-date-picker
@@ -116,7 +112,7 @@
 						@change="applyFilter"
 					>
 						<el-option
-							v-for="pet in this.$data.petList"
+							v-for="pet in petList"
 							:key="pet.petId"
 							:label="pet.petName"
 							:value="pet.petName"
@@ -131,109 +127,431 @@
 					size="mini"
 					plain
 					@click="resetRecordList"
-					>Reset</el-button
+					>Reset Filter</el-button
 				>
 			</el-form>
 		</div>
 	</div>
+	<!-- add dialog -->
+	<el-dialog
+		width="600px"
+		title="Add Document"
+		v-model="AdddialogFormVisible"
+	>
+		<el-form :model="documentForm">
+			<el-form-item label="Document Title">
+				<el-input
+					v-model="documentForm.recordTitle"
+					placeholder="Enter document title"
+					autocomplete="off"
+				></el-input>
+			</el-form-item>
+
+			<div class="document-dialog-datepet">
+				<el-form-item label="Pet" width="10vw">
+					<el-select
+						v-model="documentForm.petId"
+						placeholder="Select a pet"
+					>
+						<el-option
+							v-for="item in petOptions"
+							:key="item.value"
+							:label="item.label"
+							:value="item.value"
+						>
+						</el-option>
+					</el-select>
+				</el-form-item>
+
+				<el-form-item label="Date">
+					<el-date-picker
+						type="date"
+						v-model="documentForm.date"
+						format="YYYY-MM-DD"
+						value-format="YYYY-MM-DD"
+					>
+					</el-date-picker>
+				</el-form-item>
+			</div>
+
+			<el-upload
+				v-model="documentForm.fileDir"
+				class="document-dialog-upload"
+				action=""
+				:show-file-list="true"
+				:before-upload="AddbeforeAvatarUpload"
+				:http-request="Upload"
+			>
+				<el-button size="medium" type="primary"
+					>Upload Document</el-button
+				>
+			</el-upload>
+		</el-form>
+		<template #footer>
+			<span class="dialog-footer">
+				<el-button
+					@click="AdddialogFormVisible = false"
+					type="primary"
+					plain
+					>Cancel</el-button
+				>
+				<el-button @click="adddocument" type="primary" plain
+					>Create</el-button
+				>
+			</span>
+		</template>
+	</el-dialog>
+
+	<!-- delete dialog -->
+	<el-dialog
+		v-model="deletedialogVisible"
+		title=""
+		width="30%"
+		:before-close="handleClose"
+	>
+		<span>Are you sure to delete this {{ recordType }} ?</span>
+		<template #footer>
+			<span class="dialog-footer">
+				<el-button @click="deletedialogVisible = false"
+					>Cancel</el-button
+				>
+				<el-button type="primary" @click="documentDelete()"
+					>Confirm</el-button
+				>
+			</span>
+		</template>
+	</el-dialog>
+
+	<!-- edit dialog related -->
+	<el-dialog
+		width="600px"
+		title="Edit Document"
+		v-model="EditdialogFormVisible"
+	>
+		<el-form :model="EditdocumentForm">
+			<el-form-item label="Document Title">
+				<el-input
+					v-model="EditdocumentForm.recordTitle"
+					placeholder="Enter document title"
+					autocomplete="off"
+				></el-input>
+			</el-form-item>
+
+			<div class="document-dialog-datepet">
+				<el-form-item label="Pet" width="10vw">
+					<el-select
+						v-model="EditdocumentForm.petId"
+						placeholder="Select a pet"
+					>
+						<el-option
+							v-for="item in petOptions"
+							:key="item.value"
+							:label="item.label"
+							:value="item.value"
+						>
+						</el-option>
+					</el-select>
+				</el-form-item>
+
+				<el-form-item label="Date">
+					<el-date-picker
+						type="date"
+						v-model="EditdocumentForm.date"
+						format="YYYY-MM-DD"
+						value-format="YYYY-MM-DD"
+					>
+					</el-date-picker>
+				</el-form-item>
+			</div>
+
+			<el-upload
+				v-model="EditdocumentForm.fileDir"
+				class="document-dialog-upload"
+				action=""
+				:show-file-list="true"
+				:before-upload="EditbeforeAvatarUpload"
+				:http-request="Upload"
+			>
+				<el-button size="medium" type="primary"
+					>Replace Document</el-button
+				>
+			</el-upload>
+		</el-form>
+		<template #footer>
+			<span class="dialog-footer">
+				<el-button
+					@click="EditdialogFormVisible = false"
+					type="primary"
+					plain
+					>Cancel</el-button
+				>
+				<el-button @click="editdocument" type="primary" plain
+					>Create</el-button
+				>
+			</span>
+		</template>
+	</el-dialog>
+	<!-- view pdf related -->
+	<el-dialog :title="view_recordTitle" v-model="dialogPDFVisible">
+		<el-image
+			v-if="view_fileFormat == 'Image'"
+			:src="view_fileDir"
+		></el-image>
+		<vue-pdf-embed v-else :source="view_fileDir" />
+	</el-dialog>
 </template>
+
+<script setup>
+import httpServices from '@services';
+import { FireBaseStorage as storage } from '@services/firebase.js';
+import {
+	ref as ref_upload,
+	uploadBytes,
+	getDownloadURL
+} from 'firebase/storage';
+import { getStorage, ref as ref_delete, deleteObject } from 'firebase/storage';
+</script>
 
 <script>
 import VuePdfEmbed from 'vue-pdf-embed';
 
 export default {
+	props: ['petList', 'petOptions'],
 	components: {
 		VuePdfEmbed
 	},
 	data() {
 		return {
-			recordList: [
-				{
-					date: '2022-05-02',
-					petName: 'Lucy',
-					documentTitle: 'Medical Exam Invoice',
-					tag: 'Lucy',
-					fileDir:
-						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/invoiceExample1.pdf?alt=media&token=303348a1-3b88-4c43-a6b8-4f5d5e49dcba'
-				},
-				{
-					date: '2022-05-04',
-					petName: 'Bella',
-					documentTitle: 'Vaccination',
-					tag: 'Bella',
-					fileDir:
-						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/git-cheat-sheet-education.pdf?alt=media&token=23ca76e2-d3fe-4d67-8790-a6e3a067de6f'
-				},
-				{
-					date: '2022-05-01',
-					petName: 'Lucy',
-					documentTitle: 'Checkup invoice',
-					tag: 'Lucy',
-					fileDir:
-						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/git-cheat-sheet-education.pdf?alt=media&token=23ca76e2-d3fe-4d67-8790-a6e3a067de6f'
-				},
-				{
-					date: '2022-05-03',
-					petName: 'Bella',
-					documentTitle: 'Invoice',
-					tag: 'Bella',
-					fileDir:
-						'https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/git-cheat-sheet-education.pdf?alt=media&token=23ca76e2-d3fe-4d67-8790-a6e3a067de6f'
-				}
-			],
-			petList: [
-				{
-					petID: 'cxgfchfc',
-					petName: 'Lucy'
-				},
-				{
-					petID: 'ibhbikbh',
-					petName: 'Bella'
-				}
-			],
+			uid: '_FENN-aEN9PIjjAMy83Hb',
+			recordList: [],
+			recordType: 'Invoice',
+			//filter related
 			dateRange: '',
 			petSelected: '',
 			displayedRecordList: [],
-			dialogTableVisible: false,
-			dialogFormVisible: false,
-			dialogPDFVisible: false,
-			cur: 0,
+
+			//add diaglog related
+			AdddialogFormVisible: false,
 			documentForm: {
-				documentTitle: '',
-				petName: '',
+				recordTitle: '',
+				petId: '',
 				date: '',
-				documentName: ''
-			}
+				fileDir: '',
+				fileFormat: ''
+			},
+
+			//delete dialog related
+			deletedialogVisible: false,
+			delete_recordId: '',
+
+			//edit dialog related
+			EditdialogFormVisible: false,
+			EditdocumentForm: {
+				recordId: '',
+				recordTitle: '',
+				petId: '',
+				date: '',
+				fileDir: '',
+				fileFormat: ''
+			},
+
+			//view pdf dialog related
+			dialogPDFVisible: false,
+			view_fileDir: '',
+			view_fileFormat: '',
+			view_recordTitle: ''
 		};
 	},
 	created: function () {
-		// TODO: get recordList from API
-		this.$data.displayedRecordList = this.$data.recordList.slice();
+		//get record list
+		httpServices.invoicemed
+			.getAllRecords({ uid: this.$data.uid, recordType: 'Invoice' })
+			.then(response => {
+				this.$data.recordList = response.data.data;
+				this.$data.displayedRecordList = this.$data.recordList;
+				console.log('haha', this.$data.recordList);
+			})
+			.catch(error => {
+				console.log(error);
+			});
 	},
 	methods: {
+		//preview document
+		handleView(record) {
+			this.$data.view_recordTitle = record.recordTitle;
+			this.$data.view_fileFormat = record.fileFormat;
+			this.$data.view_fileDir = record.fileDir;
+			this.$data.dialogPDFVisible = true;
+			console.log(record, this.$data.view_recordTitle);
+		},
+
+		//add new invoice
+		adddocument() {
+			this.$data.AdddialogFormVisible = false;
+			console.log(this.$data.documentForm);
+			//add new invoice
+			httpServices.invoicemed
+				.addNewRecord({
+					uid: this.$data.uid,
+					record: {
+						recordType: this.$data.recordType,
+						recordTitle: this.$data.documentForm.recordTitle,
+						date: this.$data.documentForm.date,
+						fileDir: this.$data.documentForm.fileDir,
+						petId: this.$data.documentForm.petId,
+						fileFormat: this.$data.documentForm.fileFormat
+					}
+				})
+				.then(response => {
+					console.log(response);
+					location.reload();
+				})
+				.catch(error => {
+					console.log(error);
+				});
+		},
+
+		//Add upload document
+		AddbeforeAvatarUpload(file) {
+			const isJPG =
+				file.type === 'image/png' || file.type === 'image/jpeg';
+			const isPDF = file.type === 'application/pdf';
+
+			const isLt2M = file.size / 1024 / 1024 < 2;
+
+			if (!isJPG && !isPDF) {
+				this.$message.error(
+					'Upload document can only be in Image/PDF format!'
+				);
+				return false;
+			}
+
+			if (!isLt2M) {
+				this.$message.error('Upload document size cannot exceed 2MB!');
+				return false;
+			}
+
+			if (isJPG) {
+				this.$data.documentForm.fileFormat = 'Image';
+			} else {
+				this.$data.documentForm.fileFormat = 'PDF';
+			}
+			//get current timstamp, timestamp will always be unique for each user
+			const currentDate = new Date();
+			const timestamp = currentDate.getTime();
+
+			const storageRef = ref_upload(
+				storage,
+				this.$data.uid + '_invocie' + '_' + timestamp
+			);
+			uploadBytes(storageRef, file).then(() => {
+				getDownloadURL(storageRef).then(url => {
+					this.$data.documentForm.fileDir = url;
+				});
+			});
+		},
+
 		popoverPDF(index) {
 			this.cur = index;
 			this.dialogPDFVisible = true;
 		},
 
-		filterTag(value, row) {
-			return row.tag === value;
+		//edit document related
+		handleEdit(record) {
+			this.$data.EditdialogFormVisible = true;
+			this.$data.EditdocumentForm.recordTitle = record.recordTitle;
+			this.$data.EditdocumentForm.petId = record.petId;
+			this.$data.EditdocumentForm.date = record.date;
+			this.$data.EditdocumentForm.fileDir = record.fileDir;
+			this.$data.EditdocumentForm.recordId = record.recordId;
+			this.$data.EditdocumentForm.fileFormat = record.fileFormat;
+
+			console.log(this.$data.EditdocumentForm);
 		},
-		filterHandler(value, row, column) {
-			const property = column['property'];
-			return row[property] === value;
+
+		editdocument() {
+			httpServices.invoicemed
+				.editRecord({
+					uid: this.$data.uid,
+					newRecord: {
+						recordId: this.$data.EditdocumentForm.recordId,
+						recordType: this.$data.EditdocumentForm.recordType,
+						recordTitle: this.$data.EditdocumentForm.recordTitle,
+						date: this.$data.EditdocumentForm.date,
+						fileDir: this.$data.EditdocumentForm.fileDir,
+						petId: this.$data.EditdocumentForm.petId,
+						fileFormat: this.$data.EditdocumentForm.fileFormat
+					}
+				})
+				.then(response => {
+					console.log(response);
+					location.reload();
+				})
+				.catch(error => {
+					console.log(error);
+				});
 		},
-		handleEdit(index, row) {
-			console.log(index, row);
+		handleDelete(record) {
+			this.$data.deletedialogVisible = true;
+			this.$data.delete_recordId = record.recordId;
+			console.log(this.$data.delete_recordId);
+			console.log(record);
 		},
-		handleDelete(index, row) {
-			console.log(index, row);
+		documentDelete() {
+			this.$data.deletedialogVisible = false;
+			//delete record list
+			httpServices.invoicemed
+				.deleteRecord({
+					uid: this.$data.uid,
+					recordId: this.$data.delete_recordId
+				})
+				.then(response => {
+					console.log(response);
+					location.reload();
+				})
+				.catch(error => {
+					console.log(error);
+				});
 		},
-		handleView(index, row) {
-			console.log(index, row);
-		},
-		handlePreview(file) {
-			console.log(file);
+
+		//Edit upload document
+		EditbeforeAvatarUpload(file) {
+			const isJPG =
+				file.type === 'image/png' || file.type === 'image/jpeg';
+			const isPDF = file.type === 'application/pdf';
+
+			const isLt2M = file.size / 1024 / 1024 < 2;
+
+			if (!isJPG && !isPDF) {
+				this.$message.error(
+					'Upload document can only be in Image/PDF format!'
+				);
+				return false;
+			}
+
+			if (!isLt2M) {
+				this.$message.error('Upload document size cannot exceed 2MB!');
+				return false;
+			}
+
+			if (isJPG) {
+				this.$data.EditdocumentForm.fileFormat = 'Image';
+			} else {
+				this.$data.EditdocumentForm.fileFormat = 'PDF';
+			}
+			//get current timstamp, timestamp will always be unique for each user
+			const currentDate = new Date();
+			const timestamp = currentDate.getTime();
+
+			const storageRef = ref_upload(
+				storage,
+				this.$data.uid + '_invocie' + '_' + timestamp
+			);
+			uploadBytes(storageRef, file).then(() => {
+				getDownloadURL(storageRef).then(url => {
+					this.$data.EditdocumentForm.fileDir = url;
+				});
+			});
 		},
 		//filter date
 		applyFilter() {
@@ -301,20 +619,14 @@ export default {
 				}
 			}
 		},
-		// //filter Pet
-		// filterPet() {
-		// 	this.$data.displayedRecordList = [];
-		// 	for (let record of this.$data.recordList) {
-		// 		if (record.petName == this.$data.petSelected) {
-		// 			this.$data.displayedRecordList.push(record);
-		// 		}
-		// 	}
-		// },
-
 		resetRecordList() {
 			this.$data.displayedRecordList = this.$data.recordList.slice();
 			this.$data.dateRange = '';
 			this.$data.petSelected = '';
+		},
+		Upload() {},
+		handleClose(done) {
+			done();
 		}
 	}
 };
@@ -342,20 +654,41 @@ export default {
 }
 
 .card-bottom {
+	height: 60px;
+	position: absolute;
+	bottom: 10px;
+	width: 180px;
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
-	text-align: left;
+	// align-items: center;
 
 	b {
-		font-size: medium;
+		width: 50px;
+		font-size: small;
 		font-family: Trebuchet MS;
 		color: #76553f;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
 	}
 	p {
 		font-size: small;
 		font-family: Trebuchet MS;
 		color: #76553f;
+	}
+	.bottom_text {
+		text-align: left;
+		float: left;
+	}
+	.pet_name_avatar {
+		justify-content: center;
+		float: right;
+
+		.avatar {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+		}
 	}
 }
 
