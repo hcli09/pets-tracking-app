@@ -10,8 +10,8 @@
 					<div class="avatar-container">
 						<!-- user avater -->
 						<img
-							v-if="user.user_temp_image_URL"
-							:src="user.user_temp_image_URL"
+							v-if="user.image"
+							:src="user.image"
 							alt="upload"
 							class="avatar-image"
 						/>
@@ -112,7 +112,7 @@
 			<div class="pet" v-for="(item, index) in user.petList" :key="index">
 				<div class="pet-avatar-wrapper">
 					<img
-						:src="item.petAvatar_Url"
+						:src="item.petAvatar"
 						alt="an image of the pet's avatar"
 					/>
 				</div>
@@ -162,8 +162,7 @@ const user = reactive({
 	phone: null,
 	address: null,
 	image: '',
-	petList: [],
-	user_temp_image_URL: ''
+	petList: []
 });
 
 //get user's data
@@ -189,27 +188,9 @@ const getUserProfile = async () => {
 
 	//get user avatar
 	user.image = res.data.data.image;
-	const storageRef = ref_upload(storage, user.image);
-	getDownloadURL(storageRef).then(url => {
-		user.user_temp_image_URL = url;
-	});
 
 	//get pet avatar
 	user.petList = res.data.data.petList;
-	for (var index = 0; index < user.petList.length; index++) {
-		const storageRef_user = ref_pet_upload(
-			storage,
-			user.petList[index].petAvatar
-		);
-
-		getDownloadURL(storageRef_user).then(async url => {
-			for (let i in user.petList) {
-				if (user.petList[i].petAvatar === storageRef_user.fullPath) {
-					user.petList[i].petAvatar_Url = url;
-				}
-			}
-		});
-	}
 };
 
 const getAllUsers = async () => {
@@ -252,25 +233,28 @@ const beforeAvatarUpload = function (rawFile) {
 	}
 	const currentDate = new Date();
 	const timestamp = currentDate.getTime();
-	user.image = user.uid + '_userAvatar' + '_' + timestamp;
-	const storageRef = ref_upload(storage, user.image);
+
+	const storageRef = ref_upload(
+		storage,
+		user.uid + '_userAvatar' + '_' + timestamp
+	);
 
 	uploadBytes(storageRef, rawFile).then(() => {
 		//get url from firebase
-		getDownloadURL(storageRef).then(res => {
-			console.log(res);
-			user.user_temp_image_URL = res;
+		getDownloadURL(storageRef).then(url => {
+			user.image = url;
+			console.log('haha', user.image);
+			//post user avatar to BE
+			httpServices.userProfile
+				.postUserImage({
+					uid: user.uid,
+					image: user.image
+				})
+				.then(response => {
+					console.log(response);
+					location.reload();
+				});
 		});
-		//post user avatar to BE
-		httpServices.userProfile
-			.postUserImage({
-				uid: user.uid,
-				image: user.image
-			})
-			.then(response => {
-				console.log(response);
-				location.reload();
-			});
 	});
 };
 </script>

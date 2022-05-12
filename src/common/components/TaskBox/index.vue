@@ -1,56 +1,43 @@
 <template>
 	<el-row :span="6" class="events-tasks-big-box">
 		<h3 class="start-time-event-task">
-			{{ isEvent ? timeRange.substr(0, 5) : 'Due ' + dates }}
+			{{ 'Due ' + dueDate.substr(-5) }}
 		</h3>
 		<el-card
 			shadow="hover"
 			:class="'event-task-card'"
-			:style="bgColors[type]"
+			:style="{ backgroundColor: '#eff6ff', color: '#1e40af' }"
 			@click="toCalendar"
 		>
 			<div class="event-task-small-box">
 				<div class="event-task-inside">
 					<span>{{ title }}</span>
-					<p>{{ isEvent ? timeRange : '' }}</p>
 				</div>
 				<el-tooltip
 					class="box-item"
 					effect="dark"
-					:content="`with ${pets.map(pet => pet.name).join(', ')}`"
+					:content="`with ${pets.map(pet => pet.petName).join(', ')}`"
 					placement="right"
 				>
 					<div class="pet-name">
 						<template v-if="pets.length < 2">
 							<img
 								class="first-img"
-								:src="pets[0].avatarUrl"
+								:src="pets[0].petAvatar"
 								alt=""
 							/>
 						</template>
 						<template v-else>
 							<div>
-								<img :src="pets[0].avatarUrl" alt="" />
+								<img :src="pets[0].petAvatar" alt="" />
 								<img
 									class="following-imgs"
 									v-for="pet in pets.slice(1)"
-									:src="pet.avatarUrl"
+									:src="pet.petAvatar"
 									alt=""
 								/>
 							</div>
-
-							<!-- <img :src="pets[1].avatarUrl" alt="" /> -->
-
-							<!-- <img
-								class="following-imgs"
-								v-for="pet in pets.slice(1)"
-								:src="pet.avatarUrl"
-								alt=""
-							/> -->
 						</template>
-						<!-- <span class="name">
-						{{ pets[0].name }}
-					</span> -->
 					</div>
 				</el-tooltip>
 			</div>
@@ -59,8 +46,9 @@
 </template>
 
 <script setup>
-import { defineProps, toRaw } from 'vue';
+import { defineProps, onMounted, reactive, toRaw } from 'vue';
 import { useRouter } from 'vue-router';
+import { getPetAbListWithFullAvatar } from '../../utils/getPetAvatar';
 const router = useRouter();
 const props = defineProps({
 	customData: {
@@ -71,17 +59,9 @@ const props = defineProps({
 		type: Number
 	}
 });
-const bgColors = {
-	task: { 'background-color': '#eff6ff', color: '#1e40af' }, // bg-blue-200
-	event: { 'background-color': '#fff1f2', color: '#9f1239' } // bg-rose-200
-};
-const textWhite = 'color: white';
 
-let { type, timeRange, title, className, pets, dates } = props.customData;
-const { index } = props;
-
-pets = toRaw(pets);
-const isEvent = type == 'event';
+let { taskTitle: title, dueDate, petAbList } = props.customData;
+const pets = toRaw(petAbList);
 
 const toCalendar = () => {
 	router.push('/calendar');
@@ -89,9 +69,6 @@ const toCalendar = () => {
 </script>
 
 <style lang="scss" scoped>
-// p {
-// 	color: rgb(94 234 212);
-// }
 .events-tasks-big-box {
 	display: flex;
 	align-items: center;

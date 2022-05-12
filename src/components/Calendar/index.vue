@@ -12,10 +12,10 @@
 				style="width: 120px"
 			>
 				<el-option
-					v-for="item in options"
-					:key="item.value"
-					:label="item.label"
-					:value="item.value"
+					v-for="pet in petList"
+					:key="pet.petId"
+					:label="pet.petName"
+					:value="pet.petId"
 				/>
 			</el-select>
 		</div>
@@ -49,137 +49,119 @@
 </template>
 
 <script setup>
-import { reactive, computed, ref } from 'vue';
+import moment from 'moment';
+import { reactive, computed, ref, onMounted } from 'vue';
+import services from '../../services';
 const month = new Date().getMonth();
 const year = new Date().getFullYear();
 const masks = { weekdays: 'WWW' };
 const filterValue = ref('All');
-const baseAttributes = [
-	{
-		key: 1,
-		customData: {
-			title: 'Take Bailey to vet appointment',
-			className: 'bg-rose-400',
-			type: 'event',
-			pets: ['Bailey'],
-			timeRange: '10:30-12:30'
-		},
-		dates: new Date(year, month, 1)
-	},
-	{
-		key: 2,
-		customData: {
-			title: 'Lucy vaccination appointment',
-			className: 'bg-rose-400',
-			type: 'event',
-			pets: ['Lucy'],
-			timeRange: '14:00-15:00'
-		},
-		dates: new Date(year, month, 2)
-	},
-	{
-		key: 3,
-		customData: {
-			title: 'Lucy vaccination appointment',
-			className: 'bg-rose-400',
-			type: 'event',
-			pets: ['Lucy'],
-			timeRange: '14:00-15:00'
-		},
-		dates: { months: 5, ordinalWeekdays: { 2: 1 } }
-	},
-	{
-		key: 4,
-		customData: {
-			title: "Renew prescription for Max's medication",
-			className: 'bg-blue-400',
-			type: 'task',
-			pets: ['Max'],
-			timeRange: ''
-		},
-		dates: new Date(year, month, 5)
-	},
-	{
-		key: 5,
-		customData: {
-			title: 'Take Max for vet check up',
-			className: 'bg-blue-400',
-			type: 'task',
-			pets: ['Max'],
-			timeRange: ''
-		},
-		dates: new Date(year, month, 5)
-	},
-	{
-		key: 6,
-		customData: {
-			title: 'Play date with Lucy and Odie',
-			className: 'bg-blue-400',
-			task: 'task',
-			pets: ['Lucy', 'Odie'],
-			timeRange: ''
-		},
-		dates: new Date(year, month, 22)
-	},
-	{
-		key: 'today',
-		customData: {
-			title: "Renew prescription for Lucy's medication",
-			className: 'bg-blue-400',
-			tasks: 'task',
-			pets: ['Lucy'],
-			timeRange: ''
-		},
-		dates: new Date()
-	}
-];
-// let attributes = reactive(baseAttributes);
 
+// Get base attributes (base data) for calendar
+const baseAttributes = reactive([]);
+const getCalendarByMonthAsync = async () => {
+	const { data: res, status } = await services.calendar.getCalendarByMonth({
+		uid: '4EL4hp_qRUYMzzal_G29f',
+		month: moment().format('YYYY-MM')
+	});
+	const filtered = res.data.filter(
+		item => item.eventList.length > 0 || item.taskList.length > 0
+	);
+	const newData = [];
+	filtered.forEach(item => {
+		for (let event of item.eventList) {
+			newData.push({
+				key: event.eventTitle,
+				customData: {
+					title: event.eventTitle,
+					className: 'bg-rose-400',
+					pets: event.petIdList
+				},
+				dates: new Date(item.date)
+			});
+		}
+		for (let task of item.taskList) {
+			newData.push({
+				key: task.taskTitle,
+				customData: {
+					title: task.taskTitle,
+					className: 'bg-blue-400',
+					pets: task.petIdList
+				},
+				dates: new Date(item.date)
+			});
+		}
+	});
+	baseAttributes.push(...newData);
+};
+getCalendarByMonthAsync();
+
+// Get pet filter selector
+const petList = reactive([]);
+let { petList: newPetList } = JSON.parse(localStorage.getItem('user'));
+newPetList.unshift({ petId: 'All', petName: 'All' });
+petList.push(...newPetList);
+// filter implementation
 let attributes = computed(() => {
-	switch (filterValue.value) {
-		case 'All':
-			return baseAttributes;
-		case 'Lucy':
-			return baseAttributes.filter(item =>
-				item.customData.pets.includes('Lucy')
-			);
-		case 'Max':
-			return baseAttributes.filter(item =>
-				item.customData.pets.includes('Max')
-			);
-		case 'Bailey':
-			return baseAttributes.filter(item =>
-				item.customData.pets.includes('Bailey')
-			);
-		case 'Odie':
-			return baseAttributes.filter(item =>
-				item.customData.pets.includes('Odie')
-			);
-		default:
-			break;
+	if (filterValue.value === 'All') {
+		return baseAttributes;
+	} else {
+		return baseAttributes.filter(attribute =>
+			attribute.customData.pets.includes(filterValue.value)
+		);
 	}
 });
-
-const options = [
-	{ value: 'All', label: 'All' },
-	{
-		value: 'Bailey',
-		label: 'Bailey'
-	},
-	{
-		value: 'Lucy',
-		label: 'Lucy'
-	},
-	{
-		value: 'Max',
-		label: 'Max'
-	},
-	{
-		value: 'Odie',
-		label: 'Odie'
-	}
-];
 </script>
+<!-- 
+<script>
+export default {
+	data() {
+		return {
+			baseAttributes: []
+		};
+	},
+	created() {
+		services.calendar
+			.getCalendarByMonth({
+				uid: '4EL4hp_qRUYMzzal_G29f',
+				month: moment().format('YYYY-MM')
+			})
+			.then(({ data: res, status }) => {
+				const filtered = res.data.filter(
+					item =>
+						item.eventList.length > 0 || item.taskList.length > 0
+				);
+				const newData = [];
+
+				filtered.forEach(item => {
+					for (let event of item.eventList) {
+						newData.push({
+							key: event.eventTitle,
+							customData: {
+								title: event.eventTitle,
+								className: 'bg-rose-400',
+								pets: event.petIdList
+							},
+							dates: new Date(item.date)
+						});
+					}
+					for (let task of item.taskList) {
+						newData.push({
+							key: task.taskTitle,
+							customData: {
+								title: task.taskTitle,
+								className: 'bg-blue-400',
+								pets: task.petIdList
+							},
+							dates: new Date(item.date)
+						});
+					}
+				});
+				this.$data.baseAttributes = newData;
+			});
+	}
+};
+</script> -->
 
 <style lang="scss" scoped>
 .filter-pets {

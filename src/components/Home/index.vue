@@ -5,7 +5,7 @@
 			<PetsTopBar
 				:firstName="userObject.firstName"
 				:lastName="userObject.lastName"
-				:UserAvatar="temp_user_url"
+				:UserAvatar="userObject.image"
 			/>
 		</el-header>
 
@@ -20,21 +20,17 @@
 			</el-aside>
 
 			<!-- Main part -->
-			<el-main
-				style="
-					background-color: #f2f4f7;
-					height: 92vh;
-					overflow: scroll;
-				"
-			>
-				<!-- Dashboard, Calender and folders -->
-				<!-- folders -->
+			<el-scrollbar height="92vh" class="main-scroll">
+				<el-main style="background-color: #f2f4f7">
+					<!-- Dashboard, Calender and folders -->
+					<!-- folders -->
 
-				<router-view
-					@changeUserAvater="getUserInfo"
-					@changeUserInfo="getUserInfo"
-				></router-view>
-			</el-main>
+					<router-view
+						@changeUserAvater="getUserInfo"
+						@changeUserInfo="getUserInfo"
+					></router-view>
+				</el-main>
+			</el-scrollbar>
 			<!-- end of main part for dashboard -->
 		</el-container>
 	</el-container>
@@ -127,44 +123,12 @@ export default {
 			.user_dashboard({ uid: this.$data.uid })
 			.then(response => {
 				let userObject = response.data.data;
+				localStorage.setItem('user', JSON.stringify(userObject));
 				//edit page, assign pet object to pet form
 				this.$data.userObject.firstName = userObject.firstName;
 				this.$data.userObject.lastName = userObject.lastName;
 				this.$data.userObject.petList = userObject.petList;
 				this.$data.userObject.image = userObject.image;
-
-				//get url for pet avatars
-				for (
-					var index = 0;
-					index < this.$data.userObject.petList.length;
-					index++
-				) {
-					const storageRef = ref_upload(
-						storage,
-						this.$data.userObject.petList[index].petAvatar
-					);
-					getDownloadURL(storageRef).then(async url => {
-						for (let i in this.$data.userObject.petList) {
-							if (
-								this.$data.userObject.petList[i].petAvatar ===
-								storageRef.fullPath
-							) {
-								this.$data.userObject.petList[i].petAvatar_Url =
-									url;
-							}
-						}
-					});
-				}
-
-				//get user avatar
-				const storageRef_user = ref_user(
-					storage,
-					this.$data.userObject.image
-				);
-				getDownloadURL(storageRef_user).then(url => {
-					console.log(url);
-					this.$data.temp_user_url = url;
-				});
 			})
 			.catch(error => {
 				console.log(error);
@@ -198,6 +162,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// .main-scroll :deep(.el-scrollbar__view:nth-of-type(1)) {
+// 	width: calc(100vw - 75px);
+// }
 .dashboard-home {
 	position: absolute;
 	top: 0px;
@@ -207,6 +174,7 @@ export default {
 }
 
 .el-main {
+	width: calc(100vw - 75px);
 	padding: 20px 25px;
 }
 

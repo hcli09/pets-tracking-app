@@ -33,8 +33,8 @@
 					:http-request="Upload"
 				>
 					<img
-						v-if="petAvatar_temp_url"
-						:src="petAvatar_temp_url"
+						v-if="petAvatar"
+						:src="petAvatar"
 						class="avatar"
 						alt="upload"
 					/>
@@ -156,7 +156,6 @@ export default {
 			},
 
 			petAvatar: '',
-			petAvatar_temp_url: '',
 
 			// rules for pet form input
 			rules: {
@@ -268,8 +267,7 @@ export default {
 							petForm.height == null || petForm.height === ''
 								? 0
 								: petForm.height,
-
-						//Unique pet avatar name
+						//petavatar now stores url
 						petAvatar: this.$data.petAvatar
 					};
 
@@ -289,7 +287,7 @@ export default {
 		//clear all inputs
 		resetForm(petForm) {
 			this.$refs[petForm].resetFields();
-			this.petAvatar_temp_url = '';
+			this.petAvatar = '';
 		},
 
 		handleChange(value) {
@@ -317,15 +315,18 @@ export default {
 			const timestamp = currentDate.getTime();
 
 			//assign a unique name to the pet avatar
-			this.$data.petAvatar =
-				this.$data.uid + '_petAvatar' + '_' + timestamp;
-			const storageRef = ref(storage, this.$data.petAvatar);
+			// this.$data.petAvatar =
+			// 	this.$data.uid + '_petAvatar' + '_' + timestamp;
+			const storageRef = ref(
+				storage,
+				this.$data.uid + '_petAvatar' + '_' + timestamp
+			);
 
 			//send image to firebase and get the temporary url of the image
 			uploadBytes(storageRef, file).then(() => {
-				getDownloadURL(storageRef).then(res => {
-					console.log(res);
-					this.petAvatar_temp_url = res;
+				getDownloadURL(storageRef).then(url => {
+					console.log(url);
+					this.petAvatar = url;
 				});
 			});
 		}
@@ -430,7 +431,7 @@ export default {
 }
 </style>
 
-<style>
+<style scoped>
 .el-form-item__label {
 	color: #76553f;
 	text-align: justify;
@@ -439,7 +440,7 @@ export default {
 }
 
 .el-input__inner {
-	box-shadow: 0 0 0 1px #76553f inset;
+	/* box-shadow: 0 0 0 1px #76553f inset; */
 	font-family: Trebuchet MS;
 	color: #76553f;
 	font-size: medium;

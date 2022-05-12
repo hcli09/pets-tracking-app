@@ -13,6 +13,7 @@ import Settings from '@/components/Settings/index.vue';
 import UserProfile from '@/components/UserProfile/index.vue';
 import EditUserProfile from '@/components/EditUserProfile/index.vue';
 import VaccinationHistory from '@/components/VaccinationHistory/index.vue';
+import Medication from '@/components/Medication/index.vue';
 
 const routes = [
 	{
@@ -21,7 +22,7 @@ const routes = [
 		component: Home,
 		children: [
 			{
-				path: 'dashboard',
+				path: '',
 				component: Dashboard
 			},
 			{
@@ -40,22 +41,26 @@ const routes = [
 				path: '/invoice',
 				component: Invoice
 			},
-            {
-                path: 'userprofile',
-                component: UserProfile
-            },
-            {
-                path: 'editprofile',
-                component: EditUserProfile                
-            }, 
-            {
-                path: 'settings',
-                component: Settings               
-            },
-            {
-                path: 'vaccinationhistory',
-                component: VaccinationHistory
-            }
+			{
+				path: 'userprofile',
+				component: UserProfile
+			},
+			{
+				path: 'editprofile',
+				component: EditUserProfile
+			},
+			{
+				path: 'settings',
+				component: Settings
+			},
+			{
+				path: 'Medication',
+				component: Medication
+			},
+			{
+				path: 'vaccinationhistory',
+				component: VaccinationHistory
+			}
 		]
 	},
 	{
