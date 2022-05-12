@@ -6,22 +6,23 @@
                 <el-main style="padding:0; margin-top:3vh">
                   <div class="table-wrapper">
                     <div class="upper-button-wrapper">                      
-                      <el-button>Add</el-button>                      
-                      <el-button-group>
+                                            
+                      <!-- <el-button-group>
                         <el-button>List View</el-button>
                         <el-button>Grid View</el-button>
-                      </el-button-group>
+                      </el-button-group> -->
                     </div>
                     <el-table 
                       class="table" 
-                      :data="hardcodeTableData" 
+                      :data="vaccinationTable" 
                       :default-sort="{ prop: 'date', order: 'descending' }"
                       style="width: 100%"
                     >
+                        
                         <el-table-column 
-                          prop="pet" 
+                          prop="petName" 
                           label="PET" 
-                          :filters="hardcodePetList"
+                          :filters="petList"
                           :filter-method="filterHandler"
                           width="200" align="center" 
                         />
@@ -30,75 +31,327 @@
 
                         <el-table-column label="Operations" align="center">
                           <template #default="scope">
-                            <el-button
-                              size="small"
-                              
-                              @click="handleDelete(scope.$index, scope.row)"
-                              >View</el-button
-                            >
-                            <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
+                            <el-button size="small" @click="editDialogFormVisible=true;fillFormByRow(scope.$index, scope.row)"
                               >Edit</el-button
                             >
-                            <el-button
-                              size="small"
-                              
-                              @click="handleDelete(scope.$index, scope.row)"
-                              >Delete</el-button
+                            <el-popconfirm
+                              confirm-button-text="Yes"
+                              cancel-button-text="No"
+                              :icon="InfoFilled"
+                              icon-color="#76553f"
+                              title="Are you sure to delete this?"
+                              @confirm="handleDelete(scope.$index, scope.row)"
+                              @cancel="cancelEvent"
                             >
+                              <template #reference>
+                                <el-button size="small">Delete</el-button>
+                              </template>
+                            </el-popconfirm>
+
                           </template>
                         </el-table-column>
-
+                        <el-table-column prop="recordTitle" label="Description" width="300" align="center" />
                     </el-table>
+                    <div class="add-button-wrapper">
+                      <el-button class="add-button" @click="addDialogFormVisible = true">
+                        <el-icon style="margin-right:1vh"><circle-plus-filled /></el-icon>
+                        Add
+                      </el-button>
+                    </div>
+                    
                   </div>
+
+              
 
                 </el-main>
                            
             </el-container>
         </el-container>
+
+        <!-- dialog for adding a new vaccine record -->
+
+        <el-dialog v-model="addDialogFormVisible" title="Add vaccination record" @close="resetForm()">
+          <el-form :model="form">
+            <el-form-item label="Vaccination type" :label-width="formLabelWidth">
+              <el-autocomplete
+                v-model="form.vacType"
+                :fetch-suggestions="querySearch"
+                clearable
+                placeholder="Please input vaccination type"
+                @select="handleSelect"   
+                style="width:45vh"              
+              />
+            </el-form-item>
+            <el-form-item label="Date" :label-width="formLabelWidth">
+              <el-date-picker v-model="form.date" type="date" placeholder="Date" :disabled-date="disabledDate" value-format="YYYY-MM-DD" style="width:45vh"/>
+            </el-form-item>
+            <el-form-item label="Pet" :label-width="formLabelWidth">
+              <el-select v-model="form.petId" placeholder="Select pet" style="width:45vh">
+                <el-option
+                  v-for="item in petList"
+                  :key="item.value"
+                  :label="item.text"
+                  :value="item.value"
+                />
+              </el-select>              
+            </el-form-item>
+            <el-form-item label="Description" :label-width="formLabelWidth">
+              <el-input v-model="form.recordTitle" placeholder="Enter description" autocomplete="off" />
+            </el-form-item>            
+          </el-form>
+          <template #footer>
+            <span class="dialog-footer">
+              <el-button @click="addDialogFormVisible = false">Close</el-button>
+              <el-button type="primary" @click="addVaccination();addDialogFormVisible = false"
+                >Save</el-button
+              >
+            </span>
+          </template>
+        </el-dialog>    
+
+        <!-- dialog for editing a vaccine record -->
+        <el-dialog v-model="editDialogFormVisible" title="Edit vaccination record" @close="resetForm()">
+          <el-form :model="form">
+            <el-form-item label="Vaccination type" :label-width="formLabelWidth">
+              <el-autocomplete
+                v-model="form.vacType"
+                :fetch-suggestions="querySearch"
+                clearable
+                placeholder="Please input vaccination type"
+                @select="handleSelect"
+                style="width:45vh"                
+              />
+            </el-form-item>
+            <el-form-item label="Date" :label-width="formLabelWidth">
+              <el-date-picker v-model="form.date" type="date" placeholder="Date" :disabled-date="disabledDate" value-format="YYYY-MM-DD" style="width:45vh"/>
+            </el-form-item>
+            <el-form-item label="Pet" :label-width="formLabelWidth">
+              <el-select v-model="form.petId" placeholder="Select pet" style="width:45vh">
+                <el-option
+                  v-for="item in petList"
+                  :key="item.value"
+                  :label="item.text"
+                  :value="item.value"
+                />
+              </el-select>              
+            </el-form-item>
+            <el-form-item label="Description" :label-width="formLabelWidth">
+              <el-input v-model="form.recordTitle" placeholder="Enter description" autocomplete="off" />
+            </el-form-item>            
+          </el-form>
+          <template #footer>
+            <span class="dialog-footer">
+              <el-button @click="editDialogFormVisible = false">Close</el-button>
+              <el-button type="primary" @click="editVaccination();editDialogFormVisible = false;"
+                >Save</el-button
+              >
+            </span>
+          </template>
+        </el-dialog>            
+
     </div>
 </template>
 
 <script setup>
-// 连api后换成实际的table data
-const hardcodeTableData = [
-  {
-    pet: 'Lucy',
-    vacType: 'Vaccination Type 1',
-    date: '2021-05-02',
-  },
-  {
-    pet: 'Bella',
-    vacType: 'Vaccination Type 2',
-    date: '2021-03-12',
-  },
-  {
-    pet: 'Tom',
-    vacType: 'Vaccination Type 1',
-    date: '2021-10-19',
-  },
-  {
-    pet: 'Jerry',
-    vacType: 'Vaccination Type 3',
-    date: '2021-09-30',
-  },
-]
+import { reactive, ref, onMounted } from 'vue'
+import httpServices from '@services';
+import router from '@/router';
 
-const hardcodePetList = [
-  { text: 'Lucy', value: 'Lucy' },
-  { text: 'Bella', value: 'Bella' },
-  { text: 'Tom', value: 'Tom' },
-  { text: 'Jerry', value: 'Jerry' },
-]
 
-const filterHandler = (value, row, column) => {
-  const property = column['property']
-  return row[property] === value
+const userID = ref('4EL4hp_qRUYMzzal_G29f')
+const addDialogFormVisible = ref(false)
+const editDialogFormVisible = ref(false)
+const formLabelWidth = '140px'
+const vaccinations = ref([])
+const vaccinationTable = ref([])
+const petList = ref([])
+
+
+const form = reactive({
+  recordId: '',
+  recordTitle: '',
+  vacType: '',
+  petId: '',
+  date: '',
+})
+
+const querySearch = (queryString, cb) => {
+  const results = queryString
+    ? vaccinations.value.filter(createFilter(queryString))
+    : vaccinations.value
+  // call callback function to return suggestions
+  cb(results)
+}
+const createFilter = (queryString) => {
+  return (vac) => {
+    return (
+      vac.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+    )
+  }
+}
+const loadAll = () => {
+  return [
+    { value: 'Feline panleukopenia virus' },
+    { value: 'Feline herpesvirus' },
+    { value: 'Feline calicivirus' },
+    { value: 'Feline leukaemia virus' },
+    { value: 'Rabies' },
+    { value: 'Chlamydophila felis' },
+    { value: 'Bordetella bronchiseptica' },
+    { value: 'Distemper' },
+    { value: 'Hepatitis' },
+    { value: 'Parvovirus' },
+    { value: 'Bordetella' },
+    { value: 'Leptospirosis' },
+    { value: 'Lyme Disease' },
+    { value: 'Coronavirus' },
+    { value: 'Giardia' },
+    { value: 'Canine Influenza H3N8' },
+    { value: 'Rattlesnake vaccine' },
+
+  ]
 }
 
+const handleSelect = (item) => {
+  console.log(item)
+}
+
+const disabledDate = (time) => {
+  return time.getTime() > Date.now()
+}
+
+const getAllVaccination = async () => {
+	const res = await httpServices.vaccinationHistory.getAllVaccination({
+    uid: userID.value,
+    recordType: "Vaccination"
+  });
+  console.log("vaccine table: ", res.data)
+  vaccinationTable.value = res.data.data
+
+	// console.log('all vaccination', res);
+};
+
+const getPetList = async () => {
+	const res = await httpServices.vaccinationHistory.getPetList({
+    uid: userID.value,
+  });
+  console.log("pet list:", res.data.data)
+	for (let item of res.data.data) {
+		petList.value.push({ text: item.petName, value: item.petId });
+	}  
+  //hardcode
+  // petList.value = [
+  //   { text: 'Lucy', value: '01' },
+  //   { text: 'Bella', value: '02' },
+  //   { text: 'Tom', value: '03' },
+  //   { text: 'Jerry', value: '04' },
+  // ]
+
+	// console.log('pet list', res);
+};
+
+const fillFormByRow = (index, row) => {
+  form.recordId = row.recordId
+  form.recordTitle = row.recordTitle
+  form.vacType = row.vacType
+  form.petId = row.petId
+  form.date = row.date
+  console.log(index, row)
+}
+
+const resetForm = () => {
+  form.recordId = ''
+  form.recordTitle = ''
+  form.vacType = ''
+  form.petId = ''
+  form.date = ''
+}
+
+onMounted(() => {
+  getAllVaccination()
+  getPetList()
+  vaccinations.value = loadAll()
+})
+
+
+
+const filterHandler = (value, row, column) => {
+  // const property = column['property']
+  // return row[property] === value
+  return row.petId === value
+}
+
+const addVaccination = async () => {
+  const res = await httpServices.vaccinationHistory.addVaccination({
+    uid: userID.value,
+    record: {
+      recordType: 'Vaccination',
+      recordTitle: form.recordTitle,
+      date: form.date,
+      fileDir: null,
+      fileFormat: null,
+      vacType: form.vacType,
+      petId: form.petId
+    }
+  });
+  if (res.data.status === 200) {
+		ElMessage({
+			message: 'New record added',
+			type: 'success'
+		});    
+    getAllVaccination()
+  }
+  console.log("add res: ", res.data)
+
+  console.log("send")
+}
+
+const editVaccination = async () => {
+  const res = await httpServices.vaccinationHistory.editVaccination({
+    uid: userID.value,
+    newRecord: {
+      recordId: form.recordId,
+      recordType: 'Vaccination',
+      recordTitle: form.recordTitle,
+      date: form.date,
+      fileDir: null,
+      fileFormat: null,
+      vacType: form.vacType,
+      petId: form.petId
+    }
+  });
+  if (res.data.status === 200) {
+		ElMessage({
+			message: 'Record updated',
+			type: 'success'
+		});    
+    getAllVaccination()
+  }
+  console.log("edit")
+}
+
+const handleDelete = async (index, row) => {
+  console.log("row.recordId,", row.recordId)
+  const res = await httpServices.vaccinationHistory.deleteVaccination({
+    uid: userID.value,
+    recordId: row.recordId
+  });  
+  if (res.data.status === 200) {
+		ElMessage({
+			message: 'Record deleted',
+			type: 'success'
+		});    
+    getAllVaccination()
+  }  
+  console.log("delete,", res)
+}
 
 </script>
 
 <style lang="scss" scoped>
+.el-input {
+  width: 45vh;
+}
 
 .table-wrapper {
   height: 60vh;
@@ -115,7 +368,16 @@ const filterHandler = (value, row, column) => {
   .table {
       border-radius: 1.5vh;
   }
+}
+.add-button-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 3vh;
+  .add-button {
+
+  }
 }        
+
 
 
 .table .el-table__body {
