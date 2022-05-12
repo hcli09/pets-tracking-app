@@ -13,6 +13,7 @@ import Settings from '@/components/Settings/index.vue';
 import UserProfile from '@/components/UserProfile/index.vue';
 import EditUserProfile from '@/components/EditUserProfile/index.vue';
 import VaccinationHistory from '@/components/VaccinationHistory/index.vue';
+import Medication from '@/components/Medication/index.vue';
 
 const routes = [
 	{
@@ -51,6 +52,10 @@ const routes = [
 			{
 				path: 'settings',
 				component: Settings
+			},
+			{
+				path: 'Medication',
+				component: Medication
 			},
 			{
 				path: 'vaccinationhistory',

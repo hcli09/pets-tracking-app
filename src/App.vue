@@ -38,6 +38,19 @@ export default {
 	padding: 0;
 	// font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
 	//     'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+	//tabs used for list and grid view in folders
+	.el-tabs__content {
+		height: 65vh;
+	}
+	//background color of tabs used for list and grid view in folders
+	.el-tabs__nav-scroll {
+		background-color: #f1eeec;
+	}
+	//text color and font used in table in folders
+	.cell {
+		color: #76553f;
+		font-family: 'Trebuchet MS';
+	}
 }
 
 #app {

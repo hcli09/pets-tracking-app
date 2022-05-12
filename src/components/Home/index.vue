@@ -5,7 +5,7 @@
 			<PetsTopBar
 				:firstName="userObject.firstName"
 				:lastName="userObject.lastName"
-				:UserAvatar="temp_user_url"
+				:UserAvatar="userObject.image"
 			/>
 		</el-header>
 
@@ -129,6 +129,7 @@ export default {
 				this.$data.userObject.lastName = userObject.lastName;
 				this.$data.userObject.petList = userObject.petList;
 				this.$data.userObject.image = userObject.image;
+<<<<<<< HEAD
 
 				//get url for pet avatars
 				for (
@@ -162,6 +163,8 @@ export default {
 					console.log(url);
 					this.$data.temp_user_url = url;
 				});
+=======
+>>>>>>> 38a078c24405154f9f20a2d4b30763a1dd59d0b1
 			})
 			.catch(error => {
 				console.log(error);

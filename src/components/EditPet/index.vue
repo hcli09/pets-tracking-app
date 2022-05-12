@@ -59,8 +59,8 @@
 					:http-request="Upload"
 				>
 					<img
-						v-if="petAvatar_temp_url"
-						:src="petAvatar_temp_url"
+						v-if="petAvatar"
+						:src="petAvatar"
 						class="avatar"
 						alt="upload"
 					/>
@@ -193,9 +193,8 @@ export default {
 				weight: null,
 				height: null
 			},
-			// pet avatar, get from backend to show on the edit page, after editing then send to backend
+			// pet avatar url
 			petAvatar: '',
-			petAvatar_temp_url: '',
 
 			// rules for pet form input
 			rules: {
@@ -301,15 +300,6 @@ export default {
 						petobject.breed
 					];
 					this.$data.petAvatar = petobject.petAvatar;
-
-					const storageRef = ref_upload(
-						storage,
-						this.$data.petAvatar
-					);
-					getDownloadURL(storageRef).then(url => {
-						console.log(url);
-						this.$data.petAvatar_temp_url = url;
-					});
 				})
 				.catch(error => {
 					console.log(error.message);
@@ -355,7 +345,6 @@ export default {
 					httpServices.petInfo
 						.updatePet(petObject)
 						.then(response => {
-							console.log(response.data.data);
 							location.reload();
 						})
 						.catch(error => {
@@ -371,7 +360,7 @@ export default {
 		// clear all inputs
 		resetForm(petForm) {
 			this.$refs[petForm].resetFields();
-			this.petAvatar_temp_url = '';
+			this.petAvatar = '';
 		},
 
 		// Delete pet
@@ -379,16 +368,18 @@ export default {
 			httpServices.petInfo
 				.deletePet({ uid: this.$data.uid, petId: this.$data.petId })
 				.then(response => {
-					// console.log(response.message)
+					const storage = getStorage();
+					// Create a reference to the file to delete
+					const avatar_ref = decodeURIComponent(
+						this.$data.petAvatar.split('/').pop().split('?')[0]
+					);
+					const desertRef = ref_delete(storage, avatar_ref);
+					// Delete the file
+					deleteObject(desertRef).then(() => {
+						// File deleted successfully
+					});
 					location.href = '/dashboard';
 				});
-			const storage = getStorage();
-			// Create a reference to the file to delete
-			const desertRef = ref_delete(storage, this.$data.petAvatar);
-			// Delete the file
-			deleteObject(desertRef).then(() => {
-				// File deleted successfully
-			});
 		},
 
 		handleChange(value) {
@@ -419,12 +410,13 @@ export default {
 			const currentDate = new Date();
 			const timestamp = currentDate.getTime();
 
-			this.$data.petAvatar =
-				this.$data.uid + '_petAvatar' + '_' + timestamp;
-			const storageRef = ref_upload(storage, this.$data.petAvatar);
+			const storageRef = ref_upload(
+				storage,
+				this.$data.uid + '_petAvatar' + '_' + timestamp
+			);
 			uploadBytes(storageRef, file).then(() => {
-				getDownloadURL(storageRef).then(res => {
-					this.petAvatar_temp_url = res;
+				getDownloadURL(storageRef).then(url => {
+					this.petAvatar = url;
 				});
 			});
 		}
@@ -526,21 +518,5 @@ export default {
 	.lc-petforms {
 		width: 340px;
 	}
-}
-</style>
-
-<style scoped>
-.el-form-item__label {
-	color: #76553f;
-	text-align: justify;
-	margin-right: 20px;
-	font-size: medium;
-}
-
-.el-input__inner {
-	/* box-shadow: 0 0 0 1px #76553f inset; */
-	font-family: Trebuchet MS;
-	color: #76553f;
-	font-size: medium;
 }
 </style>
