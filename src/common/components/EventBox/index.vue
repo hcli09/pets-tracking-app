@@ -13,7 +13,7 @@
 			<div class="event-task-small-box">
 				<div class="event-task-inside">
 					<span>{{ title }}</span>
-					<p>{{ startDateTime.slice(-5) }}</p>
+					<!-- <p>{{ startDateTime.slice(-5) }}</p> -->
 				</div>
 				<el-tooltip
 					class="box-item"
