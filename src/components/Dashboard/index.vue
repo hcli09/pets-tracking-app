@@ -162,12 +162,9 @@ const toInvoice = () => {
 const toVaccination = () => {
 	router.push('/vaccinationhistory');
 };
-<<<<<<< HEAD
-=======
 const toMedication = () => {
 	router.push('/medication');
 };
->>>>>>> 38a078c24405154f9f20a2d4b30763a1dd59d0b1
 </script>
 
 <script>

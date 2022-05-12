@@ -129,42 +129,6 @@ export default {
 				this.$data.userObject.lastName = userObject.lastName;
 				this.$data.userObject.petList = userObject.petList;
 				this.$data.userObject.image = userObject.image;
-<<<<<<< HEAD
-
-				//get url for pet avatars
-				for (
-					let index = 0;
-					index < this.$data.userObject.petList.length;
-					index++
-				) {
-					const storageRef = ref_upload(
-						storage,
-						this.$data.userObject.petList[index].petAvatar
-					);
-					getDownloadURL(storageRef).then(async url => {
-						for (let i in this.$data.userObject.petList) {
-							if (
-								this.$data.userObject.petList[i].petAvatar ===
-								storageRef.fullPath
-							) {
-								this.$data.userObject.petList[i].petAvatar_Url =
-									url;
-							}
-						}
-					});
-				}
-
-				//get user avatar
-				const storageRef_user = ref_user(
-					storage,
-					this.$data.userObject.image
-				);
-				getDownloadURL(storageRef_user).then(url => {
-					console.log(url);
-					this.$data.temp_user_url = url;
-				});
-=======
->>>>>>> 38a078c24405154f9f20a2d4b30763a1dd59d0b1
 			})
 			.catch(error => {
 				console.log(error);
