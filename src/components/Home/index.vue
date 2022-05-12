@@ -123,6 +123,7 @@ export default {
 			.user_dashboard({ uid: this.$data.uid })
 			.then(response => {
 				let userObject = response.data.data;
+				localStorage.setItem('user', JSON.stringify(userObject));
 				//edit page, assign pet object to pet form
 				this.$data.userObject.firstName = userObject.firstName;
 				this.$data.userObject.lastName = userObject.lastName;
@@ -131,7 +132,7 @@ export default {
 
 				//get url for pet avatars
 				for (
-					var index = 0;
+					let index = 0;
 					index < this.$data.userObject.petList.length;
 					index++
 				) {

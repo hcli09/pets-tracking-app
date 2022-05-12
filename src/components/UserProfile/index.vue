@@ -258,7 +258,6 @@ const beforeAvatarUpload = function (rawFile) {
 	uploadBytes(storageRef, rawFile).then(() => {
 		//get url from firebase
 		getDownloadURL(storageRef).then(res => {
-			console.log(res);
 			user.user_temp_image_URL = res;
 		});
 		//post user avatar to BE

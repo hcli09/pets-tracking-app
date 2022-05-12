@@ -5,8 +5,32 @@
 
 <template>
 	<!-- <HelloWorld msg="Hello Vue 3 + Vite" /> -->
-	<router-view></router-view>
+	<router-view v-if="isRouterAlive"></router-view>
 </template>
+
+<script>
+export default {
+	name: 'Pets App',
+	provide() {
+		return {
+			reload: this.reload
+		};
+	},
+	data() {
+		return {
+			isRouterAlive: true
+		};
+	},
+	methods: {
+		reload() {
+			this.isRouterAlive = false;
+			this.$nextTick(() => {
+				this.isRouterAlive = true;
+			});
+		}
+	}
+};
+</script>
 
 <style lang="scss">
 * {
@@ -33,4 +57,15 @@
 // :root {
 //     --el-color-primary: #76553f;
 // }
+
+.el-form-item__label {
+	color: #76553f;
+	text-align: justify;
+}
+
+.el-input__inner {
+	/* box-shadow: 0 0 0 1px #76553f inset; */
+	font-family: Trebuchet MS;
+	color: #76553f;
+}
 </style>

@@ -45,21 +45,21 @@ export default {
 	name: 'PetsTopBar',
 	props: ['firstName', 'lastName', 'UserAvatar'],
 
-    //print for now
-    methods: {
-        clickSettings() {
-            this.$router.push({
-                path: '/settings',
-            })            
-            console.log('redirect to setting page');
-        },
+	//print for now
+	methods: {
+		clickSettings() {
+			this.$router.push({
+				path: '/settings'
+			});
+			console.log('redirect to setting page');
+		},
 
-        clickUserAvatar() {
-            this.$router.push({
-                path: '/userprofile',
-            })            
-            console.log('redirect to userprofile');
-        },
+		clickUserAvatar() {
+			this.$router.push({
+				path: '/userprofile'
+			});
+			console.log('redirect to userprofile');
+		},
 
 		//temporary add pet button
 		clickAddPet() {
@@ -94,6 +94,7 @@ export default {
 	color: #76553f;
 	font-size: 30px;
 	font-weight: bold;
+	cursor: pointer;
 }
 
 //username, avatar, settings

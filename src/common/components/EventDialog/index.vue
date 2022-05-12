@@ -9,31 +9,36 @@
 			<!-- Event Title -->
 			<el-form-item label="Event Title" :label-width="formLabelWidth">
 				<el-input
-					v-model="form.title"
+					v-model="form.eventData.eventTitle"
 					autocomplete="off"
 					placeholder="Please input event title"
-					style="width: 71%"
+					style="width: 80%"
 				/>
 			</el-form-item>
 
 			<!-- Pet Selector -->
 			<el-form-item label="Pet" :label-width="formLabelWidth">
 				<el-select
-					v-model="form.pet"
+					v-model="form.eventData.petIdList"
 					placeholder="Please select a pet"
-					style="width: 71%"
+					style="width: 80%"
+					multiple
 				>
-					<el-option label="Lucy" value="LucyId" />
-					<el-option label="Oliver" value="OliverId" />
+					<el-option
+						v-for="pet in petList"
+						:key="pet.petId"
+						:label="pet.petName"
+						:value="pet.petId"
+					/>
 				</el-select>
 			</el-form-item>
 
 			<!-- Event Type -->
 			<el-form-item label="Event Type" :label-width="formLabelWidth">
 				<el-select
-					v-model="form.eventType"
+					v-model="form.eventData.eventType"
 					placeholder="Please select an event type"
-					style="width: 71%"
+					style="width: 80%"
 				>
 					<el-option label="Vaccination" value="vaccination" />
 					<el-option label="Pet Grocery" value="petGrocery" />
@@ -50,38 +55,36 @@
 					}"
 				>
 					<el-date-picker
-						v-model="form.startDate"
+						v-model="eventDateTime.startDate"
 						type="date"
 						placeholder="Start date"
-						style="width: 28%; margin-right: 5px"
+						value-format="YYYY-MM-DD"
+						style="width: 45%; margin-right: 14px"
 					/>
 
 					<el-time-picker
-						v-model="form.startTime"
-						is-range
+						v-model="eventDateTime.startTime"
 						format="HH:mm"
-						range-separator="to"
-						start-placeholder="Start time"
-						end-placeholder="End time"
-						style="width: 42%"
+						placeholder="Start time"
+						value-format="HH:mm"
+						style="width: 48%"
 					/>
 				</div>
 
 				<div :style="{ display: 'flex', alignItems: 'center' }">
 					<el-date-picker
-						v-model="form.endDate"
+						v-model="eventDateTime.endDate"
 						type="date"
 						placeholder="End date"
-						style="width: 28%; margin-right: 5px"
+						value-format="YYYY-MM-DD"
+						style="width: 45%; margin-right: 14px"
 					/>
 					<el-time-picker
-						v-model="form.endTime"
-						is-range
+						v-model="eventDateTime.endTime"
 						format="HH:mm"
-						range-separator="to"
-						start-placeholder="Start time"
-						end-placeholder="End time"
-						style="width: 42%"
+						placeholder="End time"
+						value-format="HH:mm"
+						style="width: 48%"
 					/>
 				</div>
 			</el-form-item>
@@ -89,18 +92,21 @@
 			<!-- Description -->
 			<el-form-item label="Description" :label-width="formLabelWidth">
 				<el-input
-					v-model="form.description"
+					v-model="form.eventData.description"
 					:rows="5"
 					type="textarea"
 					placeholder="Please input description"
-					style="width: 71%"
+					style="width: 80%"
 				/>
 			</el-form-item>
 		</el-form>
 		<template #footer>
 			<span class="dialog-footer">
 				<el-button @click="$emit('setVisible')">Cancel</el-button>
-				<el-button type="primary" @click="$emit('setVisible')"
+				<el-button
+					type="primary"
+					:loading="isSubmitting"
+					@click="onSubmit"
 					>Confirm</el-button
 				>
 			</span>
@@ -109,7 +115,16 @@
 </template>
 
 <script setup>
-import { reactive, ref, defineProps, defineEmits } from 'vue';
+import {
+	inject,
+	reactive,
+	ref,
+	defineProps,
+	defineEmits,
+	onMounted
+} from 'vue';
+import httpServices from '@services';
+const reload = inject('reload');
 const props = defineProps({
 	dialogVisible: {
 		type: Boolean,
@@ -117,7 +132,7 @@ const props = defineProps({
 	}
 });
 const emits = defineEmits(['setVisible']);
-// const visible = ref(props.dialogVisible);
+const isSubmitting = ref(false);
 const formLabelWidth = '140px';
 const shortcuts = [
 	{
@@ -148,38 +163,54 @@ const shortcuts = [
 		}
 	}
 ];
-const form = reactive({
-	name: '',
-	region: '',
-	date1: '',
-	date2: '',
-	delivery: false,
-	type: [],
-	resource: '',
-	desc: ''
+const eventDateTime = reactive({
+	startDate: '',
+	startTime: '',
+	endDate: '',
+	endTime: ''
 });
-const colors = [
-	{
-		name: 'Blue',
-		bgColor: '#eff6ff',
-		textColor: '#1e40af'
-	},
-	{
-		name: 'Indigo',
-		bgColor: '#eef2ff',
-		textColor: '#3730a3'
-	},
-	{
-		name: 'Teal',
-		bgColor: '#f0fdfa',
-		textColor: '#115e59'
-	},
-	{
-		name: 'Rose',
-		bgColor: '#fff1f2',
-		textColor: '#9f1239'
+const form = reactive({
+	uid: '',
+	eventData: {
+		eventId: null,
+		petIdList: [],
+		eventTitle: '',
+		eventType: '',
+		startDateTime: '',
+		endDateTime: '',
+		description: '',
+		petAbList: null
 	}
-];
+});
+const onSubmit = async () => {
+	isSubmitting.value = true;
+	form.eventData.startDateTime =
+		eventDateTime.startDate + ' ' + eventDateTime.startTime;
+	form.eventData.endDateTime =
+		eventDateTime.endDate + ' ' + eventDateTime.endTime;
+	try {
+		const res = await httpServices.events.addEvent(form);
+		if (res.status === 200) {
+			isSubmitting.value = false;
+			ElMessage({
+				message:
+					'New event created successfully. You will get notified when the event is approaching',
+				type: 'success',
+				duration: 6000
+			});
+			reload();
+			emits('setVisible');
+		}
+	} catch (error) {
+		ElMessage.error('Failed to create event');
+		console.log(error);
+	}
+};
+
+const petList = reactive([]);
+let user = JSON.parse(localStorage.getItem('user'));
+form.uid = '4EL4hp_qRUYMzzal_G29f';
+petList.push(...user.petList);
 </script>
 
 <style lang="scss" scoped>
@@ -192,6 +223,9 @@ const colors = [
 .el-input {
 	width: 300px;
 }
+// :deep(.el-input__inner) {
+// 	padding-right: 0 !important;
+// }
 .dialog-footer button:first-child {
 	margin-right: 10px;
 }
@@ -200,6 +234,22 @@ const colors = [
 	&:hover {
 		background: transparent;
 	}
+}
+
+:deep(input[placeholder='Start date']) {
+	padding-left: 40px !important;
+}
+:deep(input[placeholder='End date']) {
+	padding-left: 40px !important;
+}
+:deep(input[placeholder='Start time']) {
+	padding-left: 40% !important;
+}
+:deep(input[placeholder='End time']) {
+	padding-left: 40% !important;
+}
+:deep(textarea.el-textarea__inner) {
+	font-family: Trebuchet MS;
 }
 </style>
 

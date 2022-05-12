@@ -424,7 +424,6 @@ export default {
 			const storageRef = ref_upload(storage, this.$data.petAvatar);
 			uploadBytes(storageRef, file).then(() => {
 				getDownloadURL(storageRef).then(res => {
-					console.log(res);
 					this.petAvatar_temp_url = res;
 				});
 			});
@@ -530,7 +529,7 @@ export default {
 }
 </style>
 
-<style>
+<style scoped>
 .el-form-item__label {
 	color: #76553f;
 	text-align: justify;

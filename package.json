@@ -9,15 +9,16 @@
 		"lint": "eslint . --ext .vue,.js"
 	},
 	"dependencies": {
-		"vue-pdf": "^4.3.0",
-		"firebase": "^9.7.0",
 		"@element-plus/icons": "0.0.11",
-		"element-plus": "^2.1.8",
-		"pinia": "^2.0.13",
 		"axios": "^0.26.1",
+		"element-plus": "^2.1.8",
+		"firebase": "^9.7.0",
+		"moment": "^2.29.3",
+		"pinia": "^2.0.13",
 		"qs": "^6.10.3",
 		"v-calendar": "^3.0.0-alpha.8",
 		"vue": "^3.2.25",
+		"vue-pdf": "^4.3.0",
 		"vue-router": "^4.0.14",
 		"vue-sidebar-menu": "^5.2.2",
 		"vue3-carousel": "^0.1.38"

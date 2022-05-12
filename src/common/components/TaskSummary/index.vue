@@ -1,97 +1,53 @@
 <template>
 	<el-scrollbar height="270px">
 		<h3 class="task-heading">Tasks</h3>
-		<EventTaskBox
-			v-for="(task, index) in tasks"
-			:key="task.key"
-			:index="index"
-			:customData="task.customData"
-		/>
+		<template v-if="tasks.length < 1">
+			<div
+				style="
+					width: 320px;
+					height: 220px;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+				"
+			>
+				<h3 class="task-heading-2">No tasks today</h3>
+			</div>
+		</template>
+		<template v-else>
+			<TaskBox
+				v-for="(task, index) in tasks"
+				:key="task.taskId"
+				:index="index"
+				:customData="task"
+			/>
+		</template>
 	</el-scrollbar>
 </template>
 
 <script setup>
-import { reactive } from 'vue';
-import EventTaskBox from '@common/components/EventTaskBox/index.vue';
-const month = new Date().getMonth();
-const year = new Date().getFullYear();
-const masks = { weekdays: 'WWW' };
+import { reactive, onMounted } from 'vue';
+import TaskBox from '@common/components/TaskBox/index.vue';
+import services from '../../../services';
+import moment from 'moment';
 
-const tasks = reactive([
-	{
-		key: 1,
-		customData: {
-			title: "Renew prescription for Max's medication",
-			type: 'task',
-			pets: [
-				{
-					name: 'Max',
-					avatarUrl:
-						'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg'
-				}
-			],
-			timeRange: '',
-			dates: 'May 05'
-		},
-		dates: new Date(year, month, 5)
-	},
-	{
-		key: 2,
-		customData: {
-			title: 'Take Max for vet check up',
-			type: 'task',
-			pets: [
-				{
-					name: 'Max',
-					avatarUrl:
-						'https://previews.123rf.com/images/lar01joka/lar01joka1804/lar01joka180400019/100152648-cute-shiba-inu-dog-avatar.jpg'
-				}
-			],
-			timeRange: '',
-			dates: 'May 05'
-		},
-		dates: new Date(year, month, 5)
-	},
-	{
-		key: 3,
-		customData: {
-			title: 'Play date with Lucy and Odie',
-			type: 'task',
-			pets: [
-				{
-					name: 'Lucy',
-					avatarUrl:
-						'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png'
-				},
-				{
-					name: 'Odie',
-					avatarUrl:
-						'https://thumbs.dreamstime.com/b/dog-avatar-25770385.jpg'
-				}
-			],
-			timeRange: '',
-			dates: 'May 22'
-		},
-		dates: new Date(year, month, 22)
-	},
-	{
-		key: 4,
-		customData: {
-			title: "Renew prescription for Lucy's medication",
-			type: 'task',
-			pets: [
-				{
-					name: 'Lucy',
-					avatarUrl:
-						'https://cdn0.iconfinder.com/data/icons/black-cat-emoticon-filled/64/cute_cat_kitten_face_per_avatar-02-512.png'
-				}
-			],
-			timeRange: '',
-			dates: 'May 05'
-		},
-		dates: new Date()
+const tasks = reactive([]);
+const getTasksByDateAsync = async () => {
+	try {
+		const { data: res, status } = await services.tasks.getTasksByDate({
+			uid: '4EL4hp_qRUYMzzal_G29f',
+			date: moment().format('YYYY-MM-DD')
+		});
+
+		if (status === 200) {
+			tasks.push(...res.data.taskList);
+		}
+	} catch (error) {
+		console.log(error);
 	}
-]);
+};
+
+getTasksByDateAsync();
 </script>
 
 <style lang="scss" scoped>
@@ -100,5 +56,10 @@ const tasks = reactive([
 	font-family: Trebuchet MS;
 	font-size: 2.5vmin;
 	font-weight: bold;
+}
+.task-heading-2 {
+	color: #908f8c;
+	font-family: Trebuchet MS;
+	font-size: 2.5vmin;
 }
 </style>
