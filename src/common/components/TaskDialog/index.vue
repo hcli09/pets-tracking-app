@@ -34,20 +34,13 @@
 			</el-form-item>
 
 			<!-- Date and time -->
-			<el-form-item label="Date and time" :label-width="formLabelWidth">
-				<el-date-picker
-					v-model="form.taskData.startDate"
-					type="date"
-					placeholder="Start Date"
-					value-format="YYYY-MM-DD"
-					style="width: 39%; margin-right: 8px"
-				/>
+			<el-form-item label="Due on" :label-width="formLabelWidth">
 				<el-date-picker
 					v-model="form.taskData.dueDate"
 					type="date"
 					placeholder="Due Date"
 					value-format="YYYY-MM-DD"
-					style="width: 39%"
+					style="width: 39%; margin-right: 8px"
 				/>
 			</el-form-item>
 		</el-form>
@@ -122,7 +115,6 @@ const form = reactive({
 		taskId: null,
 		petIdList: [],
 		taskTitle: '',
-		startDate: '',
 		dueDate: '',
 		checked: false
 	}
