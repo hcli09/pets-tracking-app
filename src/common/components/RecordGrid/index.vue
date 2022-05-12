@@ -502,7 +502,7 @@ export default {
 		handleDelete(record) {
 			this.$data.deletedialogVisible = true;
 			this.$data.delete_recordId = record.recordId;
-			this.$data.delete_fileDir = row.fileDir;
+			this.$data.delete_fileDir = record.fileDir;
 			console.log(this.$data.delete_recordId);
 			console.log(record);
 		},
@@ -711,7 +711,14 @@ export default {
 		}
 	}
 }
-
+.document-dialog-datepet {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.document-dialog-upload {
+	text-align: center;
+}
 .right-filter {
 	.datepicker {
 		width: 208px;
@@ -746,6 +753,7 @@ export default {
 
 	.rihgt_buttons {
 		margin-left: 0;
+		margin-right: 0;
 		width: 100px;
 		height: 40px;
 	}
