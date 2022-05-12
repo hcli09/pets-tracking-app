@@ -59,8 +59,8 @@
 					<el-row style="position: relative">
 						<v-date-picker v-model="value" locale="eng" />
 						<div
-							style="z-index: 9999"
-							class="absolute bottom-2 left-1/2 transform -translate-x-1/2"
+							style="z-index: 99"
+							class="absolute bottom-2 left-1/2 transform -translate-x-1/2 rounded-2xl"
 						>
 							<router-link to="/calendar">
 								<el-button
