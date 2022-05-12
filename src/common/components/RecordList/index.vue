@@ -644,7 +644,7 @@ export default {
 
 .right-filter {
 	.datepicker {
-		width: 208px;
+		width: 210px;
 		margin-top: 8px;
 		p {
 			color: #76553f;
@@ -656,6 +656,7 @@ export default {
 	}
 
 	.pet-filter {
+		width: 210px;
 		margin-top: 15px;
 		p {
 			color: #76553f;
@@ -664,13 +665,18 @@ export default {
 			font-size: 14px;
 			font-weight: bold;
 		}
+
+		:deep(.el-select .el-input__inner) {
+			font-size: 14px;
+			width: 210px;
+		}
 	}
 }
 
 .document-dialog-datepet {
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
+	align-items: left;
 }
 .document-dialog-upload {
 	text-align: center;
