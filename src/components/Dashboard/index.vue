@@ -56,7 +56,26 @@
 			<el-row class="inner-events-tasks-box" :gutter="30">
 				<!-- calender -->
 				<el-col :span="6">
-					<v-date-picker v-model="value" locale="eng" />
+					<el-row style="position: relative">
+						<v-date-picker v-model="value" locale="eng" />
+						<div
+							style="z-index: 9999"
+							class="absolute bottom-2 left-1/2 transform -translate-x-1/2"
+						>
+							<router-link to="/calendar">
+								<el-button
+									class="add-button"
+									color="#76553f"
+									style="border: #fd6540"
+									type="primary"
+									:icon="Calendar"
+									plain
+								>
+									Calendar
+								</el-button>
+							</router-link>
+						</div>
+					</el-row>
 				</el-col>
 				<el-col :span="7" class="summary-events-tasks-box">
 					<EventSummary />
@@ -102,20 +121,6 @@
 							:dialogVisible="taskDialogVisible"
 							@setVisible="setTaskDialogVisible"
 						/>
-					</el-row>
-					<el-row>
-						<router-link to="/calendar">
-							<el-button
-								class="add-button"
-								color="#76553f"
-								style="border: #fd6540"
-								type="primary"
-								:icon="Calendar"
-								plain
-							>
-								Calendar
-							</el-button>
-						</router-link>
 					</el-row>
 				</el-col>
 			</el-row>
