@@ -128,7 +128,7 @@
 		title="Add Document"
 		v-model="AdddialogFormVisible"
 	>
-		<el-form :model="documentForm">
+		<el-form :model="documentForm" v-loading="addloading">
 			<el-form-item label="Document Title">
 				<el-input
 					v-model="documentForm.recordTitle"
@@ -227,7 +227,7 @@
 		title="Edit Document"
 		v-model="EditdialogFormVisible"
 	>
-		<el-form :model="EditdocumentForm">
+		<el-form :model="EditdocumentForm" v-loading="editloading">
 			<el-form-item label="Document Title">
 				<el-input
 					v-model="EditdocumentForm.recordTitle"
@@ -285,7 +285,7 @@
 					>Cancel</el-button
 				>
 				<el-button @click="editdocument" type="primary" plain
-					>Create</el-button
+					>Save</el-button
 				>
 			</span>
 		</template>
@@ -310,6 +310,8 @@ export default {
 
 	data() {
 		return {
+			editloading: false,
+			addloading: false,
 			uid: this.curr_uid,
 			recordList: [],
 			recordType: this.initial_recordType,
@@ -372,6 +374,7 @@ export default {
 		adddocument() {
 			this.$data.AdddialogFormVisible = false;
 			console.log(this.$data.documentForm);
+			console.log(this.$data.documentForm.fileDir);
 			//add new invoice
 			httpServices.invoicemed
 				.addNewRecord({
@@ -476,6 +479,7 @@ export default {
 		},
 		//Add upload document
 		AddbeforeAvatarUpload(file) {
+			this.$data.addloading = true;
 			const isJPG =
 				file.type === 'image/png' || file.type === 'image/jpeg';
 			const isPDF = file.type === 'application/pdf';
@@ -507,15 +511,19 @@ export default {
 				storage,
 				this.$data.uid + '_invocie' + '_' + timestamp
 			);
+			console.log(file);
 			uploadBytes(storageRef, file).then(() => {
 				getDownloadURL(storageRef).then(url => {
+					console.log(url);
 					this.$data.documentForm.fileDir = url;
+					this.$data.addloading = false;
 				});
 			});
 		},
 
 		//Edit upload document
 		EditbeforeAvatarUpload(file) {
+			this.$data.editloading = true;
 			const isJPG =
 				file.type === 'image/png' || file.type === 'image/jpeg';
 			const isPDF = file.type === 'application/pdf';
@@ -550,6 +558,7 @@ export default {
 			uploadBytes(storageRef, file).then(() => {
 				getDownloadURL(storageRef).then(url => {
 					this.$data.EditdocumentForm.fileDir = url;
+					this.$data.editloading = false;
 				});
 			});
 		},
@@ -644,7 +653,7 @@ export default {
 
 .right-filter {
 	.datepicker {
-		width: 208px;
+		width: 210px;
 		margin-top: 8px;
 		p {
 			color: #76553f;
@@ -656,6 +665,7 @@ export default {
 	}
 
 	.pet-filter {
+		width: 210px;
 		margin-top: 15px;
 		p {
 			color: #76553f;
@@ -664,13 +674,18 @@ export default {
 			font-size: 14px;
 			font-weight: bold;
 		}
+
+		:deep(.el-select .el-input__inner) {
+			font-size: 14px;
+			width: 210px;
+		}
 	}
 }
 
 .document-dialog-datepet {
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
+	align-items: left;
 }
 .document-dialog-upload {
 	text-align: center;
