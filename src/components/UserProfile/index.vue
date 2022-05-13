@@ -296,11 +296,13 @@ export default {
 	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 
 	.avatar-container {
-		text-align: center;
+		display: flex;
+    	justify-content: center;
 		margin-top: 3vh;
 
 		.avatar-image {
 			width: 10vh;
+			height: 10vh;
 		}
 	}
 
@@ -375,6 +377,7 @@ export default {
 			margin-bottom: 2vh;
 			img {
 				width: 11vh;
+				height: 11vh;
 				border-radius: 1vh;
 				text-align: center;
 			}
