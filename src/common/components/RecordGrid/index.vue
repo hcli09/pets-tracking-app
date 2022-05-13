@@ -142,7 +142,7 @@
 		title="Add Document"
 		v-model="AdddialogFormVisible"
 	>
-		<el-form :model="documentForm">
+		<el-form :model="documentForm" v-loading="addloading">
 			<el-form-item label="Document Title">
 				<el-input
 					v-model="documentForm.recordTitle"
@@ -232,7 +232,7 @@
 		title="Edit Document"
 		v-model="EditdialogFormVisible"
 	>
-		<el-form :model="EditdocumentForm">
+		<el-form :model="EditdocumentForm" v-loading="editloading">
 			<el-form-item label="Document Title">
 				<el-input
 					v-model="EditdocumentForm.recordTitle"
@@ -290,7 +290,7 @@
 					>Cancel</el-button
 				>
 				<el-button @click="editdocument" type="primary" plain
-					>Create</el-button
+					>Save</el-button
 				>
 			</span>
 		</template>
@@ -326,6 +326,8 @@ export default {
 	},
 	data() {
 		return {
+			editloading: false,
+			addloading: false,
 			uid: this.curr_uid,
 			recordList: [],
 			recordType: this.initial_recordType,
@@ -421,6 +423,7 @@ export default {
 
 		//Add upload document
 		AddbeforeAvatarUpload(file) {
+			this.$data.addloading = true;
 			const isJPG =
 				file.type === 'image/png' || file.type === 'image/jpeg';
 			const isPDF = file.type === 'application/pdf';
@@ -455,6 +458,7 @@ export default {
 			uploadBytes(storageRef, file).then(() => {
 				getDownloadURL(storageRef).then(url => {
 					this.$data.documentForm.fileDir = url;
+					this.$data.addloading = false;
 				});
 			});
 		},
@@ -539,6 +543,7 @@ export default {
 
 		//Edit upload document
 		EditbeforeAvatarUpload(file) {
+			this.$data.editloading = true;
 			const isJPG =
 				file.type === 'image/png' || file.type === 'image/jpeg';
 			const isPDF = file.type === 'application/pdf';
@@ -573,6 +578,7 @@ export default {
 			uploadBytes(storageRef, file).then(() => {
 				getDownloadURL(storageRef).then(url => {
 					this.$data.EditdocumentForm.fileDir = url;
+					this.$data.editloading = false;
 				});
 			});
 		},
