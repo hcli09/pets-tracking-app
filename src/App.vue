@@ -43,9 +43,9 @@ export default {
 		height: 65vh;
 	}
 	//background color of tabs used for list and grid view in folders
-	.el-tabs__nav-scroll {
-		background-color: #f1eeec;
-	}
+	// .el-tabs__nav-scroll {
+	// 	background-color: #f1eeec;
+	// }
 	//text color and font used in table in folders
 	.cell {
 		color: #76553f;
