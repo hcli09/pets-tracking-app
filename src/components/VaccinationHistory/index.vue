@@ -4,62 +4,118 @@
             <el-header style="background-color:#eedad1;color:#c17754;height:10vh;line-height:10vh">VACCINATION HISTORY</el-header>
             <el-container>
                 <el-main style="padding:0; margin-top:3vh">
-                  <div class="table-wrapper">
-                    <div class="upper-button-wrapper">                      
-                                            
-                      <!-- <el-button-group>
-                        <el-button>List View</el-button>
-                        <el-button>Grid View</el-button>
-                      </el-button-group> -->
-                    </div>
-                    <el-table 
-                      class="table" 
-                      :data="vaccinationTable" 
-                      :default-sort="{ prop: 'date', order: 'descending' }"
-                      style="width: 100%"
-                    >
-                        
-                        <el-table-column 
-                          prop="petName" 
-                          label="PET" 
-                          :filters="petList"
-                          :filter-method="filterHandler"
-                          width="200" align="center" 
-                        />
-                        <el-table-column prop="vacType" label="VACCINATION TYPE" width="300" align="center" />
-                        <el-table-column prop="date" label="DATE" sortable width="200" align="center" />
 
-                        <el-table-column label="Operations" align="center">
-                          <template #default="scope">
-                            <el-button size="small" @click="editDialogFormVisible=true;fillFormByRow(scope.$index, scope.row)"
-                              >Edit</el-button
-                            >
-                            <el-popconfirm
-                              confirm-button-text="Yes"
-                              cancel-button-text="No"
-                              :icon="InfoFilled"
-                              icon-color="#76553f"
-                              title="Are you sure to delete this?"
-                              @confirm="handleDelete(scope.$index, scope.row)"
-                              @cancel="cancelEvent"
-                            >
-                              <template #reference>
-                                <el-button size="small">Delete</el-button>
-                              </template>
-                            </el-popconfirm>
+                  <div class="record-box">
+                    <div class="table-wrapper">
+                      <el-table 
+                        class="table" 
+                        :data="displayedRecordList" 
+                        :default-sort="{ prop: 'date', order: 'descending' }"
+                        style="width: 100%"
+                      >
+                          
+                          <el-table-column 
+                            prop="petName" 
+                            label="PET" 
+                            :filters="petList"
+                            :filter-method="filterHandler"
+                            width="150" align="center" 
+                          />
+                          <el-table-column prop="vacType" label="VACCINATION TYPE" width="200" align="center" />
+                          <el-table-column prop="date" label="DATE" sortable width="150" align="center" />
 
-                          </template>
-                        </el-table-column>
-                        <el-table-column prop="recordTitle" label="Description" width="300" align="center" />
-                    </el-table>
-                    <div class="add-button-wrapper">
-                      <el-button class="add-button" @click="addDialogFormVisible = true">
-                        <el-icon style="margin-right:1vh"><circle-plus-filled /></el-icon>
-                        Add
-                      </el-button>
+                          <el-table-column label="Operations" align="center" width="200">
+                            <template #default="scope">
+                              <el-button size="small" @click="editDialogFormVisible=true;fillFormByRow(scope.$index, scope.row)"
+                                >Edit</el-button
+                              >
+                              <el-popconfirm
+                                confirm-button-text="Yes"
+                                cancel-button-text="No"
+                                :icon="InfoFilled"
+                                icon-color="#76553f"
+                                title="Are you sure to delete this?"
+                                @confirm="handleDelete(scope.$index, scope.row)"
+                                @cancel="cancelEvent"
+                              >
+                                <template #reference>
+                                  <el-button size="small">Delete</el-button>
+                                </template>
+                              </el-popconfirm>
+
+                            </template>
+                          </el-table-column>
+                          <el-table-column prop="recordTitle" label="Description" width="200" align="center" />
+                      </el-table>
+                      <div class="add-button-wrapper">
+                        <el-button class="add-button" @click="addDialogFormVisible = true">
+                          <el-icon style="margin-right:1vh"><circle-plus-filled /></el-icon>
+                          Add
+                        </el-button>
+                      </div>
+                      
                     </div>
-                    
+
+                    <div class="right-filter">
+                      <el-form>
+                        <el-form-item class="datepicker">
+                          <p>Date Filter</p>
+                          <el-date-picker
+                            v-model="dateRange"
+                            type="daterange"
+                            range-separator="to"
+                            start-placeholder="Start"
+                            end-placeholder="End"
+                            align="center"
+                            size="mini"
+                            @change="applyFilter"
+                          >
+                          </el-date-picker>
+                        </el-form-item>
+
+                        <div class="pet-filter">
+                          <p>Pet Filter</p>
+                          <el-select
+                            v-model="petSelected"
+                            placeholder="Select Pet"
+                            @change="applyFilter"
+                          >
+                            <el-option
+                              v-for="pet in petList"
+                              :key="pet.value"
+                              :label="pet.text"
+                              :value="pet.value"
+                            >
+                            </el-option>
+                          </el-select>
+                        </div>
+
+                        <div class="filter_add">
+                          <el-button
+                            class="rihgt_buttons"
+                            style="margin-top: 1vw"
+                            type="primary"
+                            plain
+                            @click="resetRecordList"
+                            >Reset Filters</el-button
+                          >
+                          <!-- add new document pop up window -->
+                          <el-button
+                            class="rihgt_buttons"
+                            @click="AdddialogFormVisible = true"
+                            label="Add"
+                            type="primary"
+                            plain
+                            style="margin-top: 1vw"
+                            ><el-icon><Plus /></el-icon> Add New</el-button
+                          >
+                        </div>
+                      </el-form>
+                    </div>
+
                   </div>
+
+
 
               
 
@@ -163,8 +219,11 @@ const addDialogFormVisible = ref(false)
 const editDialogFormVisible = ref(false)
 const formLabelWidth = '140px'
 const vaccinations = ref([])
-const vaccinationTable = ref([])
+const displayedRecordList = ref([])
+const recordList = ref([])
 const petList = ref([])
+const dateRange = ref('')
+const petSelected = ref('')
 
 
 const form = reactive({
@@ -174,6 +233,74 @@ const form = reactive({
   petId: '',
   date: '',
 })
+
+const applyFilter = () => {
+  displayedRecordList.value = recordList.value.slice()
+  if (dateRange.value !== '' && petSelected.value === '') {
+    let startDate = new Date(
+      dateRange.value[0].toISOString().split('T')[0]
+    );
+    let endDate = new Date(
+      dateRange.value[1].toISOString().split('T')[0]
+    );
+
+    for (let record of recordList.value) {
+      let recordDate = new Date(record.date);
+      if (
+        recordDate.getTime() < startDate.getTime() ||
+        recordDate.getTime() > endDate.getTime()
+      ) {
+        var index =
+          displayedRecordList.value.indexOf(record);
+        if (index !== -1) {
+          displayedRecordList.value.splice(index, 1);
+        }
+      }
+    }
+  }  
+  if (petSelected.value !== '' && dateRange.value === '') {
+    for (let record of recordList.value) {
+      if (record.petId != petSelected.value) {
+        var index =
+          displayedRecordList.value.indexOf(record);
+        if (index !== -1) {
+          displayedRecordList.value.splice(index, 1);
+        }
+      }
+    }
+  }
+  if (dateRange.value !== '' && petSelected.value !== '') {
+    let startDate = new Date(
+      dateRange.value[0].toISOString().split('T')[0]
+    );
+    let endDate = new Date(
+      dateRange.value[1].toISOString().split('T')[0]
+    );
+
+    for (let record of recordList.value) {
+      let recordDate = new Date(record.date);
+      console.log(record);
+      if (
+        recordDate.getTime() < startDate.getTime() ||
+        recordDate.getTime() > endDate.getTime() ||
+        record.petId !== petSelected.value
+      ) {
+        var index =
+          displayedRecordList.value.indexOf(record);
+        if (index !== -1) {
+          displayedRecordList.value.splice(index, 1);
+        }
+      }
+    }
+  }  
+}
+
+const resetRecordList = () => {
+  displayedRecordList.value = recordList.value;
+  dateRange.value = '';
+  petSelected.value = '';  
+}
+
 
 const querySearch = (queryString, cb) => {
   const results = queryString
@@ -226,7 +353,8 @@ const getAllVaccination = async () => {
     recordType: "Vaccination"
   });
   console.log("vaccine table: ", res.data)
-  vaccinationTable.value = res.data.data
+  recordList.value = res.data.data
+  displayedRecordList.value = res.data.data
 
 	// console.log('all vaccination', res);
 };
@@ -352,33 +480,73 @@ const handleDelete = async (index, row) => {
 .el-input {
   width: 45vh;
 }
-
-.table-wrapper {
+.record-box {
+  display: flex;
+	justify-content: space-between;
   height: 60vh;
   padding: 5vh;
   border-radius: 10px;
   background-color: white;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  .table-wrapper {
+    .table {
+        border-radius: 1.5vh;
+    }
+  }
+  .right-filter {
+    .datepicker {
+      width: 210px;
+      margin-top: 8px;
+      p {
+        color: #76553f;
+        margin: 0 2px;
+        font-family: 'Trebuchet MS';
+        font-size: 14px;
+        font-weight: bold;
+      }
+    }
+    .pet-filter {
+      width: 210px;
+      margin-top: 15px;
+      p {
+        color: #76553f;
+        margin: 0 2px;
+        font-family: 'Trebuchet MS';
+        font-size: 14px;
+        font-weight: bold;
+      }
 
-  .upper-button-wrapper {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 3vh;
-  }
-  .table {
-      border-radius: 1.5vh;
-  }
+      :deep(.el-select .el-input__inner) {
+        font-size: 14px;
+        width: 210px;
+      }
+    }
 }
-.add-button-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-top: 3vh;
-  .add-button {
+  .add-button-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 3vh;
+    .add-button {
 
+    }
   }
-}        
 
+}
+       
 
+.filter_add {
+	display: flex;
+	justify-content: space-evenly;
+	flex-direction: column;
+	align-items: center;
+
+	.rihgt_buttons {
+		margin-left: 0;
+		margin-right: 0;
+		width: 100px;
+		height: 40px;
+	}
+}
 
 .table .el-table__body {
     /* border-collapse: separate;
