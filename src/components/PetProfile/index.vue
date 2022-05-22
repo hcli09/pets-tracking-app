@@ -2,6 +2,7 @@
 	<!-- header of pet profile page -->
 	<div class="petprofile-header">
 		<el-image
+			v-if="this.$data.petsummary.petAvatar"
 			class="pet-avatar"
 			:src="this.$data.petsummary.petAvatar"
 		></el-image>
@@ -31,8 +32,12 @@
 					:userInfo="userInfo"
 				></PetSummary>
 			</el-tab-pane>
-			<el-tab-pane label="Events" name="second">events</el-tab-pane>
-			<el-tab-pane label="Tasks" name="third">tasks</el-tab-pane>
+			<el-tab-pane label="Events" name="second">
+				<PetProfileEvent></PetProfileEvent>
+			</el-tab-pane>
+			<el-tab-pane label="Tasks" name="third"
+				><PetProfileTask></PetProfileTask
+			></el-tab-pane>
 		</el-tabs>
 
 		<el-tabs
@@ -79,6 +84,8 @@
 <script setup>
 import httpServices from '@services';
 import PetSummary from '../../common/components/PetSummary/index.vue';
+import PetProfileEvent from '../../common/components/PetProfileEvent/index.vue';
+import PetProfileTask from '../../common/components/PetProfileTask/index.vue';
 </script>
 
 <script>

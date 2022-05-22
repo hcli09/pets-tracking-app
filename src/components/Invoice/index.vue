@@ -29,6 +29,14 @@
 				></RecordGrid
 			></el-tab-pane>
 		</el-tabs>
+
+		<el-button
+			style="position: absolute; right: 10px; top: 3px"
+			type="primary"
+			plain
+			@click="topetProfile"
+			>Back to Pet Profile</el-button
+		>
 	</div>
 </template>
 
@@ -93,7 +101,14 @@ export default {
 			});
 	},
 
-	methods: {}
+	methods: {
+		topetProfile() {
+			this.$router.push({
+				path: '/PetProfile',
+				query: { id: this.$data.petId }
+			});
+		}
+	}
 };
 </script>
 

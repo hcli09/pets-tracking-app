@@ -334,7 +334,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .petinfo-header {
 	height: 10vh;
 	position: relative;
@@ -397,7 +397,7 @@ export default {
 
 .petinfo-content {
 	background-color: white;
-	height: 67vh;
+	height: 73vmin;
 	margin: 0 2.5vw;
 	padding: 2vh 3vw;
 	border-radius: 1rem;
@@ -428,21 +428,18 @@ export default {
 	.lc-petforms {
 		width: 340px;
 	}
-}
-</style>
 
-<style scoped>
-.el-form-item__label {
-	color: #76553f;
-	text-align: justify;
-	margin-right: 20px;
-	font-size: medium;
-}
-
-.el-input__inner {
-	/* box-shadow: 0 0 0 1px #76553f inset; */
-	font-family: Trebuchet MS;
-	color: #76553f;
-	font-size: medium;
+	:deep(.el-form-item__label) {
+		color: #76553f;
+		text-align: justify;
+		margin-right: 20px;
+		font-size: medium;
+	}
+	:deep(.el-input__inner) {
+		box-shadow: 0 0 0 1px #76553f inset;
+		font-family: Trebuchet MS;
+		color: #76553f;
+		font-size: medium;
+	}
 }
 </style>

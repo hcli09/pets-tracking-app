@@ -2,7 +2,11 @@
 	<div class="pet-summary">
 		<div class="left">
 			<div class="owner-box">
-				<el-image class="user-image" :src="userInfo.image"></el-image>
+				<el-image
+					v-if="userInfo.image"
+					class="user-image"
+					:src="userInfo.image"
+				></el-image>
 				<p class="name">
 					{{ userInfo.firstName }} {{ userInfo.lastName }}
 				</p>
@@ -118,11 +122,12 @@ export default {
 			height: 4vh;
 			display: flex;
 			align-items: center;
-			justify-content: space-around;
+			justify-content: space-between;
 			background-color: #f1eeec;
 			border-radius: 10px 10px 10px 10px;
 			margin-bottom: 2.5vh;
 			text-align-last: justify;
+			padding: 0 1vw;
 
 			p {
 				font-size: medium;
@@ -137,9 +142,10 @@ export default {
 			height: 4vh;
 			display: flex;
 			align-items: center;
-			justify-content: space-around;
+			justify-content: space-between;
 			background-color: #f1eeec;
 			border-radius: 10px 10px 10px 10px;
+			padding: 0 1vw;
 			p {
 				font-size: medium;
 				font-family: Trebuchet MS;
