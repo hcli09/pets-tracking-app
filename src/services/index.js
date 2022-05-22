@@ -8,6 +8,7 @@ import tasks from './modules/tasks';
 import calendar from './modules/calendar';
 import invoicemed from './modules/invoicemed';
 import vaccinationHistory from './modules/vaccination-history';
+import petprofile from './modules/petprofile';
 
 export default {
 	registerLogin,
@@ -19,5 +20,6 @@ export default {
 	tasks,
 	calendar,
 	invoicemed,
-	vaccinationHistory
+	vaccinationHistory,
+	petprofile
 };

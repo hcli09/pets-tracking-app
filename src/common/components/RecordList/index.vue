@@ -80,7 +80,10 @@
 						</el-date-picker>
 					</el-form-item>
 
-					<div class="pet-filter">
+					<div
+						class="pet-filter"
+						v-if="this.$route.query.id === undefined"
+					>
 						<p>Pet Filter</p>
 						<el-select
 							v-model="petSelected"
@@ -306,7 +309,13 @@ import { throttleFilter } from '@vueuse/shared';
 
 <script>
 export default {
-	props: ['petList', 'petOptions', 'initial_recordType', 'curr_uid'],
+	props: [
+		'petList',
+		'petOptions',
+		'initial_recordType',
+		'curr_uid',
+		'record_List'
+	],
 
 	data() {
 		return {
@@ -353,22 +362,12 @@ export default {
 		};
 	},
 
-	created: function () {
-		//get record list
-		httpServices.invoicemed
-			.getAllRecords({
-				uid: this.$data.uid,
-				recordType: this.$data.recordType
-			})
-			.then(response => {
-				this.$data.recordList = response.data.data;
-				this.$data.displayedRecordList = this.$data.recordList;
-			})
-			.catch(error => {
-				console.log(error);
-			});
+	watch: {
+		record_List(newval) {
+			this.$data.recordList = newval;
+			this.$data.displayedRecordList = this.$data.recordList;
+		}
 	},
-
 	methods: {
 		//add new invoice
 		adddocument() {

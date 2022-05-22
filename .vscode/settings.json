@@ -13,6 +13,6 @@
 	},
 	"javascript.updateImportsOnFileMove.enabled": "always",
 	"editor.formatOnSave": true,
-	"window.zoomLevel": 0,
+	"window.zoomLevel": 2,
 	"files.eol": "\n"
 }

@@ -14,6 +14,7 @@ import UserProfile from '@/components/UserProfile/index.vue';
 import EditUserProfile from '@/components/EditUserProfile/index.vue';
 import VaccinationHistory from '@/components/VaccinationHistory/index.vue';
 import Medication from '@/components/Medication/index.vue';
+import PetProfile from '@/components/PetProfile/index.vue';
 
 const routes = [
 	{
@@ -60,6 +61,10 @@ const routes = [
 			{
 				path: 'vaccinationhistory',
 				component: VaccinationHistory
+			},
+			{
+				path: '/PetProfile',
+				component: PetProfile
 			}
 		]
 	},

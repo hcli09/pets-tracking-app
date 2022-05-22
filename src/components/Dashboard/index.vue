@@ -183,31 +183,8 @@ export default {
 				image: 'https://cdn-icons-png.flaticon.com/512/1320/1320933.png',
 				petList: [],
 				taskList: [],
-				eventList: [],
-				folderList: [
-					{ folderid: 1, folderName: 'Invoice' },
-					{ folderid: 2, folderName: 'Medication Report' },
-					{ folderid: 3, folderName: 'Vaccination History' }
-				]
-			},
-			album: [
-				{
-					id: 1,
-					picURL: 'https://www.rd.com/wp-content/uploads/2020/07/animalmemes-12.jpg?w=1414'
-				},
-				{
-					id: 2,
-					picURL: 'https://www.rd.com/wp-content/uploads/2020/12/When-you-have-three-zoom-calls-back-to-back-1297963220.jpg?w=1200'
-				},
-				{
-					id: 3,
-					picURL: 'https://www.rd.com/wp-content/uploads/2020/07/animalmemes-21.jpg?w=1414'
-				},
-				{
-					id: 4,
-					picURL: 'https://www.rd.com/wp-content/uploads/2020/07/animalmemes-20.jpg?w=1414'
-				}
-			]
+				eventList: []
+			}
 		};
 	},
 	created: function () {
@@ -216,10 +193,10 @@ export default {
 			.then(response => {
 				let userObject = response.data.data;
 
-				//edit page, assign pet object to pet form
-				this.$data.userObject.firstName = userObject.firstName;
-				this.$data.userObject.lastName = userObject.lastName;
-				this.$data.userObject.petList = userObject.petList;
+				// //edit page, assign pet object to pet form
+				// this.$data.userObject.firstName = userObject.firstName;
+				// this.$data.userObject.lastName = userObject.lastName;
+				// this.$data.userObject.petList = userObject.petList;
 			})
 			.catch(error => {
 				console.log(error);
