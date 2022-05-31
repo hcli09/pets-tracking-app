@@ -1,6 +1,13 @@
 <template>
 	<el-scrollbar height="270px">
-		<h3 class="event-heading">Events</h3>
+		<div class="flex align-center justify-between">
+			<h3 class="event-heading">Events</h3>
+			<div>
+				<el-button @click="router.push('event-table')"
+					>Details</el-button
+				>
+			</div>
+		</div>
 		<template v-if="events.length < 1">
 			<div
 				style="
@@ -25,10 +32,13 @@
 </template>
 
 <script setup>
-import { onMounted, reactive } from 'vue';
+import { reactive } from 'vue';
 import EventBox from '@common/components/EventBox/index.vue';
 import services from '../../../services';
 import moment from 'moment';
+
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const events = reactive([]);
 const getEventsByDateAsync = async () => {
@@ -44,9 +54,7 @@ const getEventsByDateAsync = async () => {
 		console.log(error);
 	}
 };
-onMounted(() => {
-	getEventsByDateAsync();
-});
+getEventsByDateAsync();
 </script>
 
 <style lang="scss" scoped>

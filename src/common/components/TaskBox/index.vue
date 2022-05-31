@@ -7,11 +7,15 @@
 			shadow="hover"
 			:class="'event-task-card'"
 			:style="{ backgroundColor: '#eff6ff', color: '#1e40af' }"
-			@click="toCalendar"
 		>
 			<div class="event-task-small-box">
 				<div class="event-task-inside">
-					<span>{{ title }}</span>
+					<el-checkbox
+						v-model="checked"
+						label=""
+						@change="handleChange"
+					/>
+					<span style="margin-left: 5px">{{ title }}</span>
 				</div>
 				<el-tooltip
 					class="box-item"
@@ -46,10 +50,9 @@
 </template>
 
 <script setup>
-import { defineProps, onMounted, reactive, toRaw } from 'vue';
-import { useRouter } from 'vue-router';
-import { getPetAbListWithFullAvatar } from '../../utils/getPetAvatar';
-const router = useRouter();
+import { defineProps, toRaw, inject } from 'vue';
+import services from '../../../services';
+
 const props = defineProps({
 	customData: {
 		type: Object,
@@ -59,12 +62,37 @@ const props = defineProps({
 		type: Number
 	}
 });
-
-let { taskTitle: title, dueDate, petAbList } = props.customData;
+let {
+	taskTitle: title,
+	dueDate,
+	petAbList,
+	checked,
+	taskId
+} = props.customData;
 const pets = toRaw(petAbList);
+const reload = inject('reload');
 
-const toCalendar = () => {
-	router.push('/calendar');
+const handleChange = async target => {
+	const { data: res } = await services.tasks.checkOffTask({
+		uid: '4EL4hp_qRUYMzzal_G29f',
+		taskId,
+		isChecked: +target
+	});
+	if (res.status === 200 && target) {
+		ElMessage({
+			message: 'Task checked off!',
+			type: 'success',
+			duration: 3000
+		});
+		reload();
+	} else {
+		ElMessage({
+			message: 'Task unchecked!',
+			type: 'success',
+			duration: 3000
+		});
+		reload();
+	}
 };
 </script>
 
@@ -85,7 +113,7 @@ const toCalendar = () => {
 		font-weight: bold;
 	}
 	.event-task-card {
-		width: 34vh;
+		width: 100%;
 		height: 10vh;
 		// background-color: #e9eaf4;
 		border-radius: 1rem;
@@ -96,16 +124,17 @@ const toCalendar = () => {
 			align-items: center;
 			justify-content: flex-start;
 			font-family: Trebuchet MS;
-			max-width: 14.875rem /* 238/16 */;
+			max-width: 100%;
 			height: 6vh;
 
 			.event-task-inside {
+				display: flex;
+				align-items: center;
 				text-align: left;
-				width: 11.2rem /* 178/16 */;
+				width: 11.2rem;
 				overflow: hidden;
 				text-overflow: ellipsis;
 				white-space: nowrap;
-				// padding-right: 2rem;
 			}
 
 			//event name and pet name
@@ -120,9 +149,7 @@ const toCalendar = () => {
 			}
 			.pet-name {
 				position: relative;
-
 				display: inline-flex;
-				// flex-direction: column;
 				align-items: center;
 				font-weight: bold;
 				box-sizing: border-box;

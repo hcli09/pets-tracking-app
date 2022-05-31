@@ -43,6 +43,13 @@ export default {
 			data
 		});
 	},
+	getAllArchivedTasks(data) {
+		return axios({
+			url: '/user/task/archive/all',
+			method: 'post',
+			data
+		});
+	},
 	checkOffTask(data) {
 		return axios({
 			url: '/user/task/check',

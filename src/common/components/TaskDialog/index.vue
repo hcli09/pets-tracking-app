@@ -59,17 +59,13 @@
 </template>
 
 <script setup>
-import {
-	inject,
-	reactive,
-	ref,
-	defineProps,
-	defineEmits,
-	onMounted
-} from 'vue';
-import httpServices from '@services';
+import { inject, reactive, ref, defineProps, defineEmits } from 'vue';
+import services from '../../../services';
 
 const props = defineProps({
+	taskId: {
+		type: String
+	},
 	dialogVisible: {
 		type: Boolean,
 		required: true
@@ -114,28 +110,54 @@ const form = reactive({
 	taskData: {
 		taskId: null,
 		petIdList: [],
+		petAbList: null,
 		taskTitle: '',
 		dueDate: '',
 		checked: false
 	}
 });
+const init = async taskId => {
+	const { data: res } = await services.tasks.getTasksById({ taskId });
+	if (res.data) {
+		Object.assign(form, { uid: '', taskData: res.data });
+	}
+};
+
+props.taskId && init(props.taskId);
+
 const onSubmit = async () => {
 	isSubmitting.value = true;
 	try {
-		const res = await httpServices.tasks.addTask(form);
-		if (res.status === 200) {
-			isSubmitting.value = false;
-			ElMessage({
-				message:
-					'New task created successfully. You will get notified when the task is due',
-				type: 'success',
-				duration: 6000
-			});
-			emits('setVisible');
-			reload();
+		if (props.taskId) {
+			form.uid = '4EL4hp_qRUYMzzal_G29f';
+			delete form.taskData.petAbList;
+			const { data: res } = await services.tasks.editTask(form);
+			if (res.status === 200) {
+				isSubmitting.value = false;
+				ElMessage({
+					message: 'Task edited successfully',
+					type: 'success',
+					duration: 3000
+				});
+				reload();
+				emits('setVisible');
+			}
+		} else {
+			const res = await services.tasks.addTask(form);
+			if (res.status === 200) {
+				isSubmitting.value = false;
+				ElMessage({
+					message:
+						'New task created successfully. You will get notified when the task is due',
+					type: 'success',
+					duration: 6000
+				});
+				reload();
+				emits('setVisible');
+			}
 		}
 	} catch (error) {
-		ElMessage.error('Failed to create task');
+		ElMessage.error('Failed to create or edit task');
 		console.log(error);
 	}
 };

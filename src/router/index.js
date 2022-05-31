@@ -14,6 +14,8 @@ import UserProfile from '@/components/UserProfile/index.vue';
 import EditUserProfile from '@/components/EditUserProfile/index.vue';
 import VaccinationHistory from '@/components/VaccinationHistory/index.vue';
 import Medication from '@/components/Medication/index.vue';
+import EventTable from '@/components/EventTable/index.vue';
+import TaskTable from '@/components/TaskTable/index.vue';
 
 const routes = [
 	{
@@ -28,6 +30,14 @@ const routes = [
 			{
 				path: 'calendar',
 				component: Calendar
+			},
+			{
+				path: 'event-table',
+				component: EventTable
+			},
+			{
+				path: 'task-table',
+				component: TaskTable
 			},
 			{
 				path: '/editpet',

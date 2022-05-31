@@ -2,8 +2,14 @@
 	<div class="text-center section">
 		<div class="filter-pets">
 			<ul class="legend-list">
-				<li>Event</li>
-				<li>Task</li>
+				<template v-if="props.for">
+					<li v-if="props.for === 'event'" class="event">Event</li>
+					<li v-if="props.for === 'task'" class="task">Task</li>
+				</template>
+				<template v-else>
+					<li class="event">Event</li>
+					<li class="task">Task</li>
+				</template>
 			</ul>
 			<el-select
 				v-model="filterValue"
@@ -50,15 +56,23 @@
 
 <script setup>
 import moment from 'moment';
-import { reactive, computed, ref, onMounted } from 'vue';
+import { reactive, computed, ref, onMounted, defineProps, toRaw } from 'vue';
 import services from '../../services';
 const month = new Date().getMonth();
 const year = new Date().getFullYear();
 const masks = { weekdays: 'WWW' };
 const filterValue = ref('All');
 
+const props = defineProps({
+	for: {
+		type: String
+	}
+});
+
 // Get base attributes (base data) for calendar
 const baseAttributes = reactive([]);
+const eventAttributes = reactive([]);
+const taskAttributes = reactive([]);
 const getCalendarByMonthAsync = async () => {
 	const { data: res, status } = await services.calendar.getCalendarByMonth({
 		uid: '4EL4hp_qRUYMzzal_G29f',
@@ -69,28 +83,35 @@ const getCalendarByMonthAsync = async () => {
 	);
 	const newData = [];
 	filtered.forEach(item => {
+		const events = [];
 		for (let event of item.eventList) {
-			newData.push({
+			events.push({
 				key: event.eventTitle,
 				customData: {
 					title: event.eventTitle,
-					className: 'bg-rose-400',
+					className: 'bg-blue-400',
 					pets: event.petIdList
 				},
 				dates: new Date(item.date)
 			});
 		}
+		eventAttributes.push(...events);
+
+		const tasks = [];
 		for (let task of item.taskList) {
-			newData.push({
+			tasks.push({
 				key: task.taskTitle,
 				customData: {
 					title: task.taskTitle,
-					className: 'bg-blue-400',
+					className: 'bg-rose-400',
 					pets: task.petIdList
 				},
 				dates: new Date(item.date)
 			});
 		}
+		taskAttributes.push(...tasks);
+
+		newData.push(...events, ...tasks);
 	});
 	baseAttributes.push(...newData);
 };
@@ -102,7 +123,26 @@ let { petList: newPetList } = JSON.parse(localStorage.getItem('user'));
 newPetList.unshift({ petId: 'All', petName: 'All' });
 petList.push(...newPetList);
 // filter implementation
+
 let attributes = computed(() => {
+	if (props.for && props.for === 'event') {
+		if (filterValue.value === 'All') {
+			return eventAttributes;
+		} else {
+			return eventAttributes.filter(attr =>
+				attr.customData.pets.includes(filterValue.value)
+			);
+		}
+	}
+	if (props.for && props.for === 'task') {
+		if (filterValue.value === 'All') {
+			return taskAttributes;
+		} else {
+			return taskAttributes.filter(attr =>
+				attr.customData.pets.includes(filterValue.value)
+			);
+		}
+	}
 	if (filterValue.value === 'All') {
 		return baseAttributes;
 	} else {
@@ -232,7 +272,7 @@ p {
 		align-items: center;
 		color: #333;
 		margin-right: 20px;
-		&:first-of-type {
+		&.task {
 			&::before {
 				display: inline-block;
 				content: '';
@@ -243,7 +283,7 @@ p {
 				border-radius: 5px;
 			}
 		}
-		&:last-of-type {
+		&.event {
 			&::before {
 				display: inline-block;
 				content: '';

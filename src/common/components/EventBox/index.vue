@@ -8,7 +8,6 @@
 			shadow="hover"
 			:class="'event-task-card'"
 			:style="{ backgroundColor: '#fff1f2', color: '#9f1239' }"
-			@click="toCalendar"
 		>
 			<div class="event-task-small-box">
 				<div class="event-task-inside">
@@ -87,7 +86,7 @@ const toCalendar = () => {
 		font-weight: bold;
 	}
 	.event-task-card {
-		width: 34vh;
+		width: 100%;
 		height: 10vh;
 		// background-color: #e9eaf4;
 		border-radius: 1rem;
@@ -98,16 +97,17 @@ const toCalendar = () => {
 			align-items: center;
 			justify-content: flex-start;
 			font-family: Trebuchet MS;
-			max-width: 14.875rem /* 238/16 */;
+			width: 100%;
 			height: 6vh;
 
 			.event-task-inside {
+				display: flex;
+				align-items: center;
 				text-align: left;
-				width: 11.2rem /* 178/16 */;
+				width: 11.2rem;
 				overflow: hidden;
 				text-overflow: ellipsis;
 				white-space: nowrap;
-				// padding-right: 2rem;
 			}
 
 			//event name and pet name
@@ -122,9 +122,7 @@ const toCalendar = () => {
 			}
 			.pet-name {
 				position: relative;
-
 				display: inline-flex;
-				// flex-direction: column;
 				align-items: center;
 				font-weight: bold;
 				box-sizing: border-box;

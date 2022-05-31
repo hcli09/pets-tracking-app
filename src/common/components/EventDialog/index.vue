@@ -1,7 +1,7 @@
 <template>
 	<el-dialog
 		v-model="dialogVisible"
-		title="Add an event"
+		:title="props.eventId ? 'Edit event' : 'Add an event'"
 		:show-close="false"
 		custom-class="event-dialog"
 	>
@@ -12,7 +12,7 @@
 					v-model="form.eventData.eventTitle"
 					autocomplete="off"
 					placeholder="Please input event title"
-					style="width: 80%"
+					style="width: 75%"
 				/>
 			</el-form-item>
 
@@ -21,7 +21,7 @@
 				<el-select
 					v-model="form.eventData.petIdList"
 					placeholder="Please select a pet"
-					style="width: 80%"
+					style="width: 75%"
 					multiple
 				>
 					<el-option
@@ -38,15 +38,25 @@
 				<el-select
 					v-model="form.eventData.eventType"
 					placeholder="Please select an event type"
-					style="width: 80%"
+					style="width: 75%"
 				>
-					<el-option label="Vaccination" value="vaccination" />
-					<el-option label="Pet Grocery" value="petGrocery" />
+					<el-option label="Vaccination" value="Vaccination" />
+					<el-option label="Pet Grocery" value="Pet Grocery" />
 				</el-select>
 			</el-form-item>
 
 			<!-- Date and time -->
 			<el-form-item label="Date and time" :label-width="formLabelWidth">
+				<el-radio-group
+					v-model="isAllDay"
+					class="ml-4"
+					@change="onChangeTimeType"
+				>
+					<el-radio :label="true">All Day</el-radio>
+					<el-radio :label="false">Fixed Time</el-radio>
+				</el-radio-group>
+			</el-form-item>
+			<el-form-item :label-width="142" v-if="!isAllDay">
 				<div
 					:style="{
 						display: 'flex',
@@ -71,7 +81,12 @@
 					/>
 				</div>
 
-				<div :style="{ display: 'flex', alignItems: 'center' }">
+				<div
+					:style="{
+						display: 'flex',
+						alignItems: 'center'
+					}"
+				>
 					<el-date-picker
 						v-model="eventDateTime.endDate"
 						type="date"
@@ -96,7 +111,7 @@
 					:rows="5"
 					type="textarea"
 					placeholder="Please input description"
-					style="width: 80%"
+					style="width: 75%"
 				/>
 			</el-form-item>
 		</el-form>
@@ -115,24 +130,24 @@
 </template>
 
 <script setup>
-import {
-	inject,
-	reactive,
-	ref,
-	defineProps,
-	defineEmits,
-	onMounted
-} from 'vue';
-import httpServices from '@services';
+import { inject, reactive, ref, defineProps, defineEmits } from 'vue';
+
+import services from '../../../services';
+
 const reload = inject('reload');
 const props = defineProps({
 	dialogVisible: {
 		type: Boolean,
 		required: true
+	},
+	eventId: {
+		type: String
 	}
 });
+
 const emits = defineEmits(['setVisible']);
 const isSubmitting = ref(false);
+const isAllDay = ref(true);
 const formLabelWidth = '140px';
 const shortcuts = [
 	{
@@ -182,28 +197,77 @@ const form = reactive({
 		petAbList: null
 	}
 });
+
+const init = async eventId => {
+	const { data: res } = await services.events.getEventsById({ eventId });
+	if (res.data) {
+		const tempEventDateTime = {
+			startDate: res.data.startDateTime.slice(0, 10),
+			startTime: res.data.startDateTime.slice(11),
+			endDate: res.data.endDateTime.slice(0, 10),
+			endTime: res.data.endDateTime.slice(11)
+		};
+
+		Object.assign(eventDateTime, tempEventDateTime);
+		Object.assign(form, { uid: '', eventData: res.data });
+	}
+};
+
+props.eventId && init(props.eventId);
+
 const onSubmit = async () => {
 	isSubmitting.value = true;
-	form.eventData.startDateTime =
-		eventDateTime.startDate + ' ' + eventDateTime.startTime;
-	form.eventData.endDateTime =
-		eventDateTime.endDate + ' ' + eventDateTime.endTime;
+	form.eventData.startDateTime = eventDateTime.startDate
+		? eventDateTime.startDate + ' ' + eventDateTime.startTime
+		: null;
+	form.eventData.endDateTime = eventDateTime.endDate
+		? eventDateTime.endDate + ' ' + eventDateTime.endTime
+		: null;
+
+	// console.log('form', form);
 	try {
-		const res = await httpServices.events.addEvent(form);
-		if (res.status === 200) {
-			isSubmitting.value = false;
-			ElMessage({
-				message:
-					'New event created successfully. You will get notified when the event is approaching',
-				type: 'success',
-				duration: 6000
-			});
-			reload();
-			emits('setVisible');
+		if (props.eventId) {
+			form.uid = '4EL4hp_qRUYMzzal_G29f';
+			delete form.eventData.petAbList;
+			const { data: res } = await services.events.editEvent(form);
+			if (res.status === 200) {
+				isSubmitting.value = false;
+				ElMessage({
+					message: 'Event edited successfully',
+					type: 'success',
+					duration: 3000
+				});
+				reload();
+				emits('setVisible');
+			}
+		} else {
+			const res = await services.events.addEvent(form);
+			if (res.status === 200) {
+				isSubmitting.value = false;
+				ElMessage({
+					message:
+						'New event created successfully. You will get notified when the event is approaching',
+					type: 'success',
+					duration: 6000
+				});
+				reload();
+				emits('setVisible');
+			}
 		}
 	} catch (error) {
-		ElMessage.error('Failed to create event');
+		ElMessage.error('Failed to create or edit event');
 		console.log(error);
+	}
+};
+
+const onChangeTimeType = isAllDay => {
+	if (isAllDay) {
+		Object.assign(eventDateTime, {
+			startDate: '',
+			startTime: '',
+			endDate: '',
+			endTime: ''
+		});
 	}
 };
 
@@ -260,7 +324,7 @@ petList.push(...user.petList);
 	border-radius: 10px;
 	background-image: url('@assets/dialog/dialog-3.png');
 	background-size: 430px 509px;
-	background-position: 320px 85px;
+	background-position: 380px 85px;
 	background-repeat: no-repeat;
 }
 </style>

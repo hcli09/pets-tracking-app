@@ -1,6 +1,13 @@
 <template>
 	<el-scrollbar height="270px">
-		<h3 class="task-heading">Tasks</h3>
+		<div class="flex align-center justify-between">
+			<h3 class="task-heading">Tasks</h3>
+			<div>
+				<el-button @click="router.push('task-table')"
+					>Details</el-button
+				>
+			</div>
+		</div>
 		<template v-if="tasks.length < 1">
 			<div
 				style="
@@ -26,10 +33,13 @@
 </template>
 
 <script setup>
-import { reactive, onMounted } from 'vue';
+import { reactive } from 'vue';
 import TaskBox from '@common/components/TaskBox/index.vue';
 import services from '../../../services';
 import moment from 'moment';
+
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const tasks = reactive([]);
 const getTasksByDateAsync = async () => {
