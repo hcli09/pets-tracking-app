@@ -367,7 +367,7 @@ export default {
 		justify-content: center;
 	}
 
-	.avatar-uploader .el-upload {
+	:deep(.avatar-uploader .el-upload) {
 		border: 1px dashed #d9d9d9;
 		border-radius: 50%;
 		cursor: pointer;

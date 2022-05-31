@@ -15,7 +15,15 @@
 				label="Due Date"
 				align="center"
 			/>
-			<el-table-column prop="checked" label="Checked" align="center" />
+
+			<el-table-column label="Check Task" align="center">
+				<template #default="scope">
+					<el-checkbox
+						size="small"
+						@change="checkTask(scope.$index, scope.row)"
+					></el-checkbox>
+				</template>
+			</el-table-column>
 		</el-table>
 		<!-- add task diaglog -->
 		<el-button
@@ -41,11 +49,14 @@
 	</div>
 </template>
 <script setup>
-import { reactive, ref } from 'vue';
+import { ElMessage } from 'element-plus';
+
+import { reactive, ref, inject } from 'vue';
 import { Flag, CircleCheck, Calendar } from '@element-plus/icons-vue';
 
 import httpServices from '@services';
 import TaskDialog from '@common/components/TaskDialog/index.vue';
+import { and } from '@vueuse/shared';
 
 const taskDialogVisible = ref(false);
 const setTaskDialogVisible = () => {
@@ -55,6 +66,7 @@ const setTaskDialogVisible = () => {
 
 <script>
 export default {
+	inject: ['reload'],
 	data() {
 		return {
 			uid: '4EL4hp_qRUYMzzal_G29f',
@@ -63,6 +75,28 @@ export default {
 			curr_petId: this.$route.query.id
 		};
 	},
+	methods: {
+		checkTask(index, row) {
+			httpServices.petprofile
+				.checkTask({
+					uid: this.$data.uid,
+					taskId: row.taskId,
+					isChecked: 1
+				})
+				.then(response => {
+					console.log(response);
+					this.ElMessage({
+						message: 'Task checked off!',
+						type: 'success',
+						duration: 1000
+					});
+					this.reload();
+				})
+				.catch(error => {
+					console.log(error.message);
+				});
+		}
+	},
 	created: function () {
 		//get all tasks of this pet
 		httpServices.petprofile
@@ -70,8 +104,10 @@ export default {
 			.then(response => {
 				let taskobject = response.data.data;
 				this.$data.taskList = taskobject;
-				this.$data.taskList = this.$data.taskList.filter(item =>
-					item.petIdList.includes(this.$data.curr_petId)
+				this.$data.taskList = this.$data.taskList.filter(
+					item =>
+						item.petIdList.includes(this.$data.curr_petId) &&
+						item.checked === false
 				);
 				console.log(this.$data.taskList);
 			})

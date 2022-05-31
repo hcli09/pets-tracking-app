@@ -354,7 +354,8 @@ export default {
 					httpServices.petInfo
 						.updatePet(petObject)
 						.then(response => {
-							location.reload();
+							this.topetProfile();
+							// topetProfile();
 						})
 						.catch(error => {
 							console.log(error);
@@ -466,7 +467,7 @@ export default {
 		justify-content: center;
 	}
 
-	.avatar-uploader .el-upload {
+	:deep(.avatar-uploader .el-upload) {
 		border: 1px dashed #d9d9d9;
 		border-radius: 50%;
 		cursor: pointer;
@@ -485,12 +486,14 @@ export default {
 		height: 9vw;
 		line-height: 9vw;
 		text-align: center;
+		border-radius: 50%;
 	}
 
 	.avatar {
 		width: 9vw;
 		height: 9vw;
 		display: block;
+		border-radius: 50%;
 	}
 }
 

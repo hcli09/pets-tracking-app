@@ -44,7 +44,6 @@
 			class="petprofile-right"
 			v-model="record_activeName"
 			type="border-card"
-			@tab-click="handleClick"
 		>
 			<el-tab-pane label="Records" name="first" class="pet-records">
 				<div class="folder" @click="toInvoice">
@@ -125,8 +124,27 @@ export default {
 				path: '/medication',
 				query: { id: this.$data.petId }
 			});
+		},
+		handleClick(tab, event) {
+			// 点击tab后触发事件，修改显示页面，将状态保存在sessionStorage里面
+			sessionStorage.setItem('currentTab', tab.props.name);
 		}
 	},
+	mounted() {
+		let name = sessionStorage.getItem('currentTab');
+		console.log('hahaha', sessionStorage);
+		// 判断是否存在currentTab，即tab页之前是否被点击切换到别的页面
+		if (name) {
+			this.activeName = name;
+		}
+	},
+	beforeRouteLeave(to, from, next) {
+		// 在离开此路由之后清除保存的状态（我的需求是只需要在当前tab页操作刷新保存状态，路由切换之后不需要保存）
+		// 根据个人需求决定清除的时间
+		sessionStorage.removeItem('currentTab');
+		next();
+	},
+
 	created: function () {
 		//get pet profile
 		httpServices.petprofile
@@ -172,6 +190,7 @@ export default {
 	.pet-avatar {
 		width: 6vw;
 		border-radius: 50%;
+		margin-bottom: 1vh;
 	}
 }
 

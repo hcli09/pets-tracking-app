@@ -42,5 +42,12 @@ export default {
 			method: 'post',
 			data
 		});
+	},
+	checkTask(data) {
+		return axios({
+			url: '/user/task/check',
+			method: 'post',
+			data
+		});
 	}
 };
