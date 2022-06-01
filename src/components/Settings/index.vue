@@ -58,16 +58,41 @@
                     </div>
                 </div>
             </el-tab-pane>
+
+            <!-- below is notification settings -->
+
             <el-tab-pane label="Notification" name="notification" class="notificationsPane">
                 <h1 class="notifications-title">Email Notifications</h1>
-                <el-switch v-model="emailNotifications" style="margin-right: 1vw;"/>
-                <span>Send me email notifications</span>
-                <el-divider />
-                <h1 class="notifications-title">Desktop Notifications</h1>
-                <p style="margin-bottom:1vw;">When webpage is open and your browser is open, notifications apper in the corner of your screen.</p>
-                <img src="@assets/Settings/notificationExample.png" alt="" class="notifications-example" >
-                <el-switch v-model="desktopNotifications" style="margin-right: 1vw;"/>
-                <span>Send me desktop notifications</span>
+                <div>
+                    <span>Allow email notifications</span>
+                    <el-switch v-model="emailNotifications" style="margin-left: 1vw;" @change="handleEmailNtf"/>                    
+                </div>
+                <div>
+                    <span style="margin-left:3vw">Task notifications</span>
+                    <el-switch v-model="taskNotifications" style="margin-left:1.7vw;margin-right:1vw" :disabled="taskDisabled" @change="handleTimeSelect"/>
+
+                    <span>Notify me at </span>
+                    <el-time-select
+                        v-model="taskNtfTime"
+                        start="00:00"
+                        step="00:15"
+                        end="23:45"
+                        placeholder="Select time"
+                        style="width:10vw"
+                        :disabled="timeSelectDisabled"
+                        @change="handleTaskNtf"
+                    />                
+                    <span> the day before a task</span>
+
+                </div>
+                <div>
+                    <span style="margin-left:3vw">Event notifications</span>
+                    <el-switch v-model="eventNotifications" style="margin: 0 1vw;" :disabled="eventDisabled" @change="handleEventNtf"/>
+                </div>
+
+
+                
+
             </el-tab-pane>
             <el-tab-pane label="Privacy" name="privacy">
                 Privacy
@@ -83,8 +108,16 @@ import axios from 'axios'
 
 
 let userAvatarURL = ""
-const emailNotifications = ref(false)
-const desktopNotifications = ref(false)
+const userID = ref('4EL4hp_qRUYMzzal_G29f')
+const emailNotifications = ref(true)
+const taskNotifications = ref(true)
+const taskNtfTime = ref('18:00')
+const eventNotifications = ref(true)
+const taskDisabled = ref(false)
+const eventDisabled = ref(false)
+const timeSelectDisabled = ref(false)
+
+// const desktopNotifications = ref(false)
 const formSize = ref('default')
 const ruleFormRef = ref()
 const ruleForm = reactive({
@@ -155,7 +188,7 @@ const editSettings = async() => {
     }
 
     const res = await httpServices.userProfileEdit.editUserProfile({
-        uid: '4EL4hp_qRUYMzzal_G29f',
+        uid: userID.value,
         firstName: ruleForm.firstName,
         lastName: ruleForm.lastName,
         phone: ruleForm.phone.toString(),
@@ -174,6 +207,76 @@ const editSettings = async() => {
 
     console.log('res', res);
     
+}
+
+const getNotificationSettings = async() => {
+    const res = await httpServices.notification.getNotificationSettings({
+        uid: userID.value
+    })
+    console.log('notifi settings', res)
+    if (res.data.data.taskNtfOn === false && res.data.data.eventNtfOn === false) {
+        emailNotifications.value = false
+        taskNotifications.value = false
+        taskDisabled.value = true
+        eventNotifications.value = false
+        eventDisabled.value = true
+        timeSelectDisabled.value = true        
+    }
+    taskNotifications.value = res.data.data.taskNtfOn
+    eventNotifications.value = res.data.data.eventNtfOn
+    taskNtfTime.value = res.data.data.taskNtfTime
+}
+
+const editNotificationSettings = async(taskNtf, taskNtfTime, eventNtf) => {
+    const res = await httpServices.notification.editNotificationSettings({
+        uid: userID.value,
+        eventNtfOn: eventNtf,
+        taskNtfOn: taskNtf,
+        taskNtfTime: taskNtfTime
+    })
+    if(res.data.status == 200) {
+		ElMessage({
+			message: 'Updated',
+			type: 'success'
+		});           
+    }
+}
+
+const handleEmailNtf = () => {
+    if(emailNotifications.value == false) {
+        console.log('off')
+        taskNotifications.value = false
+        taskDisabled.value = true
+        eventNotifications.value = false
+        eventDisabled.value = true
+        timeSelectDisabled.value = true
+    }
+    else {
+        taskNotifications.value = true
+        taskDisabled.value = false
+        eventNotifications.value = true
+        eventDisabled.value = false
+        timeSelectDisabled.value = false
+    }
+    editNotificationSettings(taskNotifications.value, taskNtfTime.value, eventNotifications.value)
+}
+
+const handleTimeSelect = () => {
+    if(taskNotifications.value === false) {
+        timeSelectDisabled.value = true
+    }
+    else {
+        timeSelectDisabled.value = false
+    }
+    editNotificationSettings(taskNotifications.value, taskNtfTime.value, eventNotifications.value)
+}
+
+const handleTaskNtf = () => {
+    editNotificationSettings(taskNotifications.value, taskNtfTime.value, eventNotifications.value)
+}
+
+const handleEventNtf = () => {
+    editNotificationSettings(taskNotifications.value, taskNtfTime.value, eventNotifications.value)
 }
 
 const linkToDashboard = () => {
@@ -210,6 +313,7 @@ function handleClick(tab, event) {
 onMounted(() => {
     getUserProfile();
     getLocationList();
+    getNotificationSettings();
     // console.log("noti permission: ", window.Notification.permission)
     // sendNotification()
 })
@@ -223,7 +327,7 @@ const getLocationList = async() => {
 
 const getUserProfile = async() => {
     const res = await httpServices.userProfile.getUserProfile({
-        uid: '4EL4hp_qRUYMzzal_G29f',
+        uid: userID.value,
     });
     // user.image = res.data.data.image;
     ruleForm.firstName = res.data.data.firstName;
