@@ -131,7 +131,7 @@
 
 <script setup>
 import { inject, reactive, ref, defineProps, defineEmits } from 'vue';
-
+import moment from 'moment'
 import services from '../../../services';
 
 const reload = inject('reload');
@@ -219,10 +219,10 @@ const onSubmit = async () => {
 	isSubmitting.value = true;
 	form.eventData.startDateTime = eventDateTime.startDate
 		? eventDateTime.startDate + ' ' + eventDateTime.startTime
-		: null;
+		: moment().startOf('day').format('YYYY-MM-DD HH:mm');
 	form.eventData.endDateTime = eventDateTime.endDate
 		? eventDateTime.endDate + ' ' + eventDateTime.endTime
-		: null;
+		: moment().endOf('day').format('YYYY-MM-DD HH:mm');
 
 	// console.log('form', form);
 	try {
