@@ -34,6 +34,7 @@
 			type="primary"
 			plain
 			@click="topetProfile"
+			v-if="this.$route.query.id"
 			>Back to Pet Profile</el-button
 		>
 	</div>

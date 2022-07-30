@@ -375,21 +375,26 @@ export default {
 
 		// Delete pet
 		deletePet() {
-			httpServices.petInfo
-				.deletePet({ uid: this.$data.uid, petId: this.$data.petId })
-				.then(response => {
-					const storage = getStorage();
-					// Create a reference to the file to delete
-					const avatar_ref = decodeURIComponent(
-						this.$data.petAvatar.split('/').pop().split('?')[0]
-					);
-					const desertRef = ref_delete(storage, avatar_ref);
-					// Delete the file
-					deleteObject(desertRef).then(() => {
-						// File deleted successfully
+			try {
+				httpServices.petInfo
+					.deletePet({ uid: this.$data.uid, petId: this.$data.petId })
+					.then(response => {
+						const storage = getStorage();
+						// Create a reference to the file to delete
+						const avatar_ref = decodeURIComponent(
+							this.$data.petAvatar.split('/').pop().split('?')[0]
+						);
+						const desertRef = ref_delete(storage, avatar_ref);
+						// Delete the file
+						deleteObject(desertRef).then(() => {
+							// File deleted successfully
+						});
+						location.href = '/dashboard';
 					});
-					location.href = '/dashboard';
-				});
+			} catch (error) {
+				ElMessage.error('Failed to delete pet');
+				console.log(error);
+			}
 		},
 
 		handleChange(value) {

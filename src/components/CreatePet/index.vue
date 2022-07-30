@@ -272,13 +272,21 @@ export default {
 					};
 
 					//create pet profile
-					httpServices.petInfo.addPet(petObject).then(response => {
-						// let petId = response.data.data.petId;
-						console.log(petObject);
-						location.href = '/dashboard';
-					});
+					try {
+						httpServices.petInfo
+							.addPet(petObject)
+							.then(response => {
+								// let petId = response.data.data.petId;
+								console.log(petObject);
+								location.href = '/dashboard';
+							});
+					} catch (error) {
+						ElMessage.error('Failed to create pet');
+						console.log(error);
+					}
 				} else {
 					console.log('error submit!!');
+					ElMessage.error('Failed to create pet');
 					return false;
 				}
 			});
