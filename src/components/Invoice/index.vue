@@ -16,6 +16,7 @@
 					:petOptions="petOptions"
 					:initial_recordType="recordType"
 					:curr_uid="uid"
+					:record_List="recordList"
 				></RecordList
 			></el-tab-pane>
 			<el-tab-pane label="Grid" name="second"
@@ -24,9 +25,19 @@
 					:petOptions="petOptions"
 					:initial_recordType="recordType"
 					:curr_uid="uid"
+					:record_List="recordList"
 				></RecordGrid
 			></el-tab-pane>
 		</el-tabs>
+
+		<el-button
+			style="position: absolute; right: 10px; top: 3px"
+			type="primary"
+			plain
+			@click="topetProfile"
+			v-if="this.$route.query.id"
+			>Back to Pet Profile</el-button
+		>
 	</div>
 </template>
 
@@ -44,7 +55,9 @@ export default {
 			activeName: 'first',
 			petList: [],
 			petOptions: [],
-			recordType: 'Invoice'
+			recordType: 'Invoice',
+			recordList: [],
+			petId: this.$route.query.id
 		};
 	},
 	created: function () {
@@ -53,6 +66,12 @@ export default {
 			.getPetList({ uid: this.$data.uid })
 			.then(response => {
 				this.$data.petList = response.data.data;
+
+				if (this.$data.petId !== undefined) {
+					this.$data.petList = this.$data.petList.filter(
+						item => item.petId === this.$data.petId
+					);
+				}
 				//generate pet options for el-select
 				for (let pet of this.$data.petList) {
 					let temp = { value: pet.petId, label: pet.petName };
@@ -63,9 +82,34 @@ export default {
 			.catch(error => {
 				console.log(error);
 			});
+
+		//get record list
+		httpServices.invoicemed
+			.getAllRecords({
+				uid: this.$data.uid,
+				recordType: this.$data.recordType
+			})
+			.then(response => {
+				this.$data.recordList = response.data.data;
+				if (this.$data.petId !== undefined) {
+					this.$data.recordList = this.$data.recordList.filter(
+						item => item.petId === this.$data.petId
+					);
+				}
+			})
+			.catch(error => {
+				console.log(error);
+			});
 	},
 
-	methods: {}
+	methods: {
+		topetProfile() {
+			this.$router.push({
+				path: '/PetProfile',
+				query: { id: this.$data.petId }
+			});
+		}
+	}
 };
 </script>
 
@@ -90,5 +134,9 @@ export default {
 	background-color: white;
 	border-radius: 1rem;
 	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+	:deep(.el-tabs__nav-scroll) {
+		background-color: #f1eeec;
+	}
 }
 </style>

@@ -96,7 +96,10 @@
 					</el-date-picker>
 				</el-form-item>
 
-				<div class="pet-filter">
+				<div
+					class="pet-filter"
+					v-if="this.$route.query.id === undefined"
+				>
 					<p>Pet Filter</p>
 					<el-select
 						v-model="petSelected"
@@ -320,7 +323,13 @@ import { getStorage, ref as ref_delete, deleteObject } from 'firebase/storage';
 import VuePdfEmbed from 'vue-pdf-embed';
 
 export default {
-	props: ['petList', 'petOptions', 'initial_recordType', 'curr_uid'],
+	props: [
+		'petList',
+		'petOptions',
+		'initial_recordType',
+		'curr_uid',
+		'record_List'
+	],
 	components: {
 		VuePdfEmbed
 	},
@@ -369,21 +378,11 @@ export default {
 			view_recordTitle: ''
 		};
 	},
-	created: function () {
-		//get record list
-		httpServices.invoicemed
-			.getAllRecords({
-				uid: this.$data.uid,
-				recordType: this.$data.recordType
-			})
-			.then(response => {
-				this.$data.recordList = response.data.data;
-				this.$data.displayedRecordList = this.$data.recordList;
-				console.log('haha', this.$data.recordList);
-			})
-			.catch(error => {
-				console.log(error);
-			});
+	watch: {
+		record_List(newval) {
+			this.$data.recordList = newval;
+			this.$data.displayedRecordList = this.$data.recordList;
+		}
 	},
 	methods: {
 		//preview document

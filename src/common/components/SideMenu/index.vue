@@ -74,7 +74,7 @@ export default {
 	},
 	methods: {
 		loadPetPage(event, item, node) {
-			location.href = `/editpet?id=${item.petId}`;
+			location.href = `/PetProfile?id=${item.petId}`;
 		}
 	}
 };

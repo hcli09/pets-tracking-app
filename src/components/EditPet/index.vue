@@ -13,10 +13,12 @@
 			class="demo-ruleForm"
 		>
 			<div class="buttons">
-				<el-button type="primary" @click="dialogVisible = true"
-					>Delete Pet</el-button
-				>
-
+				<div>
+					<el-button type="primary" @click="dialogVisible = true"
+						>Delete Pet</el-button
+					>
+					<el-button @click="topetProfile">Cancel</el-button>
+				</div>
 				<el-dialog
 					title="Warning"
 					v-model="dialogVisible"
@@ -307,6 +309,13 @@ export default {
 	},
 
 	methods: {
+		topetProfile() {
+			this.$router.push({
+				path: '/PetProfile',
+				query: { id: this.$data.petId }
+			});
+		},
+
 		Upload() {},
 		handleClose(done) {
 			done();
@@ -345,7 +354,8 @@ export default {
 					httpServices.petInfo
 						.updatePet(petObject)
 						.then(response => {
-							location.reload();
+							this.topetProfile();
+							// topetProfile();
 						})
 						.catch(error => {
 							console.log(error);
@@ -365,21 +375,26 @@ export default {
 
 		// Delete pet
 		deletePet() {
-			httpServices.petInfo
-				.deletePet({ uid: this.$data.uid, petId: this.$data.petId })
-				.then(response => {
-					const storage = getStorage();
-					// Create a reference to the file to delete
-					const avatar_ref = decodeURIComponent(
-						this.$data.petAvatar.split('/').pop().split('?')[0]
-					);
-					const desertRef = ref_delete(storage, avatar_ref);
-					// Delete the file
-					deleteObject(desertRef).then(() => {
-						// File deleted successfully
+			try {
+				httpServices.petInfo
+					.deletePet({ uid: this.$data.uid, petId: this.$data.petId })
+					.then(response => {
+						const storage = getStorage();
+						// Create a reference to the file to delete
+						const avatar_ref = decodeURIComponent(
+							this.$data.petAvatar.split('/').pop().split('?')[0]
+						);
+						const desertRef = ref_delete(storage, avatar_ref);
+						// Delete the file
+						deleteObject(desertRef).then(() => {
+							// File deleted successfully
+						});
+						location.href = '/dashboard';
 					});
-					location.href = '/dashboard';
-				});
+			} catch (error) {
+				ElMessage.error('Failed to delete pet');
+				console.log(error);
+			}
 		},
 
 		handleChange(value) {
@@ -424,7 +439,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .petinfo-header {
 	height: 10vh;
 	position: relative;
@@ -457,7 +472,7 @@ export default {
 		justify-content: center;
 	}
 
-	.avatar-uploader .el-upload {
+	:deep(.avatar-uploader .el-upload) {
 		border: 1px dashed #d9d9d9;
 		border-radius: 50%;
 		cursor: pointer;
@@ -476,18 +491,20 @@ export default {
 		height: 9vw;
 		line-height: 9vw;
 		text-align: center;
+		border-radius: 50%;
 	}
 
 	.avatar {
 		width: 9vw;
 		height: 9vw;
 		display: block;
+		border-radius: 50%;
 	}
 }
 
 .petinfo-content {
 	background-color: white;
-	height: 67vh;
+	height: 73vmin;
 	margin: 0 2.5vw;
 	padding: 2vh 3vw;
 	border-radius: 1rem;
@@ -517,6 +534,19 @@ export default {
 
 	.lc-petforms {
 		width: 340px;
+	}
+
+	:deep(.el-form-item__label) {
+		color: #76553f;
+		text-align: justify;
+		margin-right: 20px;
+		font-size: medium;
+	}
+	:deep(.el-input__inner) {
+		box-shadow: 0 0 0 1px #76553f inset;
+		font-family: Trebuchet MS;
+		color: #76553f;
+		font-size: medium;
 	}
 }
 </style>
