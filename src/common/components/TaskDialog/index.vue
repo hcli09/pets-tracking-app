@@ -162,9 +162,13 @@ const onSubmit = async () => {
 	}
 };
 const petList = reactive([]);
-let user = JSON.parse(localStorage.getItem('user'));
+try {
+	let user = JSON.parse(localStorage.getItem('user'));
+} catch (error) {
+	console.log('error', error);
+}
 form.uid = '4EL4hp_qRUYMzzal_G29f';
-petList.push(...user.petList);
+user.petList && petList.push(...user.petList);
 </script>
 
 <style lang="scss" scoped>

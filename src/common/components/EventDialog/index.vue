@@ -131,7 +131,7 @@
 
 <script setup>
 import { inject, reactive, ref, defineProps, defineEmits } from 'vue';
-import moment from 'moment'
+import moment from 'moment';
 import services from '../../../services';
 
 const reload = inject('reload');
@@ -272,9 +272,13 @@ const onChangeTimeType = isAllDay => {
 };
 
 const petList = reactive([]);
-let user = JSON.parse(localStorage.getItem('user'));
+try {
+	let user = JSON.parse(localStorage.getItem('user'));
+} catch (error) {
+	console.log('error', error);
+}
 form.uid = '4EL4hp_qRUYMzzal_G29f';
-petList.push(...user.petList);
+user.petList && petList.push(...user.petList);
 </script>
 
 <style lang="scss" scoped>
