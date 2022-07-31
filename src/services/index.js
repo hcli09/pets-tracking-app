@@ -9,6 +9,7 @@ import calendar from './modules/calendar';
 import invoicemed from './modules/invoicemed';
 import vaccinationHistory from './modules/vaccination-history';
 import petprofile from './modules/petprofile';
+import notification from './modules/notification';
 
 export default {
 	registerLogin,
@@ -21,5 +22,6 @@ export default {
 	calendar,
 	invoicemed,
 	vaccinationHistory,
-	petprofile
+	petprofile,
+	notification,
 };
