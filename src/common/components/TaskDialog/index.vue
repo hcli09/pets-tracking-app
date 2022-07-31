@@ -164,11 +164,12 @@ const onSubmit = async () => {
 const petList = reactive([]);
 try {
 	let user = JSON.parse(localStorage.getItem('user'));
+	user && petList.push(...user.petList);
 } catch (error) {
 	console.log('error', error);
 }
+
 form.uid = '4EL4hp_qRUYMzzal_G29f';
-user.petList && petList.push(...user.petList);
 </script>
 
 <style lang="scss" scoped>
