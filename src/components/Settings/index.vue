@@ -63,32 +63,40 @@
 
             <el-tab-pane label="Notification" name="notification" class="notificationsPane">
                 <h1 class="notifications-title">Email Notifications</h1>
-                <div>
-                    <span>Allow email notifications</span>
-                    <el-switch v-model="emailNotifications" style="margin-left: 1vw;" @change="handleEmailNtf"/>                    
-                </div>
-                <div>
-                    <span style="margin-left:3vw">Task notifications</span>
-                    <el-switch v-model="taskNotifications" style="margin-left:1.7vw;margin-right:1vw" :disabled="taskDisabled" @change="handleTimeSelect"/>
 
-                    <span>Notify me at </span>
-                    <el-time-select
-                        v-model="taskNtfTime"
-                        start="00:00"
-                        step="00:15"
-                        end="23:45"
-                        placeholder="Select time"
-                        style="width:10vw"
-                        :disabled="timeSelectDisabled"
-                        @change="handleTaskNtf"
-                    />                
-                    <span> the day before a task</span>
+                <div class="notification-settings-container">
+                    <div class="setting-title-container">
+                        <p>Allow email notifications</p>                                            
+                        <p>Task notifications</p>                            
+                        <p>Event notifications</p>                   
+                    </div>
+
+                    <div class="switch-container">
+                        <el-switch v-model="emailNotifications" style="display:block" @change="handleEmailNtf"/> 
+                        <el-switch v-model="taskNotifications" style="display:block" :disabled="taskDisabled" @change="handleTimeSelect"/>
+                        <el-switch v-model="eventNotifications" style="display:block" :disabled="eventDisabled" @change="handleEventNtf"/>
+                    </div>
+
+                    <div class="time-select-container">
+                        <span>Notify me at </span>
+                        <el-time-select
+                            v-model="taskNtfTime"
+                            start="00:00"
+                            step="00:15"
+                            end="23:45"
+                            placeholder="Select time"
+                            style="width:10vw"
+                            :disabled="timeSelectDisabled"
+                            @change="handleTaskNtf"
+                        />                
+                        <span> the day before a task</span>
+                    </div>
 
                 </div>
-                <div>
-                    <span style="margin-left:3vw">Event notifications</span>
-                    <el-switch v-model="eventNotifications" style="margin: 0 1vw;" :disabled="eventDisabled" @change="handleEventNtf"/>
-                </div>
+
+
+
+
 
 
                 
@@ -385,6 +393,22 @@ const sendNotification = ()=> {
         font-weight: bold;
         color: #76553f;
         margin-bottom: 1vw;
+    }
+    .notification-settings-container {
+        display: flex;
+
+        .setting-title-container {
+            p {
+                line-height: 1.5vw;
+            }
+        }
+        .switch-container {
+            margin-left: 2vw;
+        }
+        .time-select-container {
+            margin-left: 2vw;
+            margin-top: 1.5vw;
+        }
     }
     .notifications-example {
         width: 25vw;
