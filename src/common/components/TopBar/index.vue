@@ -1,7 +1,7 @@
 <template>
 	<div class="top-bar-box">
 		<!-- left hand side of dashboard top bar -->
-		<div class="top-bar-title" onclick="location.href='/dashboard';">
+		<div class="top-bar-title" onclick="location.href='/';">
 			<!-- temporary add button -->
 			<img src="@assets/Dashboard/home-logo.svg" style="width: 35px" />
 			Home
