@@ -53,7 +53,7 @@
 	<div class="outer-folder-box">
 		<span class="main-title-text">Events and Tasks</span>
 		<div class="outer-events-tasks-box">
-			<el-row class="inner-events-tasks-box" :gutter="30">
+			<el-row class="inner-events-tasks-box" :gutter="54">
 				<!-- calender -->
 				<el-col :span="6">
 					<el-row style="position: relative">
@@ -264,6 +264,7 @@ export default {
 			flex-direction: column;
 			align-items: center;
 			margin: 0 2vw;
+			cursor: pointer;
 		}
 
 		.folder-image {

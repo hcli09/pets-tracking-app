@@ -116,6 +116,7 @@ export default {
 		width: 2.7rem;
 		border-radius: 5px;
 		box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+		cursor: pointer;
 	}
 
 	.top-bar-settings {
