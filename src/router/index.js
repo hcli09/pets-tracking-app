@@ -73,7 +73,7 @@ const routes = [
 				component: VaccinationHistory
 			},
 			{
-				path: '/PetProfile',
+				path: '/pet-profile',
 				component: PetProfile
 			}
 		]

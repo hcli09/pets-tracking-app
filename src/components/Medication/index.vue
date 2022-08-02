@@ -104,7 +104,7 @@ export default {
 	methods: {
 		topetProfile() {
 			this.$router.push({
-				path: '/PetProfile',
+				path: '/pet-profile',
 				query: { id: this.$data.petId }
 			});
 		}
