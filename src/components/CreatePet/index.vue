@@ -5,108 +5,104 @@
 	</div>
 
 	<div class="petinfo-content">
-		<el-form
-			:model="petForm"
-			:rules="rules"
-			ref="petForm"
-			label-width="100px"
-			class="demo-ruleForm"
-		>
-			<div class="buttons">
-				<!-- placeholder for buttons -->
-				<p></p>
-				<el-form-item>
-					<el-button type="primary" @click="submitForm('petForm')"
-						>Create</el-button
-					>
-					<el-button @click="resetForm('petForm')">Clear</el-button>
-				</el-form-item>
-			</div>
-
-			<!-- pet avatar -->
-			<div class="petavatar">
-				<el-upload
-					class="avatar-uploader"
-					action=""
-					:show-file-list="false"
-					:before-upload="beforeAvatarUpload"
-					:http-request="Upload"
-				>
-					<img
-						v-if="petAvatar"
-						:src="petAvatar"
-						class="avatar"
-						alt="upload"
-					/>
-					<img
-						v-else
-						src="https://pic.onlinewebfonts.com/svg/img_212908.png"
-						class="avatar-uploader-icon"
-					/>
-				</el-upload>
-				<p>Click to upload avatar!</p>
-			</div>
-
-			<div class="petforms">
-				<div class="lc-petforms">
-					<!-- pet name input -->
-					<el-form-item label="Pet Name" prop="petName">
-						<el-input v-model="petForm.petName"></el-input>
-					</el-form-item>
-
-					<!-- date of birth datepicker -->
-					<el-form-item label="Birth Date" required>
-						<el-form-item prop="petDob">
-							<el-date-picker
-								type="date"
-								v-model="petForm.petDob"
-								:disabledDate="disabledDateDob"
-								format="YYYY/MM/DD"
-								value-format="YYYY/MM/DD"
-							>
-							</el-date-picker>
-						</el-form-item>
-					</el-form-item>
-
-					<!-- weight input -->
-					<el-form-item label="Weight (kg)" prop="weight">
-						<el-input
-							v-model="petForm.weight"
-							v-model.number="petForm.weight"
-						></el-input>
-					</el-form-item>
-				</div>
-
-				<div class="rc-petforms">
-					<!-- species breed select -->
-					<el-form-item label="Species/Breed" prop="speciesAndBreed">
-						<el-cascader
-							v-model="petForm.speciesAndBreed"
-							:options="speciesAndBreedOptions"
-							@change="handleChange"
+		<template v-if="petForm">
+			<el-form
+				:model="petForm"
+				:rules="rules"
+				ref="petForm"
+				label-width="100px"
+				class="demo-ruleForm"
+			>
+				<div class="buttons">
+					<el-form-item>
+						<el-button type="primary" @click="submitForm('petForm')"
+							>Create</el-button
 						>
-						</el-cascader>
-					</el-form-item>
-
-					<!-- gender select -->
-					<el-form-item label="Gender" prop="gender">
-						<el-select v-model="petForm.gender">
-							<el-option label="Female" value="0"></el-option>
-							<el-option label="Male" value="1"></el-option>
-							<el-option label="N/A" value="2"></el-option>
-						</el-select>
-					</el-form-item>
-
-					<!-- height input -->
-					<el-form-item label="Height (cm)" prop="height">
-						<el-input
-							v-model="petForm.height"
-							v-model.number="petForm.height"
-						></el-input>
+						<el-button @click="resetForm('petForm')"
+							>Clear</el-button
+						>
 					</el-form-item>
 				</div>
-			</div>
-		</el-form>
+
+				<div class="petavatar">
+					<el-upload
+						class="avatar-uploader"
+						action=""
+						:show-file-list="false"
+						:before-upload="beforeAvatarUpload"
+						:http-request="Upload"
+					>
+						<img
+							v-if="petAvatar"
+							:src="petAvatar"
+							class="avatar"
+							alt="upload"
+						/>
+						<img
+							v-else
+							src="https://pic.onlinewebfonts.com/svg/img_212908.png"
+							class="avatar-uploader-icon"
+						/>
+					</el-upload>
+					<p>Click to upload avatar!</p>
+				</div>
+
+				<div class="petforms">
+					<div class="lc-petforms">
+						<el-form-item label="Pet Name" prop="petName">
+							<el-input v-model="petForm.petName" />
+						</el-form-item>
+
+						<el-form-item label="Birth Date" required>
+							<el-form-item prop="petDob">
+								<el-date-picker
+									type="date"
+									v-model="petForm.petDob"
+									:disabledDate="disabledDateDob"
+									format="YYYY/MM/DD"
+									value-format="YYYY/MM/DD"
+								/>
+							</el-form-item>
+						</el-form-item>
+
+						<el-form-item label="Weight (kg)" prop="weight">
+							<el-input
+								v-model="petForm.weight"
+								v-model.number="petForm.weight"
+							/>
+						</el-form-item>
+					</div>
+
+					<div class="rc-petforms">
+						<el-form-item
+							label="Species/Breed"
+							prop="speciesAndBreed"
+						>
+							<el-cascader
+								v-model="petForm.speciesAndBreed"
+								:options="speciesAndBreedOptions"
+								@change="handleChange"
+							/>
+						</el-form-item>
+
+						<el-form-item label="Gender" prop="gender">
+							<el-select v-model="petForm.gender">
+								<el-option label="Female" value="0"></el-option>
+								<el-option label="Male" value="1"></el-option>
+								<el-option label="N/A" value="2"></el-option>
+							</el-select>
+						</el-form-item>
+
+						<el-form-item label="Height (cm)" prop="height">
+							<el-input
+								v-model="petForm.height"
+								v-model.number="petForm.height"
+							/>
+						</el-form-item>
+					</div>
+				</div>
+			</el-form>
+		</template>
 	</div>
 </template>
 
@@ -134,7 +130,6 @@ export default {
 		return {
 			// mock uid for now
 			uid: '4EL4hp_qRUYMzzal_G29f',
-
 			// mock userobject data, use for sidebar and top bar. need uid to get userobject
 			userObject: {
 				firstName: '',
@@ -143,20 +138,17 @@ export default {
 				petList: [],
 				folderList: []
 			},
-
-			// initiate pet form
-			petForm: {
-				petName: '',
-				gender: '',
-				petDob: '',
-				species: '',
-				speciesAndBreed: '',
-				weight: null,
-				height: null
-			},
-
+			// // initiate pet form
+			// petForm: {
+			// 	petName: '',
+			// 	gender: '',
+			// 	petDob: '',
+			// 	species: '',
+			// 	speciesAndBreed: '',
+			// 	weight: null,
+			// 	height: null
+			// },
 			petAvatar: '',
-
 			// rules for pet form input
 			rules: {
 				petName: [
@@ -201,18 +193,26 @@ export default {
 					}
 				]
 			},
-
 			// array for casecader
 			speciesAndBreedOptions: [],
-
 			//pet dob can not be earlier than today
 			disabledDateDob(time) {
 				return time.getTime() > Date.now();
 			}
 		};
 	},
-
-	created: function () {
+	created() {
+		this.$data.petForm = {
+			petName: '',
+			gender: '',
+			petDob: '',
+			species: '',
+			speciesAndBreed: '',
+			weight: null,
+			height: null
+		};
+	},
+	mounted() {
 		//fetch breeds and species from backedn, generate species and breeds options to match the cascader format in element plus
 		httpServices.petInfo.getSpecies().then(response => {
 			let species_list = response.data.data;
@@ -252,7 +252,6 @@ export default {
 					let petObject = {
 						//mock uid for now
 						uid: this.$data.uid,
-
 						//from pet form
 						petName: petForm.petName,
 						gender: parseInt(petForm.gender),
@@ -414,7 +413,7 @@ export default {
 	.buttons {
 		padding: 1.5vh 0 0.5vh 0;
 		display: flex;
-		justify-content: space-between;
+		justify-content: flex-end;
 		align-items: center;
 		border-bottom: #f2f2f2 solid;
 	}

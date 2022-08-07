@@ -1,4 +1,8 @@
-import { createWebHistory, createRouter } from 'vue-router';
+import {
+	createWebHistory,
+	createRouter,
+	createWebHashHistory
+} from 'vue-router';
 
 import Home from '@/components/Home/index.vue';
 import Login from '@/components/Login/index.vue';
@@ -41,15 +45,15 @@ const routes = [
 				component: TaskTable
 			},
 			{
-				path: '/editpet',
+				path: 'editpet',
 				component: EditPet
 			},
 			{
-				path: '/createpet',
+				path: 'createpet',
 				component: CreatePet
 			},
 			{
-				path: '/invoice',
+				path: 'invoice',
 				component: Invoice
 			},
 			{
@@ -73,7 +77,7 @@ const routes = [
 				component: VaccinationHistory
 			},
 			{
-				path: '/pet-profile',
+				path: 'pet-profile',
 				component: PetProfile
 			}
 		]
@@ -104,7 +108,7 @@ const routes = [
 ];
 
 const router = createRouter({
-	history: createWebHistory(),
+	history: createWebHashHistory(),
 	routes
 });
 

@@ -1,12 +1,12 @@
 <template>
 	<!-- header of pet profile page -->
 	<div class="petprofile-header">
-		<el-image
-			v-if="this.$data.petsummary.petAvatar"
-			class="pet-avatar"
-			:src="this.$data.petsummary.petAvatar"
-		></el-image>
-		<p class="pet-name">{{ this.$data.petsummary.petName }}</p>
+		<template v-if="petsummary">
+			<el-image class="pet-avatar" :src="petsummary.petAvatar" />
+			<p class="pet-name">
+				{{ petsummary.petName }}
+			</p>
+		</template>
 		<el-link
 			style="
 				font-weight: 10;
@@ -93,11 +93,10 @@ export default {
 		return {
 			activeName: 'first',
 			record_activeName: 'first',
-			petsummary: [],
-			userInfo: [],
+			petsummary: {},
+			userInfo: {},
 			uid: '4EL4hp_qRUYMzzal_G29f',
-			// get petid from url
-			petId: this.$route.query.id
+			petId: this.$route.query.id // get petid from url
 		};
 	},
 	methods: {
@@ -131,17 +130,10 @@ export default {
 	},
 	mounted() {
 		let name = sessionStorage.getItem('currentTab');
-		console.log('hahaha', sessionStorage);
 		if (name) {
 			this.activeName = name;
 		}
-	},
-	beforeRouteLeave(to, from, next) {
-		sessionStorage.removeItem('currentTab');
-		next();
-	},
-
-	created: function () {
+		
 		//get pet profile
 		httpServices.petprofile
 			.getPet({ uid: this.$data.uid, petId: this.$data.petId })
@@ -159,11 +151,15 @@ export default {
 			.then(response => {
 				let userobject = response.data.data;
 				this.$data.userInfo = userobject;
-				console.log(this.$data.userInfo);
+				// console.log(this.$data.userInfo);
 			})
 			.catch(error => {
 				console.log(error.message);
 			});
+	},
+	beforeRouteLeave(to, from, next) {
+		sessionStorage.removeItem('currentTab');
+		next();
 	}
 };
 </script>

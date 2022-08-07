@@ -11,20 +11,20 @@
 export default {
 	props: ['petList', 'uid'],
 	created() {
-		console.log(
-			this.petList.map(pet => {
-				return {
-					href: `/pet-profile?id=${pet.pid}`,
-					title: `${pet.petName}`,
-					icon: {
-						element: 'img',
-						class: '',
-						attributes: { src: `${pet.petAvatar}` }
-					}
-				};
-			})
-		);
-		console.log(this.petsMenu);
+		// console.log(
+		// 	this.petList.map(pet => {
+		// 		return {
+		// 			href: `/pet-profile?id=${pet.pid}`,
+		// 			title: `${pet.petName}`,
+		// 			icon: {
+		// 				element: 'img',
+		// 				class: '',
+		// 				attributes: { src: `${pet.petAvatar}` }
+		// 			}
+		// 		};
+		// 	})
+		// );
+		// console.log(this.petsMenu);
 	},
 	data() {
 		return {
@@ -74,7 +74,8 @@ export default {
 	},
 	methods: {
 		loadPetPage(event, item, node) {
-			location.href = `/pet-profile?id=${item.petId}`;
+			location.href = `#/pet-profile?id=${item.petId}`;
+			// this.$router.push({ path: `/pet-profile?id=${item.petId}` });
 		}
 	}
 };

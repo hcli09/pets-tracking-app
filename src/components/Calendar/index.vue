@@ -32,6 +32,7 @@
 			locale="eng"
 			disable-page-swipe
 			is-expanded
+			@update:from-page="onMonthChange"
 		>
 			<template v-slot:day-content="{ day, attributes }">
 				<div class="flex flex-col h-full z-10 overflow-hidden">
@@ -56,7 +57,15 @@
 
 <script setup>
 import moment from 'moment';
-import { reactive, computed, ref, onMounted, defineProps, toRaw } from 'vue';
+import {
+	reactive,
+	computed,
+	ref,
+	onMounted,
+	defineProps,
+	toRaw,
+	watch
+} from 'vue';
 import services from '../../services';
 const month = new Date().getMonth();
 const year = new Date().getFullYear();
@@ -73,10 +82,10 @@ const props = defineProps({
 const baseAttributes = reactive([]);
 const eventAttributes = reactive([]);
 const taskAttributes = reactive([]);
-const getCalendarByMonthAsync = async () => {
+const getCalendarByMonthAsync = async month => {
 	const { data: res, status } = await services.calendar.getCalendarByMonth({
 		uid: '4EL4hp_qRUYMzzal_G29f',
-		month: moment().format('YYYY-MM')
+		month
 	});
 	const filtered = res.data.filter(
 		item => item.eventList.length > 0 || item.taskList.length > 0
@@ -115,7 +124,13 @@ const getCalendarByMonthAsync = async () => {
 	});
 	baseAttributes.push(...newData);
 };
-getCalendarByMonthAsync();
+
+getCalendarByMonthAsync(moment().format('YYYY-MM'));
+
+const onMonthChange = change =>
+	getCalendarByMonthAsync(
+		moment(`${change?.year}-${change?.month}`).format('YYYY-MM')
+	);
 
 // Get pet filter selector
 const petList = reactive([]);
@@ -151,6 +166,10 @@ let attributes = computed(() => {
 		);
 	}
 });
+
+const inputEvent = page => {
+	console.log(page);
+};
 </script>
 <!-- 
 <script>
