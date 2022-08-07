@@ -2,7 +2,7 @@
 	<div style="display: flex; flex-direction: column; align-items: center">
 		<el-table
 			class="eventtable"
-			:data="this.$data.eventList"
+			:data="eventList"
 			height="40vh"
 			style="width: 100%"
 		>

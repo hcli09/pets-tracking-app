@@ -2,7 +2,7 @@
 	<div style="display: flex; flex-direction: column; align-items: center">
 		<el-table
 			class="eventtable"
-			:data="this.$data.taskList"
+			:data="taskList"
 			height="40vh"
 			style="width: 100%"
 		>
@@ -40,11 +40,6 @@
 		<TaskDialog
 			:dialogVisible="taskDialogVisible"
 			@setVisible="setTaskDialogVisible"
-		/>
-
-		<EventDialog
-			:dialogVisible="eventDialogVisible"
-			@setVisible="setEventDialogVisible"
 		/>
 	</div>
 </template>

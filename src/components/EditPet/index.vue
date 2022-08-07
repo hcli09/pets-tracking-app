@@ -185,16 +185,6 @@ export default {
 				folderList: []
 			},
 
-			// pet form, get from backend to show on the edit page, after editing then send to backend
-			petForm: {
-				petName: '',
-				gender: '',
-				petDob: '',
-				species: '',
-				speciesAndBreed: '',
-				weight: null,
-				height: null
-			},
 			// pet avatar url
 			petAvatar: '',
 
@@ -245,7 +235,6 @@ export default {
 
 			// array for casecader
 			speciesAndBreedOptions: [],
-			dialogVisible: false,
 
 			//pet dob can not be later than today
 			disabledDateDob(time) {
@@ -253,7 +242,21 @@ export default {
 			}
 		};
 	},
-	created: function () {
+
+	created() {
+		this.$data.dialogVisible = false;
+		this.$data.petForm = {
+			petName: '',
+			gender: '',
+			petDob: '',
+			species: '',
+			speciesAndBreed: '',
+			weight: null,
+			height: null
+		};
+	},
+
+	mounted() {
 		// TODO: fetch uid and petId
 		console.log(this.$route.query.id);
 
@@ -389,7 +392,7 @@ export default {
 						deleteObject(desertRef).then(() => {
 							// File deleted successfully
 						});
-						location.href = '/dashboard';
+						location.href = '/';
 					});
 			} catch (error) {
 				ElMessage.error('Failed to delete pet');

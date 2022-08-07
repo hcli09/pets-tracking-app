@@ -69,7 +69,7 @@ const routes = [
 				component: Settings
 			},
 			{
-				path: 'Medication',
+				path: 'medication',
 				component: Medication
 			},
 			{

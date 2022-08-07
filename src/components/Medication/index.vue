@@ -29,14 +29,15 @@
 				></RecordGrid
 			></el-tab-pane>
 		</el-tabs>
-		<el-button
-			style="position: absolute; right: 10px; top: 3px"
-			type="primary"
-			plain
-			@click="topetProfile"
-			v-if="this.$route.query.id"
-			>Back to Pet Profile</el-button
-		>
+		<template v-if="$route.query.id">
+			<el-button
+				style="position: absolute; right: 10px; top: 3px"
+				type="primary"
+				plain
+				@click="topetProfile"
+				>Back to Pet Profile</el-button
+			>
+		</template>
 	</div>
 </template>
 
@@ -51,7 +52,6 @@ export default {
 	data() {
 		return {
 			uid: '4EL4hp_qRUYMzzal_G29f',
-			activeName: 'first',
 			petList: [],
 			petOptions: [],
 			recordType: 'Medication',
@@ -60,6 +60,7 @@ export default {
 		};
 	},
 	created: function () {
+		this.$data.activeName = 'first';
 		//get pet list
 		httpServices.invoicemed
 			.getPetList({ uid: this.$data.uid })

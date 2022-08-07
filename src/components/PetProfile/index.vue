@@ -91,13 +91,15 @@ import PetProfileTask from '../../common/components/PetProfileTask/index.vue';
 export default {
 	data() {
 		return {
-			activeName: 'first',
-			record_activeName: 'first',
 			petsummary: {},
 			userInfo: {},
 			uid: '4EL4hp_qRUYMzzal_G29f',
 			petId: this.$route.query.id // get petid from url
 		};
+	},
+	created: function () {
+		this.$data.activeName = 'first';
+		this.$data.record_activeName = 'first';
 	},
 	methods: {
 		toEditPage() {
@@ -133,7 +135,7 @@ export default {
 		if (name) {
 			this.activeName = name;
 		}
-		
+
 		//get pet profile
 		httpServices.petprofile
 			.getPet({ uid: this.$data.uid, petId: this.$data.petId })

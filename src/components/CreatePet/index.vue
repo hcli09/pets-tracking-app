@@ -138,16 +138,6 @@ export default {
 				petList: [],
 				folderList: []
 			},
-			// // initiate pet form
-			// petForm: {
-			// 	petName: '',
-			// 	gender: '',
-			// 	petDob: '',
-			// 	species: '',
-			// 	speciesAndBreed: '',
-			// 	weight: null,
-			// 	height: null
-			// },
 			petAvatar: '',
 			// rules for pet form input
 			rules: {
@@ -277,7 +267,7 @@ export default {
 							.then(response => {
 								// let petId = response.data.data.petId;
 								console.log(petObject);
-								location.href = '/dashboard';
+								location.href = '/';
 							});
 					} catch (error) {
 						ElMessage.error('Failed to create pet');

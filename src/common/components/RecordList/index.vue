@@ -67,6 +67,7 @@
 				<el-form>
 					<el-form-item class="datepicker">
 						<p>Date Filter</p>
+
 						<el-date-picker
 							v-model="dateRange"
 							type="daterange"
@@ -80,25 +81,24 @@
 						</el-date-picker>
 					</el-form-item>
 
-					<div
-						class="pet-filter"
-						v-if="this.$route.query.id === undefined"
-					>
-						<p>Pet Filter</p>
-						<el-select
-							v-model="petSelected"
-							placeholder="Select Pet"
-							@change="applyFilter"
-						>
-							<el-option
-								v-for="pet in petList"
-								:key="pet.petId"
-								:label="pet.petName"
-								:value="pet.petName"
+					<template v-if="$route.query.id === undefined">
+						<div class="pet-filter">
+							<p>Pet Filter</p>
+							<el-select
+								v-model="petSelected"
+								placeholder="Select Pet"
+								@change="applyFilter"
 							>
-							</el-option>
-						</el-select>
-					</div>
+								<el-option
+									v-for="pet in petList"
+									:key="pet.petId"
+									:label="pet.petName"
+									:value="pet.petName"
+								>
+								</el-option>
+							</el-select>
+						</div>
+					</template>
 
 					<div class="filter_add">
 						<el-button
@@ -319,46 +319,50 @@ export default {
 
 	data() {
 		return {
-			editloading: false,
-			addloading: false,
 			uid: this.curr_uid,
 			recordList: [],
-			recordType: this.initial_recordType,
-			//filter related
-			dateRange: '',
-			petSelected: '',
-			displayedRecordList: [],
-			//add diaglog related
-			AdddialogFormVisible: false,
-			documentForm: {
-				recordTitle: '',
-				petId: '',
-				date: '',
-				fileDir: '',
-				fileFormat: ''
-			},
+			recordType: this.initial_recordType
+		};
+	},
 
-			//delete dialog related
-			deletedialogVisible: false,
-			delete_recordId: '',
-			delete_fileDir: '',
+	created() {
+		this.$data.editloading = false;
+		this.$data.addloading = false;
+		//filter related
+		this.$data.dateRange = '';
+		this.$data.petSelected = '';
+		this.$data.displayedRecordList = [];
 
-			//view pdf dialog related
-			dialogPDFVisible: false,
-			view_fileDir: '',
-			view_fileFormat: '',
-			view_recordTitle: '',
+		//add diaglog related
+		this.$data.AdddialogFormVisible = false;
+		this.$data.documentForm = {
+			recordTitle: '',
+			petId: '',
+			date: '',
+			fileDir: '',
+			fileFormat: ''
+		};
 
-			//edit dialog related
-			EditdialogFormVisible: false,
-			EditdocumentForm: {
-				recordId: '',
-				recordTitle: '',
-				petId: '',
-				date: '',
-				fileDir: '',
-				fileFormat: ''
-			}
+		//delete dialog related
+		this.$data.deletedialogVisible = false;
+		this.$data.delete_recordId = '';
+		this.$data.delete_fileDir = '';
+
+		//view pdf dialog related
+		this.$data.dialogPDFVisible = false;
+		this.$data.view_fileDir = '';
+		this.$data.view_fileFormat = '';
+		this.$data.view_recordTitle = '';
+
+		//edit dialog related
+		this.$data.EditdialogFormVisible = false;
+		this.$data.EditdocumentForm = {
+			recordId: '',
+			recordTitle: '',
+			petId: '',
+			date: '',
+			fileDir: '',
+			fileFormat: ''
 		};
 	},
 
