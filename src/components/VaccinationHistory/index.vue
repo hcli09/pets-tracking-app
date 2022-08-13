@@ -1,4 +1,5 @@
 <template>
+    <Close @click="$router.back()" />
     <div>
         <el-container>
             <el-header style="background-color:#eedad1;color:#c17754;height:10vh;line-height:10vh">VACCINATION HISTORY</el-header>
@@ -212,6 +213,7 @@
 import { reactive, ref, onMounted } from 'vue'
 import httpServices from '@services';
 import router from '@/router';
+import Close from '@common/components/CloseButton/index.vue';
 
 
 const userID = ref('4EL4hp_qRUYMzzal_G29f')

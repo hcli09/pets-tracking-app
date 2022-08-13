@@ -1,4 +1,5 @@
 <template>
+    <Close @click="$router.back()" />
 	<div class="text-center section">
 		<div class="filter-pets">
 			<ul class="legend-list">
@@ -67,6 +68,7 @@ import {
 	watch
 } from 'vue';
 import services from '../../services';
+import Close from '@common/components/CloseButton/index.vue';
 const month = new Date().getMonth();
 const year = new Date().getFullYear();
 const masks = { weekdays: 'WWW' };

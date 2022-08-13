@@ -1,4 +1,5 @@
 <template>
+    <Close @click="$router.back()" />
 	<div class="record-header">
 		<p>Event Details</p>
 	</div>
@@ -30,6 +31,7 @@
 <script setup>
 import EventList from './EventList/index.vue';
 import Calendar from '../Calendar/index.vue';
+import Close from '@common/components/CloseButton/index.vue';
 import { ref } from 'vue';
 
 const uid = '4EL4hp_qRUYMzzal_G29f';
@@ -38,7 +40,7 @@ const activeName = ref('first');
 
 <style lang="scss" scoped>
 .record-header {
-	height: 70px;
+	height: 35px;
 	position: relative;
 	padding: 0.5vh 0 0.5vh 0vw;
 

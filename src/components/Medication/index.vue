@@ -1,4 +1,5 @@
 <template>
+	<Close @click="$router.back()" />
 	<div class="record-header">
 		<p>Medication Report</p>
 	</div>
@@ -44,6 +45,7 @@
 <script setup>
 import RecordList from '@common/components/RecordList/index.vue';
 import RecordGrid from '@common/components/RecordGrid/index.vue';
+import Close from '@common/components/CloseButton/index.vue';
 import httpServices from '@services';
 </script>
 
@@ -115,7 +117,7 @@ export default {
 
 <style lang="scss" scoped>
 .record-header {
-	height: 70px;
+	height: 35px;
 	position: relative;
 	padding: 0.5vh 0 0.5vh 0vw;
 
