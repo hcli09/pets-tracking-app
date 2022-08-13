@@ -31,7 +31,7 @@
 			></el-tab-pane>
 		</el-tabs>
 
-		<template v-if="$route.query.id">
+		<!-- <template v-if="$route.query.id">
 			<el-button
 				style="position: absolute; right: 10px; top: 3px"
 				type="primary"
@@ -39,7 +39,7 @@
 				@click="topetProfile"
 				>Back to Pet Profile</el-button
 			>
-		</template>
+		</template> -->
 	</div>
 </template>
 
