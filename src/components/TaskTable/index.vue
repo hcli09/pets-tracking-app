@@ -30,7 +30,7 @@
 				name="third"
 				style="height: 97%; overflow-y: auto; overflow-x: hidden"
 			>
-				<Calendar for="task" />
+				<Calendar for="task" close-b-t=false />
 			</el-tab-pane>
 		</el-tabs>
 	</div>
