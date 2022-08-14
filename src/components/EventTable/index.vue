@@ -1,5 +1,5 @@
 <template>
-    <Close @click="$router.back()" />
+	<Close @click="$router.back()" />
 	<div class="record-header">
 		<p>Event Details</p>
 	</div>
@@ -22,7 +22,7 @@
 				name="second"
 				style="height: 97%; overflow-y: auto; overflow-x: hidden"
 			>
-				<Calendar for="event" close-b-t=false />
+				<Calendar for="event" close-b-t="false" />
 			</el-tab-pane>
 		</el-tabs>
 	</div>

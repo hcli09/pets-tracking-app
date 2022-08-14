@@ -9,7 +9,7 @@
 			/>
 		</el-header>
 
-		<el-container>
+		<el-container style="position: relative">
 			<!-- side bar -->
 			<el-aside style="width: 65px">
 				<!-- <PetsSideBar :petList="userObject.petList" :uid="userObject.uid" /> -->
@@ -28,9 +28,10 @@
 					<router-view
 						@changeUserAvater="getUserInfo"
 						@changeUserInfo="getUserInfo"
-					></router-view>
+					/>
 				</el-main>
 			</el-scrollbar>
+			<BackButton />
 			<!-- end of main part for dashboard -->
 		</el-container>
 	</el-container>
@@ -56,6 +57,7 @@ import {
 } from 'firebase/storage';
 
 import 'vue3-carousel/dist/carousel.css';
+import BackButton from '../../common/components/BackButton/index.vue';
 
 const remarks = ref({ '2021-1-13': 'some tings' });
 const value = ref(new Date());
