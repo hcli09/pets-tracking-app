@@ -24,7 +24,16 @@ import PetProfile from '@/components/PetProfile/index.vue';
 
 const routes = [
 	{
+		path: '/login',
+		name: 'Login',
+		component: Login
+	},
+	{
 		path: '/',
+		redirect: '/login'
+	},
+	{
+		path: '/home',
 		name: 'Home',
 		component: Home,
 		children: [
@@ -83,22 +92,9 @@ const routes = [
 		]
 	},
 	{
-		path: '/home',
-		redirect: '/'
-	},
-	{
-		path: '/dashboard',
-		redirect: '/'
-	},
-	{
 		path: '/:catchAll(.*)',
 		name: 'Not Found',
 		component: NotFound
-	},
-	{
-		path: '/login',
-		name: 'Login',
-		component: Login
 	},
 	{
 		path: '/register',
