@@ -1,5 +1,5 @@
 <template>
-    <Close @click="$router.back()" v-if="props.closeBT == true" />
+    <Close @click="$router.back()" v-if="props.closeBT !== 'none'" />
 	<div class="text-center section">
 		<div class="filter-pets">
 			<ul class="legend-list">
@@ -79,8 +79,7 @@ const props = defineProps({
 		type: String
 	},
 	closeBT: {
-		type: Boolean,
-		default: "true"
+		type: String
 	}
 });
 
