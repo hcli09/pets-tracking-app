@@ -21,6 +21,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { ArrowLeftBold } from '@element-plus/icons-vue';
 
 const router = useRouter();
+
 const goBack = () => {
 	router.go(-1);
 };
@@ -29,8 +30,8 @@ const goBack = () => {
 <style scoped>
 .back-button {
 	position: absolute;
-	right: 40px;
-	bottom: 20px;
+	right: 60px;
+	bottom: 40px;
 	z-index: 10000;
 }
 </style>

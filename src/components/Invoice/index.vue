@@ -1,5 +1,4 @@
 <template>
-    <Close @click="$router.back()" />
 	<div class="record-header">
 		<p>Invoice</p>
 	</div>

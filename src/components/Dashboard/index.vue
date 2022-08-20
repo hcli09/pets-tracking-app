@@ -162,13 +162,13 @@ const setTaskDialogVisible = () => {
 };
 
 const toInvoice = () => {
-	router.push('/invoice');
+	router.push('/home/invoice');
 };
 const toVaccination = () => {
-	router.push('/vaccinationhistory');
+	router.push('/home/vaccinationhistory');
 };
 const toMedication = () => {
-	router.push('/medication');
+	router.push('/home/medication');
 };
 </script>
 

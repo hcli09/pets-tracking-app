@@ -104,25 +104,25 @@ export default {
 	methods: {
 		toEditPage() {
 			this.$router.push({
-				path: '/editpet',
+				path: '/home/editpet',
 				query: { id: this.$data.petId }
 			});
 		},
 		toInvoice() {
 			this.$router.push({
-				path: '/invoice',
+				path: '/home/invoice',
 				query: { id: this.$data.petId }
 			});
 		},
 		toVaccination() {
 			this.$router.push({
-				path: '/vaccinationhistory',
+				path: '/home/vaccinationhistory',
 				query: { id: this.$data.petId }
 			});
 		},
 		toMedication() {
 			this.$router.push({
-				path: '/medication',
+				path: '/home/medication',
 				query: { id: this.$data.petId }
 			});
 		},

@@ -1,5 +1,5 @@
 <template>
-    <Close @click="$router.back()" v-if="props.closeBT !== 'none'" />
+    
 	<div class="text-center section">
 		<div class="filter-pets">
 			<ul class="legend-list">

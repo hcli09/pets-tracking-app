@@ -31,8 +31,9 @@
 					/>
 				</el-main>
 			</el-scrollbar>
+			<!-- <template v-if="isRenderBackButton"> -->
 			<BackButton />
-			<!-- end of main part for dashboard -->
+			<!-- </template> -->
 		</el-container>
 	</el-container>
 </template>
@@ -58,9 +59,18 @@ import {
 
 import 'vue3-carousel/dist/carousel.css';
 import BackButton from '../../common/components/BackButton/index.vue';
+import { useRoute } from 'vue-router';
 
 const remarks = ref({ '2021-1-13': 'some tings' });
 const value = ref(new Date());
+const route = useRoute();
+
+// let isRenderBackButton;
+// if (route.fullPath === '/home') {
+// 	isRenderBackButton = ref(false);
+// } else {
+// 	isRenderBackButton = ref(true);
+// }
 
 onMounted(() => {
 	// getUserProfile();

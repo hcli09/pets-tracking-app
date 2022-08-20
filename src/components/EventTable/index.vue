@@ -1,5 +1,4 @@
 <template>
-	<Close @click="$router.back()" />
 	<div class="record-header">
 		<p>Event Details</p>
 	</div>
@@ -58,5 +57,6 @@ const activeName = ref('first');
 	position: relative;
 	background-color: white;
 	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+	margin-top: 2vh;
 }
 </style>
