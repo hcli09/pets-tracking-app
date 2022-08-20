@@ -49,9 +49,8 @@ export default {
 	methods: {
 		clickSettings() {
 			this.$router.push({
-				path: '/settings'
+				path: '/home/settings'
 			});
-			console.log('redirect to setting page');
 		},
 
 		clickUserAvatar() {

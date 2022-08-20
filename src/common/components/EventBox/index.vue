@@ -1,7 +1,11 @@
 <template>
 	<el-row :span="6" class="events-tasks-big-box">
 		<h3 class="start-time-event-task">
-			{{ startDateTime.slice(-5) === '00:00' ? 'All day' : startDateTime.slice(-5) }}
+			{{
+				startDateTime.slice(-5) === '00:00'
+					? 'All day'
+					: startDateTime.slice(-5)
+			}}
 		</h3>
 
 		<el-card
@@ -65,7 +69,7 @@ let { eventTitle: title, startDateTime, petAbList } = props.customData;
 const pets = toRaw(petAbList);
 
 const toCalendar = () => {
-	router.push('/calendar');
+	router.push('/home/calendar');
 };
 </script>
 
