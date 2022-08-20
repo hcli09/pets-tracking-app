@@ -3,7 +3,7 @@
 		<div class="flex align-center justify-between">
 			<h3 class="event-heading">Events</h3>
 			<div>
-				<el-button @click="router.push('event-table')"
+				<el-button @click="router.push('/home/event-table')"
 					>Details</el-button
 				>
 			</div>

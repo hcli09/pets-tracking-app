@@ -62,7 +62,7 @@
 							style="z-index: 99"
 							class="absolute bottom-2 left-1/2 transform -translate-x-1/2 rounded-2xl"
 						>
-							<router-link to="/calendar">
+							<router-link to="/home/calendar">
 								<el-button
 									class="add-button"
 									color="#76553f"
