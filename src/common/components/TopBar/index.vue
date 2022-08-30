@@ -55,7 +55,7 @@ export default {
 
 		clickUserAvatar() {
 			this.$router.push({
-				path: '/userprofile'
+				path: '/home/userprofile'
 			});
 			console.log('redirect to userprofile');
 		},
