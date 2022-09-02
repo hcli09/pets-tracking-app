@@ -199,7 +199,7 @@ const getAllUsers = async () => {
 };
 
 const linkToEditProfile = () => {
-	router.push('/editprofile');
+	router.push('/home/editprofile');
 };
 
 const emit = defineEmits(['changeUserAvater']);
