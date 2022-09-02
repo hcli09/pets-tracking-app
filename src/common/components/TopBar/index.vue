@@ -63,7 +63,7 @@ export default {
 		//temporary add pet button
 		clickAddPet() {
 			this.$router.push({
-				path: '/createpet'
+				path: '/home/createpet'
 			});
 		}
 	}
