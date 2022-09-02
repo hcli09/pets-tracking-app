@@ -21,8 +21,26 @@ import Medication from '@/components/Medication/index.vue';
 import EventTable from '@/components/EventTable/index.vue';
 import TaskTable from '@/components/TaskTable/index.vue';
 import PetProfile from '@/components/PetProfile/index.vue';
+import ConfirmPage from '@/components/ConfirmPage/index.vue';
+import CancelPage from '@/components/CancelPage/index.vue';
+import RejectPage from '@/components/RejectPage/index.vue';
 
 const routes = [
+	{
+		path: '/rejectpage',
+		name: 'RejectPage',
+		component: RejectPage
+	},
+	{
+		path: '/confirmpage',
+		name: 'ConfirmPage',
+		component: ConfirmPage
+	},
+	{
+		path: '/cancelpage',
+		name: 'CancelPage',
+		component: CancelPage
+	},
 	{
 		path: '/login',
 		name: 'Login',
