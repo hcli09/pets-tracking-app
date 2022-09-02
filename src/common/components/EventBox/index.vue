@@ -15,8 +15,14 @@
 		>
 			<div class="event-task-small-box">
 				<div class="event-task-inside">
-					<span>{{ title }}</span>
-					<!-- <p>{{ startDateTime.slice(-5) }}</p> -->
+					<el-tooltip
+						class="box-item"
+						effect="dark"
+						:content="title"
+						placement="bottom"
+					>
+						<span>{{ title }}</span>
+					</el-tooltip>
 				</div>
 				<el-tooltip
 					class="box-item"
@@ -87,7 +93,6 @@ const toCalendar = () => {
 		color: #908f8c;
 		font-family: Trebuchet MS;
 		font-size: 2vmin;
-		font-weight: bold;
 	}
 	.event-task-card {
 		width: 100%;

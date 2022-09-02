@@ -1,28 +1,24 @@
 <template>
 	<el-row :span="6" class="events-tasks-big-box">
 		<h3 class="start-time-event-task">
-			{{ 'Due ' + dueDate.substr(-5) }}
+			{{ 'On ' + start_time.substr(-11) }}
 		</h3>
 		<el-card
 			shadow="hover"
 			:class="'event-task-card'"
-			:style="{ backgroundColor: '#eff6ff', color: '#1e40af' }"
+			:style="{ backgroundColor: '#EAF5EA', color: '#2F5D28' }"
 		>
 			<div class="event-task-small-box">
 				<div class="event-task-inside">
-					<el-checkbox
-						v-model="checked"
-						label=""
-						@change="handleChange"
-					/>
 					<el-tooltip
 						class="box-item"
 						effect="dark"
 						:content="title"
 						placement="bottom"
 					>
-						<span style="margin-left: 5px">{{ title }}</span>
+						<span>{{ title }}</span>
 					</el-tooltip>
+					<span class="invitee">{{ invitee }}</span>
 				</div>
 				<el-tooltip
 					class="box-item"
@@ -69,38 +65,9 @@ const props = defineProps({
 		type: Number
 	}
 });
-let {
-	taskTitle: title,
-	dueDate,
-	petAbList,
-	checked,
-	taskId
-} = props.customData;
-const pets = toRaw(petAbList);
+let { title, start_time, invitee, petAbList: pets } = props.customData;
+// const pets = toRaw(petAbList);
 const reload = inject('reload');
-
-const handleChange = async target => {
-	const { data: res } = await services.tasks.checkOffTask({
-		uid: '4EL4hp_qRUYMzzal_G29f',
-		taskId,
-		isChecked: +target
-	});
-	if (res.status === 200 && target) {
-		ElMessage({
-			message: 'Task checked off!',
-			type: 'success',
-			duration: 3000
-		});
-		reload();
-	} else {
-		ElMessage({
-			message: 'Task unchecked!',
-			type: 'success',
-			duration: 3000
-		});
-		reload();
-	}
-};
 </script>
 
 <style lang="scss" scoped>
@@ -135,12 +102,17 @@ const handleChange = async target => {
 
 			.event-task-inside {
 				display: flex;
-				align-items: center;
+				align-items: left;
+				flex-direction: column;
 				text-align: left;
 				width: 11.2rem;
 				overflow: hidden;
 				text-overflow: ellipsis;
 				white-space: nowrap;
+				.invitee {
+					font-size: 12px;
+					font-weight: 300;
+				}
 			}
 
 			//event name and pet name

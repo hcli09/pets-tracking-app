@@ -59,7 +59,7 @@ getEventsByDateAsync();
 
 <style lang="scss" scoped>
 .event-heading {
-	color: #908f8c;
+	color: #4b4b4b;
 	font-family: Trebuchet MS;
 	font-size: 2.5vmin;
 	font-weight: bold;
@@ -68,5 +68,8 @@ getEventsByDateAsync();
 	color: #908f8c;
 	font-family: Trebuchet MS;
 	font-size: 2.5vmin;
+}
+:deep(.el-scrollbar__view) {
+	padding: 0 10px;
 }
 </style>

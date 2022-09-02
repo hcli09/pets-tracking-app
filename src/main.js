@@ -15,12 +15,10 @@ axios.defaults.baseURL = 'https://pets-app.azurewebsites.net/';
 // v-calendar
 import VCalendar from 'v-calendar';
 import 'v-calendar/dist/style.css';
-// clock
-// import Vue from 'vue';
-// import VueClock from '@dangvanthanh/vue-clock';
+// vue-datepicker
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 
-// Vue.use(VueClock);
-// ElementIcon
 const app = createApp(App);
 Object.keys(ElIcons).forEach(key => {
 	app.component(key, ElIcons[key]);
@@ -31,5 +29,6 @@ app.use(VCalendar, {});
 app.use(ElementPlus);
 app.use(createPinia());
 app.use(router);
+app.component('Datepicker', Datepicker);
 
 app.mount('#app');

@@ -1,5 +1,5 @@
 <template>
-	<el-scrollbar height="270px">
+	<el-scrollbar>
 		<div class="flex align-center justify-between">
 			<h3 class="task-heading">Tasks</h3>
 			<div>
@@ -62,7 +62,7 @@ getTasksByDateAsync();
 
 <style lang="scss" scoped>
 .task-heading {
-	color: #908f8c;
+	color: #4b4b4b;
 	font-family: Trebuchet MS;
 	font-size: 2.5vmin;
 	font-weight: bold;
@@ -71,5 +71,8 @@ getTasksByDateAsync();
 	color: #908f8c;
 	font-family: Trebuchet MS;
 	font-size: 2.5vmin;
+}
+:deep(.el-scrollbar__view) {
+	padding: 0 10px;
 }
 </style>

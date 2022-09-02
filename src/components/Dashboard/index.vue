@@ -53,75 +53,78 @@
 	<div class="outer-folder-box">
 		<span class="main-title-text">Events and Tasks</span>
 		<div class="outer-events-tasks-box">
-			<el-row class="inner-events-tasks-box" :gutter="54">
+			<el-row :gutter="20">
 				<!-- calender -->
 				<el-col :span="6">
-					<el-row style="position: relative">
-						<v-date-picker v-model="value" locale="eng" />
-						<div
-							style="z-index: 99"
-							class="absolute bottom-2 left-1/2 transform -translate-x-1/2 rounded-2xl"
-						>
-							<router-link to="/home/calendar">
-								<el-button
-									class="add-button"
-									color="#76553f"
-									style="border: #fd6540"
-									type="primary"
-									:icon="Calendar"
-									plain
-								>
-									Calendar
-								</el-button>
-							</router-link>
-						</div>
-					</el-row>
-				</el-col>
-				<el-col :span="7" class="summary-events-tasks-box">
-					<EventSummary />
-				</el-col>
-				<!-- events and tasks for today -->
-				<el-col :span="7" class="summary-events-tasks-box">
-					<TaskSummary />
-				</el-col>
-
-				<!-- add button for events and tasks -->
-				<el-col :span="3" class="add-events-tasks-box">
-					<el-row>
-						<el-button
-							class="add-button"
-							color="#76553f"
-							style="border: #737bc1"
-							type="primary"
-							plain
-							:icon="Flag"
-							@click="setEventDialogVisible"
-						>
-							Add Event
-						</el-button>
-
-						<EventDialog
-							:dialogVisible="eventDialogVisible"
-							@setVisible="setEventDialogVisible"
-						/>
-					</el-row>
-					<el-row>
+					<v-date-picker v-model="value" locale="eng" />
+					<router-link to="/home/calendar">
 						<el-button
 							class="add-button"
 							color="#76553f"
 							style="border: #fd6540"
 							type="primary"
+							:icon="Calendar"
 							plain
-							:icon="CircleCheck"
-							@click="setTaskDialogVisible"
 						>
-							Add Task
+							Calendar
 						</el-button>
-						<TaskDialog
-							:dialogVisible="taskDialogVisible"
-							@setVisible="setTaskDialogVisible"
-						/>
-					</el-row>
+					</router-link>
+				</el-col>
+				<el-col :span="6" class="summary-events-tasks-box">
+					<EventSummary />
+					<el-button
+						class="add-button"
+						color="#76553f"
+						style="border: #737bc1"
+						type="primary"
+						plain
+						:icon="Flag"
+						@click="setEventDialogVisible"
+					>
+						Add Event
+					</el-button>
+					<EventDialog
+						:dialogVisible="eventDialogVisible"
+						@setVisible="setEventDialogVisible"
+					/>
+				</el-col>
+				<!-- events and tasks for today -->
+				<el-col :span="6" class="summary-events-tasks-box">
+					<TaskSummary />
+					<el-button
+						class="add-button"
+						color="#76553f"
+						style="border: #fd6540"
+						type="primary"
+						plain
+						:icon="CircleCheck"
+						@click="setTaskDialogVisible"
+					>
+						Add Task
+					</el-button>
+					<TaskDialog
+						:dialogVisible="taskDialogVisible"
+						@setVisible="setTaskDialogVisible"
+					/>
+				</el-col>
+
+				<el-col :span="6" class="summary-events-tasks-box">
+					<BookingSummary />
+					<el-button
+						class="add-button"
+						color="#76553f"
+						style="border: #fd6540"
+						type="primary"
+						plain
+						:icon="Opportunity"
+						@click="setBookingDialogVisible"
+					>
+						Add Booking
+					</el-button>
+					<BookingDialog
+						:dialogVisible="bookingDialogVisible"
+						@setVisible="setBookingDialogVisible"
+					/>
 				</el-col>
 			</el-row>
 		</div>
@@ -131,7 +134,12 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { Carousel, Pagination, Slide } from 'vue3-carousel';
-import { Flag, CircleCheck, Calendar } from '@element-plus/icons-vue';
+import {
+	Flag,
+	CircleCheck,
+	Calendar,
+	Opportunity
+} from '@element-plus/icons-vue';
 
 import EventDialog from '@common/components/EventDialog/index.vue';
 import TaskDialog from '@common/components/TaskDialog/index.vue';
@@ -141,6 +149,8 @@ import TaskSummary from '../../common/components/TaskSummary/index.vue';
 
 import httpServices from '@services';
 import router from '../../router';
+import BookingSummary from '../../common/components/BookingSummary/index.vue';
+import BookingDialog from '../../common/components/BookingDialog/index.vue';
 
 // import 'vue3-carousel/dist/carousel.css';
 
@@ -151,14 +161,18 @@ const year = new Date().getFullYear();
 const masks = { weekdays: 'WWW' };
 
 const eventDialogVisible = ref(false);
-const taskDialogVisible = ref(false);
-
 const setEventDialogVisible = () => {
 	eventDialogVisible.value = !eventDialogVisible.value;
 };
 
+const taskDialogVisible = ref(false);
 const setTaskDialogVisible = () => {
 	taskDialogVisible.value = !taskDialogVisible.value;
+};
+
+const bookingDialogVisible = ref(false);
+const setBookingDialogVisible = () => {
+	bookingDialogVisible.value = !bookingDialogVisible.value;
 };
 
 const toInvoice = () => {
@@ -206,6 +220,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.el-col {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: column;
+}
 .dashboard-home {
 	position: absolute;
 	top: 0px;
@@ -302,28 +322,26 @@ export default {
 //this box is the large white box under title events and tasks
 .outer-events-tasks-box {
 	display: flex;
+	justify-content: center;
 	align-items: center;
 	background-color: white;
 	box-sizing: border-box;
 	width: 99%;
 	height: 50vh;
 	border-radius: 10px;
-	padding: 20px;
-	padding-left: 50px; // control calendar's padding to the left
 	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-
+	padding: 0 10px;
 	.el-row {
-		padding-top: 2vh;
+		height: 75%;
 	}
 }
 
 //this box including all the events and tasks for this day
 .summary-events-tasks-box {
 	display: flex;
-	justify-content: space-evenly;
+	justify-content: space-between;
 	flex-direction: column;
 	align-items: center;
-	height: 270px;
 
 	:deep(.el-card__body) {
 		padding: 2vh;
