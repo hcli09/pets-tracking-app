@@ -21,6 +21,7 @@ import Medication from '@/components/Medication/index.vue';
 import EventTable from '@/components/EventTable/index.vue';
 import TaskTable from '@/components/TaskTable/index.vue';
 import PetProfile from '@/components/PetProfile/index.vue';
+import BookingTable from '@/components/BookingTable/index.vue';
 
 const routes = [
 	{
@@ -88,7 +89,11 @@ const routes = [
 			{
 				path: 'pet-profile',
 				component: PetProfile
-			}
+			},
+			{
+				path: 'booking-table',
+				component: BookingTable
+			},
 		]
 	},
 	{
