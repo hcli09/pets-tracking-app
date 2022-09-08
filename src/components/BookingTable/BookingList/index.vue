@@ -41,10 +41,10 @@
 				</el-table-column>
 
 				<el-table-column
-					prop="invitee"
+					prop="attendee"
 					align="left"
 					label="Invitee"
-					width="100"
+					width="200"
 					column-key="booking_id"
 				/>
 
@@ -68,6 +68,7 @@
 									<img
 										v-for="pet in scope.row.petAbList"
 										:src="pet.petAvatar"
+										:key="pet.petId"
 										style="
 											width: 30px;
 											border-radius: 50%;
@@ -211,56 +212,56 @@ const props = defineProps({
 
 const { currUid } = props;
 
-const bookings = reactive([
-    {
-        booking_id: '02',
-        pet_id_list: ["HASGu7OfvhJB0fhhLbIwA","AonE9egnd-QIG7W8J4CtK"],
-        invitee: 'min.du@anu.edu.au',
-        title: 'Health check',
-        start_time: "2022-09-11 17:00",
-        end_time: "2022-09-11 18:00",
-        petAbList: [{petId: 'HASGu7OfvhJB0fhhLbIwA', petName: 'Olive', petAvatar: 'src/assets/booking-table-temp/bernard.jpg'},
-        {petId: 'AonE9egnd-QIG7W8J4CtK', petName: 'Bernard', petAvatar: 'src/assets/booking-table-temp/olive.jpg'}]
+// const bookings = reactive([
+//     {
+//         booking_id: '02',
+//         pet_id_list: ["HASGu7OfvhJB0fhhLbIwA","AonE9egnd-QIG7W8J4CtK"],
+//         invitee: 'min.du@anu.edu.au',
+//         title: 'Health check',
+//         start_time: "2022-09-11 17:00",
+//         end_time: "2022-09-11 18:00",
+//         petAbList: [{petId: 'HASGu7OfvhJB0fhhLbIwA', petName: 'Olive', petAvatar: 'src/assets/booking-table-temp/bernard.jpg'},
+//         {petId: 'AonE9egnd-QIG7W8J4CtK', petName: 'Bernard', petAvatar: 'src/assets/booking-table-temp/olive.jpg'}]
 
-    },
-	{
-        booking_id: '03',
-        pet_id_list: ["HASGu7OfvhJB0fhhLbIwA"],
-        invitee: 'xinyu.kang@anu.edu.au',
-        title: 'Vaccination Bernard',
-        start_time: "2022-09-23 15:00",
-        end_time: "2022-09-23 16:00",
-        petAbList: [{petId: 'HASGu7OfvhJB0fhhLbIwA', petName: 'Olive', petAvatar: 'src/assets/booking-table-temp/bernard.jpg'},
-        ]
+//     },
+// 	{
+//         booking_id: '03',
+//         pet_id_list: ["HASGu7OfvhJB0fhhLbIwA"],
+//         invitee: 'xinyu.kang@anu.edu.au',
+//         title: 'Vaccination Bernard',
+//         start_time: "2022-09-23 15:00",
+//         end_time: "2022-09-23 16:00",
+//         petAbList: [{petId: 'HASGu7OfvhJB0fhhLbIwA', petName: 'Olive', petAvatar: 'src/assets/booking-table-temp/bernard.jpg'},
+//         ]
 
-    },
-	{
-        booking_id: '04',
-        pet_id_list: ["AonE9egnd-QIG7W8J4CtK"],
-        invitee: 'harry.li@anu.edu.au',
-        title: 'Bernard play date',
-        start_time: "2022-09-29 17:00",
-        end_time: "2022-09-29 18:00",
-        petAbList: [{petId: 'HASGu7OfvhJB0fhhLbIwA', petName: 'Olive', petAvatar: 'src/assets/booking-table-temp/bernard.jpg'},
-        ]
+//     },
+// 	{
+//         booking_id: '04',
+//         pet_id_list: ["AonE9egnd-QIG7W8J4CtK"],
+//         invitee: 'harry.li@anu.edu.au',
+//         title: 'Bernard play date',
+//         start_time: "2022-09-29 17:00",
+//         end_time: "2022-09-29 18:00",
+//         petAbList: [{petId: 'HASGu7OfvhJB0fhhLbIwA', petName: 'Olive', petAvatar: 'src/assets/booking-table-temp/bernard.jpg'},
+//         ]
 
-    },	
-]);
-// const bookings = reactive([])
-// const loading = ref(true);
-const loading = ref(false);
+//     },	
+// ]);
+const bookings = reactive([])
+const loading = ref(true);
+// const loading = ref(false);
 const editEventDialogVisible = ref(false);
-const getAllEventsAsync = async () => {
-	const { data: res } = await services.events.getAllEvents({
+const getAllBookingsAsync = async () => {
+	const { data: res } = await services.bookingTable.getBookingList({
 		uid: props.currUid
 	});
 	if (res.data) {
 		loading.value = false;
 		bookings.push(...res.data);
 	}
-    console.log("bookings: ", bookings)
+    console.log("uid: ", uid)
 };
-// getAllEventsAsync();
+getAllBookingsAsync();
 
 const confirmDeleteEvent = async eventId => {
 	const { data: res } = await services.events.deleteEvent({
