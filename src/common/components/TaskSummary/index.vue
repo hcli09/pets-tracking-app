@@ -1,5 +1,5 @@
 <template>
-	<el-scrollbar>
+	<el-scrollbar height="270px">
 		<div class="flex align-center justify-between">
 			<h3 class="task-heading">Tasks</h3>
 			<div>

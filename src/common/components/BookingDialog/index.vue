@@ -123,6 +123,7 @@ import {
 } from 'vue';
 import moment from 'moment';
 import services from '../../../services';
+import { inviteBooking } from '../../../services/modules/booking';
 
 const reload = inject('reload');
 const props = defineProps({
@@ -145,14 +146,16 @@ const endDateTime = ref();
 const form = reactive({
 	booking_id: null,
 	uid: '',
-	invitee: '',
+	attendee: '',
 	pet_id_list: [],
 	title: '',
 	start_time: '',
 	end_time: '',
 	location: '',
 	description: '',
-	status: 'pending'
+	status: 'pending',
+	request_sender: true,
+	pair_bk_id: null
 });
 const formatBookingDateTime = (date, isSubmit) => {
 	const rawDate = toRaw(date);
@@ -185,25 +188,27 @@ const onSubmit = async () => {
 
 	form.start_time = formatBookingDateTime(startDateTime.value, true);
 	form.end_time = formatBookingDateTime(endDateTime.value, true);
+	form.pet_id_list = [form.pet_id_list];
+
 	console.log('form', form);
 
-	// try {
-	// 	const res = await services.events.addEvent(form);
-	// 	if (res.status === 200) {
-	// 		isSubmitting.value = false;
-	// 		ElMessage({
-	// 			message:
-	// 				'New booking created successfully. You will get notified when the booking is approaching',
-	// 			type: 'success',
-	// 			duration: 6000
-	// 		});
-	// 		reload();
-	// 		emits('setVisible');
-	// 	}
-	// } catch (error) {
-	// 	ElMessage.error('Failed to create or edit event');
-	// 	console.log(error);
-	// }
+	try {
+		const res = await inviteBooking(form);
+		if (res.status === 200) {
+			isSubmitting.value = false;
+			ElMessage({
+				message:
+					'Thank you! Please ask the invitee to CHECK its email to either accept or reject the booking',
+				type: 'success',
+				duration: 6000
+			});
+			reload();
+			emits('setVisible');
+		}
+	} catch (error) {
+		ElMessage.error('Failed to create a booking');
+		console.log(error);
+	}
 };
 
 const petList = reactive([]);

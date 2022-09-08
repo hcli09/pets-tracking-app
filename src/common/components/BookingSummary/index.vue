@@ -38,47 +38,28 @@ import services from '../../../services';
 import moment from 'moment';
 import { useRouter } from 'vue-router';
 import BookingBox from '../BookingBox/index.vue';
+import { getBookingsByDate } from '../../../services/modules/booking';
 
 const router = useRouter();
 
-const bookings = reactive([
-	{
-		booking_id: 123,
-		uid: '4EL4hp_qRUYMzzal_G29f',
-		invitee: 'jane@gmail.com',
-		petAbList: [
-			{
-				petId: 'AonE9egnd-QIG7W8J4CtK',
-				petName: 'Bernard',
-				petAvatar:
-					'https://firebasestorage.googleapis.com/v0/b/pet-tr…=media&token=8c3a27e3-5e10-430b-8e41-982fe5dbc950'
-			}
-		],
-		title: 'Adoption advice with Jane',
-		start_time: '2022-09-10 14:00',
-		end_time: '2022-09-10 16:00',
-		location: 'ANU',
-		description: 'none',
-		status: 'confirmed'
+const bookings = reactive([]);
+
+const getBookingsByDateAsync = async () => {
+	try {
+		const { data: res, status } = await getBookingsByDate({
+			uid: '4EL4hp_qRUYMzzal_G29f',
+			date: moment().format('YYYY-MM-DD')
+		});
+
+		if (status === 200) {
+			bookings.push(...res.data);
+		}
+	} catch (error) {
+		console.log(error);
 	}
-]);
+};
 
-// const getTasksByDateAsync = async () => {
-// 	try {
-// 		const { data: res, status } = await services.tasks.getTasksByDate({
-// 			uid: '4EL4hp_qRUYMzzal_G29f',
-// 			date: moment().format('YYYY-MM-DD')
-// 		});
-
-// 		if (status === 200) {
-// 			tasks.push(...res.data.taskList);
-// 		}
-// 	} catch (error) {
-// 		console.log(error);
-// 	}
-// };
-
-// getTasksByDateAsync();
+getBookingsByDateAsync();
 </script>
 
 <style lang="scss" scoped>

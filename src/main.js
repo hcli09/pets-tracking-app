@@ -11,7 +11,10 @@ import VueSidebarMenu from 'vue-sidebar-menu';
 import '@styles/side-menu/custom-var.scss';
 
 // axios
-axios.defaults.baseURL = 'https://pets-app.azurewebsites.net/';
+axios.defaults.baseURL = 'https://pets-backend.azurewebsites.net';
+// For local mock
+// axios.defaults.baseURL = 'http://127.0.0.1:4523/m1/819321-0-default/';
+
 // v-calendar
 import VCalendar from 'v-calendar';
 import 'v-calendar/dist/style.css';

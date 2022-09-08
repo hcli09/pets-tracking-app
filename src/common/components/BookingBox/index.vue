@@ -18,7 +18,7 @@
 					>
 						<span>{{ title }}</span>
 					</el-tooltip>
-					<span class="invitee">{{ invitee }}</span>
+					<span class="invitee">{{ attendee }}</span>
 				</div>
 				<el-tooltip
 					class="box-item"
@@ -65,7 +65,7 @@ const props = defineProps({
 		type: Number
 	}
 });
-let { title, start_time, invitee, petAbList: pets } = props.customData;
+let { title, start_time, attendee, petAbList: pets } = props.customData;
 // const pets = toRaw(petAbList);
 const reload = inject('reload');
 </script>
