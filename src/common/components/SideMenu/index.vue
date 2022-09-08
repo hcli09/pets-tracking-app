@@ -59,6 +59,7 @@ export default {
 	methods: {
 		loadPetPage(event, item, node) {
 			location.href = `#/home/pet-profile?id=${item.petId}`;
+			location.reload();
 			// this.$router.push({ path: `/pet-profile?id=${item.petId}` });
 		}
 	}
