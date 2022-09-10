@@ -3,7 +3,7 @@
 		<div class="flex align-center justify-between">
 			<h3 class="task-heading">Booking</h3>
 			<div>
-				<el-button @click="router.push('/home/task-table')"
+				<el-button @click="router.push('/home/booking-table')"
 					>Details</el-button
 				>
 			</div>
