@@ -19,7 +19,7 @@
 			<!-- Invitee Selector -->
 			<el-form-item label="Invitee" :label-width="formLabelWidth">
 				<el-autocomplete
-					v-model="form.invitee"
+					v-model="form.attendee"
 					:fetch-suggestions="querySearch"
 					:trigger-on-focus="false"
 					clearable
