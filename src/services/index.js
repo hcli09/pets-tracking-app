@@ -10,6 +10,8 @@ import invoicemed from './modules/invoicemed';
 import vaccinationHistory from './modules/vaccination-history';
 import petprofile from './modules/petprofile';
 import notification from './modules/notification';
+import bookingTable from './modules/booking-table';
+import resultPage from './modules/resultpage';
 
 export default {
 	registerLogin,
@@ -24,4 +26,6 @@ export default {
 	vaccinationHistory,
 	petprofile,
 	notification,
+	bookingTable,
+	resultPage
 };

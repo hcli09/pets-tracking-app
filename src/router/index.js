@@ -21,6 +21,7 @@ import Medication from '@/components/Medication/index.vue';
 import EventTable from '@/components/EventTable/index.vue';
 import TaskTable from '@/components/TaskTable/index.vue';
 import PetProfile from '@/components/PetProfile/index.vue';
+import BookingTable from '@/components/BookingTable/index.vue';
 import ConfirmPage from '@/components/ConfirmPage/index.vue';
 import CancelPage from '@/components/CancelPage/index.vue';
 import RejectPage from '@/components/RejectPage/index.vue';
@@ -32,7 +33,7 @@ const routes = [
 		component: RejectPage
 	},
 	{
-		path: '/confirmpage',
+		path: '/user/booking/accept_page/',
 		name: 'ConfirmPage',
 		component: ConfirmPage
 	},
@@ -106,6 +107,10 @@ const routes = [
 			{
 				path: 'pet-profile',
 				component: PetProfile
+			},
+			{
+				path: 'booking-table',
+				component: BookingTable
 			}
 		]
 	},

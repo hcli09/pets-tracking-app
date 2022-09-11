@@ -1,5 +1,4 @@
 <template>
-    
 	<div class="text-center section">
 		<div class="filter-pets">
 			<ul class="legend-list">
@@ -10,6 +9,8 @@
 				<template v-else>
 					<li class="event">Event</li>
 					<li class="task">Task</li>
+					<li class="booking-accept">Booking Accepted</li>
+					<li class="booking-pending">Booking Pending</li>
 				</template>
 			</ul>
 			<el-select
@@ -44,10 +45,128 @@
 						<p
 							v-for="attr in attributes"
 							:key="attr.key"
-							class="text-xs leading-tight rounded-sm p-1 mt-0 mb-1"
+							class="text-xs text-center leading-tight rounded-sm p-1 mt-0 mb-1"
 							:class="attr.customData.className"
+							@click="
+								() => {
+									onClickDateItem(day, attr);
+								}
+							"
 						>
-							{{ attr.customData.title }}
+							<el-popover
+								placement="right-start"
+								:title="attr.customData.title"
+								:width="300"
+								trigger="hover"
+							>
+								<template #reference>
+									{{ attr.customData.title }}
+								</template>
+								<template #default>
+									<el-avatar
+										v-if="attr.customData.pets.length > 1"
+										v-for="pet in attr.customData.pets"
+										shape="square"
+										:size="100"
+										:fit="fit"
+										:src="pet.petAvatar"
+										style="margin: 5px"
+									/>
+
+									<img
+										v-else
+										class="rounded-lg shadow-md"
+										:src="attr.customData.pets[0].petAvatar"
+									/>
+
+									<ul class="info-list">
+										<li
+											v-if="
+												attr.customData?.detail
+													?.eventType
+											"
+										>
+											<label>Type:</label>
+											<span>{{
+												attr.customData?.detail
+													?.eventType
+											}}</span>
+										</li>
+										<li v-if="attr.customData?.startTime">
+											<label>From:</label>
+											<span>{{
+												attr.customData?.startTime
+											}}</span>
+										</li>
+										<li v-if="attr.customData?.endTime">
+											<label>To:</label>
+											<span>{{
+												attr.customData?.endTime
+											}}</span>
+										</li>
+										<li
+											v-if="
+												attr.customData?.detail
+													?.attendee
+											"
+										>
+											<label>With:</label>
+											<span>{{
+												attr.customData?.detail
+													?.attendee
+											}}</span>
+										</li>
+										<li
+											v-if="
+												attr.customData?.detail
+													?.location
+											"
+										>
+											<label>Location:</label>
+											<span>{{
+												attr.customData?.detail
+													?.location
+											}}</span>
+										</li>
+										<li
+											v-if="
+												attr.customData?.detail
+													?.description
+											"
+										>
+											<label>Description:</label>
+											<span>{{
+												attr.customData?.detail
+													?.description
+											}}</span>
+										</li>
+										<li
+											v-if="
+												typeof attr.customData?.detail
+													?.checked !== 'undefined'
+											"
+										>
+											<label>Finished:</label>
+											<span>{{
+												attr.customData?.detail?.checked
+													? 'Yes'
+													: 'No'
+											}}</span>
+										</li>
+										<li
+											v-if="
+												typeof attr.customData?.detail
+													?.dueDate !== 'undefined'
+											"
+										>
+											<label>Due:</label>
+											<span>{{
+												attr.customData?.detail?.dueDate
+											}}</span>
+										</li>
+									</ul>
+								</template>
+							</el-popover>
 						</p>
 					</div>
 				</div>
@@ -87,24 +206,34 @@ const props = defineProps({
 const baseAttributes = reactive([]);
 const eventAttributes = reactive([]);
 const taskAttributes = reactive([]);
+const bookingAttributes = reactive([]);
+
 const getCalendarByMonthAsync = async month => {
 	const { data: res, status } = await services.calendar.getCalendarByMonth({
 		uid: '4EL4hp_qRUYMzzal_G29f',
 		month
 	});
+	console.log('res.data', res.data);
 	const filtered = res.data.filter(
-		item => item.eventList.length > 0 || item.taskList.length > 0
+		item =>
+			item.eventList.length > 0 ||
+			item.taskList.length > 0 ||
+			item.bookingList.length > 0
 	);
+
 	const newData = [];
 	filtered.forEach(item => {
 		const events = [];
 		for (let event of item.eventList) {
 			events.push({
-				key: event.eventTitle,
+				key: event.eventId,
 				customData: {
 					title: event.eventTitle,
 					className: 'bg-blue-400',
-					pets: event.petIdList
+					pets: event.petAbList,
+					startTime: event.startDateTime,
+					endTime: event.endDateTime,
+					detail: event
 				},
 				dates: new Date(item.date)
 			});
@@ -114,18 +243,40 @@ const getCalendarByMonthAsync = async month => {
 		const tasks = [];
 		for (let task of item.taskList) {
 			tasks.push({
-				key: task.taskTitle,
+				key: task.taskId,
 				customData: {
 					title: task.taskTitle,
 					className: 'bg-rose-400',
-					pets: task.petIdList
+					pets: task.petAbList,
+					detail: task
 				},
 				dates: new Date(item.date)
 			});
 		}
 		taskAttributes.push(...tasks);
 
-		newData.push(...events, ...tasks);
+		const bookings = [];
+		for (let booking of item.bookingList) {
+			console.log('booking', booking);
+
+			bookings.push({
+				key: booking.booking_id,
+				customData: {
+					title: booking.title,
+					className:
+						booking.status === 'pending'
+							? 'bg-amber-200'
+							: 'bg-emerald-400',
+					pets: booking.petAbList,
+					startTime: booking.start_time,
+					endTime: booking.end_time,
+					detail: booking
+				},
+				dates: new Date(item.date)
+			});
+		}
+
+		newData.push(...events, ...tasks, ...bookings);
 	});
 	baseAttributes.push(...newData);
 };
@@ -175,59 +326,30 @@ let attributes = computed(() => {
 const inputEvent = page => {
 	console.log(page);
 };
-</script>
-<!-- 
-<script>
-export default {
-	data() {
-		return {
-			baseAttributes: []
-		};
-	},
-	created() {
-		services.calendar
-			.getCalendarByMonth({
-				uid: '4EL4hp_qRUYMzzal_G29f',
-				month: moment().format('YYYY-MM')
-			})
-			.then(({ data: res, status }) => {
-				const filtered = res.data.filter(
-					item =>
-						item.eventList.length > 0 || item.taskList.length > 0
-				);
-				const newData = [];
 
-				filtered.forEach(item => {
-					for (let event of item.eventList) {
-						newData.push({
-							key: event.eventTitle,
-							customData: {
-								title: event.eventTitle,
-								className: 'bg-rose-400',
-								pets: event.petIdList
-							},
-							dates: new Date(item.date)
-						});
-					}
-					for (let task of item.taskList) {
-						newData.push({
-							key: task.taskTitle,
-							customData: {
-								title: task.taskTitle,
-								className: 'bg-blue-400',
-								pets: task.petIdList
-							},
-							dates: new Date(item.date)
-						});
-					}
-				});
-				this.$data.baseAttributes = newData;
-			});
-	}
+const onClickDateItem = (day, attributes) => {
+	console.log(day, attributes);
 };
-</script> -->
+</script>
 
 <style lang="scss" scoped>
+* {
+	font-family: 'Trebuchet MS';
+}
+.info-list {
+	li {
+		display: flex;
+		justify-content: space-between;
+		label {
+			width: 30%;
+			text-align: right;
+		}
+		span {
+			width: 68%;
+			text-align: left;
+		}
+	}
+}
 .filter-pets {
 	display: flex;
 	justify-content: space-between;
@@ -235,6 +357,8 @@ export default {
 }
 p {
 	color: white;
+	font-family: 'Trebuchet MS';
+	font-weight: 600;
 }
 ::-webkit-scrollbar {
 	width: 0px;
@@ -296,26 +420,37 @@ p {
 		align-items: center;
 		color: #333;
 		margin-right: 20px;
-		&.task {
+		&.task,
+		&.event,
+		&.booking-accept,
+		&.booking-pending {
 			&::before {
 				display: inline-block;
 				content: '';
 				width: 14px;
 				height: 14px;
-				background: #fb7185;
 				margin-right: 5px;
 				border-radius: 5px;
 			}
 		}
+		&.task {
+			&::before {
+				background: #fb7185;
+			}
+		}
 		&.event {
 			&::before {
-				display: inline-block;
-				content: '';
-				width: 14px;
-				height: 14px;
 				background: #60a5fa;
-				margin-right: 5px;
-				border-radius: 5px;
+			}
+		}
+		&.booking-accept {
+			&::before {
+				background: #34d399;
+			}
+		}
+		&.booking-pending {
+			&::before {
+				background: #fde68a;
 			}
 		}
 	}

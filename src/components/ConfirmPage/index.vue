@@ -105,3 +105,43 @@
 	}
 }
 </style>
+
+<script setup>
+import httpServices from '@services';
+</script>
+
+<script>
+export default {
+	data() {
+		return {
+			booking_details: {},
+			bookingId: this.$route.query.id
+		};
+	},
+	created: function () {
+		console.log('haha');
+		// httpServices.resultPage
+		// 	.confirmBooking({ booking_id: 'fhfNK4jqhG1sw-FsP9IZA' })
+		// 	.then(response => {
+		// 		this.$data.booking_details = response.data.data;
+		// 		console.log(this.$data.booking_details);
+		// 	})
+		// 	.catch(error => {
+		// 		console.log(error.message);
+		// 	});
+		httpServices.resultpage
+			.getPet({
+				uid: '4EL4hp_qRUYMzzal_G29f',
+				petId: 'cjmBiIwBYVFPcCvegpgmL'
+			})
+			.then(response => {
+				let petobject = response.data.data;
+				this.$data.petsummary = petobject;
+				console.log(petobject);
+			})
+			.catch(error => {
+				console.log(error.message);
+			});
+	}
+};
+</script>

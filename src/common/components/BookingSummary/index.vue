@@ -1,14 +1,14 @@
 <template>
 	<el-scrollbar height="270px">
 		<div class="flex align-center justify-between">
-			<h3 class="task-heading">Tasks</h3>
+			<h3 class="task-heading">Booking</h3>
 			<div>
-				<el-button @click="router.push('/home/task-table')"
+				<el-button @click="router.push('/home/booking-table')"
 					>Details</el-button
 				>
 			</div>
 		</div>
-		<template v-if="tasks.length < 1">
+		<template v-if="bookings.length < 1">
 			<div
 				style="
 					width: 320px;
@@ -18,15 +18,15 @@
 					align-items: center;
 				"
 			>
-				<h3 class="task-heading-2">No tasks today</h3>
+				<h3 class="task-heading-2">No booking today</h3>
 			</div>
 		</template>
 		<template v-else>
-			<TaskBox
-				v-for="(task, index) in tasks"
-				:key="task.taskId"
+			<BookingBox
+				v-for="(booking, index) in bookings"
+				:key="booking.booking_id"
 				:index="index"
-				:customData="task"
+				:customData="booking"
 			/>
 		</template>
 	</el-scrollbar>
@@ -34,30 +34,32 @@
 
 <script setup>
 import { reactive } from 'vue';
-import TaskBox from '@common/components/TaskBox/index.vue';
 import services from '../../../services';
 import moment from 'moment';
-
 import { useRouter } from 'vue-router';
+import BookingBox from '../BookingBox/index.vue';
+import { getBookingsByDate } from '../../../services/modules/booking';
+
 const router = useRouter();
 
-const tasks = reactive([]);
-const getTasksByDateAsync = async () => {
+const bookings = reactive([]);
+
+const getBookingsByDateAsync = async () => {
 	try {
-		const { data: res, status } = await services.tasks.getTasksByDate({
+		const { data: res, status } = await getBookingsByDate({
 			uid: '4EL4hp_qRUYMzzal_G29f',
 			date: moment().format('YYYY-MM-DD')
 		});
 
 		if (status === 200) {
-			tasks.push(...res.data.taskList);
+			bookings.push(...res.data);
 		}
 	} catch (error) {
 		console.log(error);
 	}
 };
 
-getTasksByDateAsync();
+getBookingsByDateAsync();
 </script>
 
 <style lang="scss" scoped>

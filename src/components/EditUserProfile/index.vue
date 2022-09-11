@@ -295,7 +295,7 @@ const beforeAvatarUpload = rawFile => {
 };
 
 const linkToProfile = () => {
-	router.push('/userprofile');
+	router.push('/home/userprofile');
 };
 </script>
 

@@ -55,7 +55,7 @@ export default {
 
 		clickUserAvatar() {
 			this.$router.push({
-				path: '/userprofile'
+				path: '/home/userprofile'
 			});
 			console.log('redirect to userprofile');
 		},
@@ -63,7 +63,7 @@ export default {
 		//temporary add pet button
 		clickAddPet() {
 			this.$router.push({
-				path: '/createpet'
+				path: '/home/createpet'
 			});
 		}
 	}

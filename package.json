@@ -10,6 +10,7 @@
 	},
 	"dependencies": {
 		"@element-plus/icons": "0.0.11",
+		"@vuepic/vue-datepicker": "^3.4.6",
 		"axios": "^0.26.1",
 		"element-plus": "^2.1.8",
 		"firebase": "^9.7.0",
