@@ -25,6 +25,7 @@ import BookingTable from '@/components/BookingTable/index.vue';
 import ConfirmPage from '@/components/ConfirmPage/index.vue';
 import CancelPage from '@/components/CancelPage/index.vue';
 import RejectPage from '@/components/RejectPage/index.vue';
+import EmailVerification from '@/components/EmailVerification/index.vue';
 
 const routes = [
 	{
@@ -41,6 +42,11 @@ const routes = [
 		path: '/cancelpage',
 		name: 'CancelPage',
 		component: CancelPage
+	},
+	{
+		path: '/email-verification',
+		name: 'EmailVerification',
+		component: EmailVerification
 	},
 	{
 		path: '/login',

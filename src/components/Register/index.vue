@@ -147,29 +147,48 @@ const formRef = ref(null);
 const registerForm = reactive({});
 const route = useRoute();
 const router = useRouter();
+            // ElMessage({
+            //     message: 'We have sent an message to , please click the link included to verify your email address',
+            //     duration: 0,
+            //     offset: 60,
+            //     customClass: 'email-varification-message',
 
+            // })
 const submitForm = formEl => {
     if (!formEl) return;
 
     formEl.validate(async valid => {
+        const emailTemp = registerForm.email
         if (valid) {
             // console.log('submit!');
             delete registerForm.checkPass;
-            const { data } = await httpServices.registerLogin.register(
-                registerForm
-            );
+            // const { data } = await httpServices.registerLogin.register(
+            //     registerForm
+            // );
             formRef.value.resetFields();
 
-            if (data.status === 200) {
-                ElNotification({
-                    title: 'Register',
-                    message: 'Register Successfully',
-                    type: 'success',
-                });
-                router.push({
-                    name: 'Login',
-                });
-            }
+            // if (data.status === 200) {
+            //     ElNotification({
+            //         title: 'Register',
+            //         message: 'Register Successfully',
+            //         type: 'success',
+            //     });
+            //     router.push({
+            //         name: 'Login',
+            //     });
+            // }
+
+
+            // display a message about email verification
+            ElMessage({
+                message: 'We have sent an message to ' + emailTemp + ', please click the link included to verify your email address',
+                duration: 0,
+                offset: 60,
+                showClose: true,
+                customClass: 'email-varification-message',
+
+            })
+
         } else {
             console.log('error submit!');
             return false;
@@ -190,6 +209,7 @@ const validatePass = (rule, value, callback) => {
 
 <style lang="scss" scoped>
 $rc-left-width: 50vw;
+
 .register-container {
     display: flex;
     justify-content: space-between;
@@ -239,6 +259,27 @@ $rc-left-width: 50vw;
                 }
             }
         }
+    }
+}
+
+
+
+</style>
+<style lang="scss">
+.email-varification-message {
+    background-color: #F1EEEC !important;
+    width: 25vw !important;
+    // height: 4.5vw !important;
+    left: 75% !important;
+
+    p {
+        font-size: 0.85vw;
+        color: #C17754 !important;
+        line-height: 1.3vw;
+        
+    }
+    i {
+        color: #C17754 !important;
     }
 }
 </style>
