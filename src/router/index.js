@@ -28,7 +28,7 @@ import RejectPage from '@/components/RejectPage/index.vue';
 
 const routes = [
 	{
-		path: '/rejectpage',
+		path: '/user/booking/reject_page/',
 		name: 'RejectPage',
 		component: RejectPage
 	},
@@ -38,7 +38,7 @@ const routes = [
 		component: ConfirmPage
 	},
 	{
-		path: '/cancelpage',
+		path: '/user/booking/cancel_page/',
 		name: 'CancelPage',
 		component: CancelPage
 	},

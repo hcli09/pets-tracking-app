@@ -1,32 +1,25 @@
 import axios from 'axios';
 
 export default {
-	getPet(data) {
-		return axios({
-			url: '/user/pet/profile',
-			method: 'post',
-			data
-		});
-	},
-	confirmBooking(data) {
+	confirmBooking(params) {
 		return axios({
 			url: '/user/booking/confirm',
 			method: 'post',
-			data
+			params
 		});
 	},
-	rejectBooking(data) {
+	rejectBooking(params) {
 		return axios({
 			url: '/user/booking/reject',
 			method: 'post',
-			data
+			params
 		});
 	},
-	cancelBooking(data) {
+	cancelBooking(params) {
 		return axios({
 			url: '/user/booking/cancel',
 			method: 'post',
-			data
+			params
 		});
 	}
 };
