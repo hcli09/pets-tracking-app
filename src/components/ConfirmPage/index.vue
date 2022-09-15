@@ -1,5 +1,5 @@
 <template>
-	<template v-if="booking_details">
+	<template v-if="loading">
 		<div class="top">
 			<p class="text">
 				Wonderful! You have accepted the following appointment
@@ -10,7 +10,7 @@
 			<div class="backgroud-picture">
 				<el-image
 					class="pic"
-					src="src/assets/Resultpage/confirm_Image.png"
+					src="https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/Screen%20Shot%202022-08-28%20at%207.43.18%20PM.png?alt=media&token=4e25626f-fca0-4b3a-a15a-5c70d7ba32d9"
 				></el-image>
 			</div>
 			<div class="details">
@@ -55,6 +55,14 @@
 					<p>{{ booking_details.description }}</p>
 				</div>
 			</div>
+		</div>
+	</template>
+
+	<template v-else>
+		<div class="top">
+			<p style="color: coral" class="text">
+				You have already confirmed this booking!
+			</p>
 		</div>
 	</template>
 </template>
@@ -152,6 +160,7 @@ import httpServices from '@services';
 export default {
 	data() {
 		return {
+			loading: false,
 			booking_details: {},
 			bookingId: this.$route.query.id
 			// booking_details: {
@@ -187,10 +196,14 @@ export default {
 		httpServices.resultPage
 			.confirmBooking({ booking_id: this.$data.bookingId })
 			.then(response => {
-				this.$data.booking_details = response.data.data;
-				console.log(this.$data.booking_details);
+				if (response.status == 200) {
+					this.$data.booking_details = response.data.data;
+					console.log(this.$data.booking_details);
+					this.$data.loading = true;
+				}
 			})
 			.catch(error => {
+				this.$data.loading = false;
 				this.$data.booking_details = {};
 				console.log(error.message);
 			});

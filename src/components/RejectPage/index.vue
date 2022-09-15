@@ -1,59 +1,70 @@
 <template>
-	<div class="top">
-		<p class="text">
-			Sorry to see you go, you have rejected the following appointment
-		</p>
-	</div>
-
-	<div class="middle">
-		<div class="backgroud-picture">
-			<el-image
-				class="pic"
-				src="src/assets/Resultpage/reject_Image.png"
-			></el-image>
+	<template v-if="loading">
+		<div class="top">
+			<p class="text">
+				Sorry to see you go, you have rejected the following appointment
+			</p>
 		</div>
-		<div class="details">
-			<div class="info-row">
-				<p style="font-weight: 900">Title</p>
-				<p>{{ booking_details.title }}</p>
+
+		<div class="middle">
+			<div class="backgroud-picture">
+				<el-image
+					class="pic"
+					src="https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/Screen%20Shot%202022-08-28%20at%207.22.51%20PM.png?alt=media&token=ec592224-bf28-4260-90e3-1012781270cc"
+				></el-image>
 			</div>
-			<div class="info-row">
-				<p style="font-weight: 900">Email</p>
-				<p>{{ booking_details.attendee }}</p>
-			</div>
-			<div class="pet-row">
-				<p style="font-weight: 900">Pets</p>
-				<div class="pets-name">
-					<p
-						v-for="(item, index) in booking_details.petAbList"
-						:key="item.petId"
-					>
-						{{
-							(index == booking_details.petAbList.length - 1 &&
-								item.petName) ||
-							item.petName + ','
-						}}
-					</p>
+			<div class="details">
+				<div class="info-row">
+					<p style="font-weight: 900">Title</p>
+					<p>{{ booking_details.title }}</p>
+				</div>
+				<div class="info-row">
+					<p style="font-weight: 900">Email</p>
+					<p>{{ booking_details.attendee }}</p>
+				</div>
+				<div class="pet-row">
+					<p style="font-weight: 900">Pets</p>
+					<div class="pets-name">
+						<p
+							v-for="(item, index) in booking_details.petAbList"
+							:key="item.petId"
+						>
+							{{
+								(index ==
+									booking_details.petAbList.length - 1 &&
+									item.petName) ||
+								item.petName + ','
+							}}
+						</p>
+					</div>
+				</div>
+				<div class="info-row">
+					<p style="font-weight: 900">Start Time</p>
+					<p>{{ booking_details.start_time }}</p>
+				</div>
+				<div class="info-row">
+					<p style="font-weight: 900">End Time</p>
+					<p>{{ booking_details.end_time }}</p>
+				</div>
+				<div class="info-row">
+					<p style="font-weight: 900">Location</p>
+					<p>{{ booking_details.location }}</p>
+				</div>
+				<div class="info-row">
+					<p style="font-weight: 900">Description</p>
+					<p>{{ booking_details.description }}</p>
 				</div>
 			</div>
-			<div class="info-row">
-				<p style="font-weight: 900">Start Time</p>
-				<p>{{ booking_details.start_time }}</p>
-			</div>
-			<div class="info-row">
-				<p style="font-weight: 900">End Time</p>
-				<p>{{ booking_details.end_time }}</p>
-			</div>
-			<div class="info-row">
-				<p style="font-weight: 900">Location</p>
-				<p>{{ booking_details.location }}</p>
-			</div>
-			<div class="info-row">
-				<p style="font-weight: 900">Description</p>
-				<p>{{ booking_details.description }}</p>
-			</div>
 		</div>
-	</div>
+	</template>
+
+	<template v-else>
+		<div class="top">
+			<p style="color: coral" class="text">
+				You have already rejected this booking!
+			</p>
+		</div>
+	</template>
 </template>
 
 <style lang="scss" scoped>
@@ -149,6 +160,7 @@ import httpServices from '@services';
 export default {
 	data() {
 		return {
+			loading: false,
 			booking_details: {},
 			bookingId: this.$route.query.id
 			// booking_details: {
@@ -184,10 +196,14 @@ export default {
 		httpServices.resultPage
 			.rejectBooking({ booking_id: this.$data.bookingId })
 			.then(response => {
-				this.$data.booking_details = response.data.data;
-				console.log(this.$data.booking_details);
+				if (response.status == 200) {
+					this.$data.booking_details = response.data.data;
+					console.log(this.$data.booking_details);
+					this.$data.loading = true;
+				}
 			})
 			.catch(error => {
+				this.$data.loading = false;
 				this.$data.booking_details = {};
 				console.log(error.message);
 			});
