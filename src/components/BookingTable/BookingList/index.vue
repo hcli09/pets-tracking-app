@@ -115,7 +115,7 @@
 							:icon="InfoFilled"
 							icon-color="#f56c6c"
 							title="Are you sure to cancel this booking?"
-							@confirm="confirmDeleteEvent(scope.row.booking_id)"
+							@confirm="confirmCancelBooking(scope.row.booking_id)"
 							@cancel="cancelDeleteEvent"
 						>
 							<template #reference>
@@ -263,17 +263,21 @@ const getAllBookingsAsync = async () => {
 };
 getAllBookingsAsync();
 
-const confirmDeleteEvent = async eventId => {
-	const { data: res } = await services.events.deleteEvent({
-		uid: currUid,
-		eventId
+const confirmCancelBooking = async booking_id => {
+	const { data: res } = await services.bookingTable.cancelBooking({
+		booking_id: booking_id
 	});
 	if (res.status === 200) {
 		ElMessage({
-			message: 'Event successfully deleted',
+			message: 'Booking successfully deleted',
 			type: 'success'
 		});
 		reload();
+	}
+	if (!res) {
+		console.log("cancel fail: ", res.message)
+		ElMessage.error('error')
+
 	}
 };
 const eventIdToEdit = ref('');
