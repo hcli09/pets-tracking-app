@@ -5,6 +5,12 @@
 				<template v-if="props.for">
 					<li v-if="props.for === 'event'" class="event">Event</li>
 					<li v-if="props.for === 'task'" class="task">Task</li>
+					<li v-if="props.for === 'booking'" class="booking-accept">
+						Booking Accepted
+					</li>
+					<li v-if="props.for === 'booking'" class="booking-pending">
+						Booking Pending
+					</li>
 				</template>
 				<template v-else>
 					<li class="event">Event</li>
@@ -13,19 +19,57 @@
 					<li class="booking-pending">Booking Pending</li>
 				</template>
 			</ul>
-			<el-select
-				v-model="filterValue"
-				class="m-1"
-				placeholder="All"
-				style="width: 120px"
-			>
-				<el-option
-					v-for="pet in petList"
-					:key="pet.petId"
-					:label="pet.petName"
-					:value="pet.petId"
-				/>
-			</el-select>
+			<div>
+				<el-select
+					v-if="
+						props.for === 'event' ||
+						props.for === 'task' ||
+						!props.for
+					"
+					v-model="filterValuePets"
+					class="m-1"
+					placeholder="All Pets"
+					style="width: 120px"
+				>
+					<el-option
+						v-for="pet in petList"
+						:key="pet.petId"
+						:label="pet.petName"
+						:value="pet.petId"
+					/>
+				</el-select>
+				<el-select
+					v-if="!props.for"
+					v-model="filterValueItems"
+					class="m-1"
+					placeholder="All Items"
+					style="width: 120px"
+				>
+					<el-option key="all" label="All Items" value="all" />
+					<el-option key="events" label="Events" value="events" />
+					<el-option key="tasks" label="Tasks" value="tasks" />
+					<el-option
+						key="bookings"
+						label="Bookings"
+						value="bookings"
+					/>
+				</el-select>
+				<el-select
+					v-if="props.for === 'booking' || !props.for"
+					v-model="filterValueBookings"
+					class="m-1"
+					placeholder="All Bookings"
+					style="width: 120px"
+				>
+					<el-option key="all" label="All Bookings" value="all" />
+					<el-option
+						key="confirmed"
+						label="Confirmed"
+						value="confirmed"
+					/>
+					<el-option key="pending" label="Pending" value="pending" />
+				</el-select>
+			</div>
 		</div>
 		<v-calendar
 			class="custom-calendar max-w-full"
@@ -191,7 +235,9 @@ import Close from '@common/components/CloseButton/index.vue';
 const month = new Date().getMonth();
 const year = new Date().getFullYear();
 const masks = { weekdays: 'WWW' };
-const filterValue = ref('All');
+const filterValuePets = ref('All Pets');
+const filterValueItems = ref('all');
+const filterValueBookings = ref('all');
 
 const props = defineProps({
 	for: {
@@ -213,7 +259,6 @@ const getCalendarByMonthAsync = async month => {
 		uid: '4EL4hp_qRUYMzzal_G29f',
 		month
 	});
-	console.log('res.data', res.data);
 	const filtered = res.data.filter(
 		item =>
 			item.eventList.length > 0 ||
@@ -256,9 +301,11 @@ const getCalendarByMonthAsync = async month => {
 		taskAttributes.push(...tasks);
 
 		const bookings = [];
+		item.bookingList = item.bookingList.filter(
+			booking =>
+				booking.status === 'pending' || booking.status === 'confirmed'
+		);
 		for (let booking of item.bookingList) {
-			console.log('booking', booking);
-
 			bookings.push({
 				key: booking.booking_id,
 				customData: {
@@ -270,11 +317,13 @@ const getCalendarByMonthAsync = async month => {
 					pets: booking.petAbList,
 					startTime: booking.start_time,
 					endTime: booking.end_time,
-					detail: booking
+					detail: booking,
+					status: booking.status
 				},
 				dates: new Date(item.date)
 			});
 		}
+		bookingAttributes.push(...bookings);
 
 		newData.push(...events, ...tasks, ...bookings);
 	});
@@ -291,35 +340,91 @@ const onMonthChange = change =>
 // Get pet filter selector
 const petList = reactive([]);
 let { petList: newPetList } = JSON.parse(localStorage.getItem('user'));
-newPetList.unshift({ petId: 'All', petName: 'All' });
+newPetList.unshift({ petId: 'All Pets', petName: 'All Pets' });
 petList.push(...newPetList);
 // filter implementation
 
+let getAttributesByPets = (props, filterValuePets) => {};
+
 let attributes = computed(() => {
+	// For general calendar - filter by items
+	if (filterValueItems.value !== 'all') {
+		switch (filterValueItems.value) {
+			// case 'all':
+			// 	return baseAttributes;
+			case 'events':
+				return eventAttributes;
+			case 'tasks':
+				return taskAttributes;
+			case 'bookings':
+				return bookingAttributes;
+			default:
+				return baseAttributes;
+		}
+	}
+	// For general calendar - filter by bookings
+	if (filterValueBookings.value !== 'all') {
+		switch (filterValueBookings.value) {
+			// case 'all':
+			// 	return baseAttributes;
+			case 'confirmed':
+				return bookingAttributes.filter(
+					attr => attr.customData.status === 'confirmed'
+				);
+			case 'pending':
+				return bookingAttributes.filter(
+					attr => attr.customData.status === 'pending'
+				);
+			default:
+				return baseAttributes;
+		}
+	}
+	// For event table - filter by pets
 	if (props.for && props.for === 'event') {
-		if (filterValue.value === 'All') {
+		if (filterValuePets.value === 'All Pets') {
 			return eventAttributes;
 		} else {
-			return eventAttributes.filter(attr =>
-				attr.customData.pets.includes(filterValue.value)
+			return eventAttributes.filter(attribute =>
+				attribute.customData.pets
+					.map(pet => pet.petId)
+					.includes(filterValuePets.value)
 			);
 		}
 	}
+	// For task table - filter by pets
 	if (props.for && props.for === 'task') {
-		if (filterValue.value === 'All') {
+		if (filterValuePets.value === 'All Pets') {
 			return taskAttributes;
 		} else {
-			return taskAttributes.filter(attr =>
-				attr.customData.pets.includes(filterValue.value)
+			return taskAttributes.filter(attribute =>
+				attribute.customData.pets
+					.map(pet => pet.petId)
+					.includes(filterValuePets.value)
 			);
 		}
 	}
-	if (filterValue.value === 'All') {
+	// For booking table - filter by status
+	if (props.for && props.for === 'booking') {
+		if (filterValueBookings.value === 'all') {
+			return bookingAttributes;
+		} else {
+			// console.log(bookingAttributes.map(attr => attr.customData.pets));
+
+			return bookingAttributes.filter(attr =>
+				attr.customData.status.includes(filterValueBookings.value)
+			);
+		}
+	}
+	// For general calendar - filter by pets
+	if (filterValuePets.value === 'All Pets') {
 		return baseAttributes;
 	} else {
-		return baseAttributes.filter(attribute =>
-			attribute.customData.pets.includes(filterValue.value)
-		);
+		const attr = baseAttributes.filter(attribute => {
+			return attribute.customData.pets
+				.map(pet => pet.petId)
+				.includes(filterValuePets.value);
+		});
+		return attr;
 	}
 });
 

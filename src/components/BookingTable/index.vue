@@ -21,7 +21,7 @@
 				name="second"
 				style="height: 97%; overflow-y: auto; overflow-x: hidden"
 			>
-				<Calendar for="event" close-b-t="none" />
+				<Calendar for="booking" close-b-t="none" />
 			</el-tab-pane>
 		</el-tabs>
 	</div>
