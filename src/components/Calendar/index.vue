@@ -5,6 +5,8 @@
 				<template v-if="props.for">
 					<li v-if="props.for === 'event'" class="event">Event</li>
 					<li v-if="props.for === 'task'" class="task">Task</li>
+					<!-- 金毓燊照猫画虎写的，不知道对不对 -->
+					<li v-if="props.for === 'booking'" class="booking-pending">Booking</li>
 				</template>
 				<template v-else>
 					<li class="event">Event</li>
@@ -275,6 +277,8 @@ const getCalendarByMonthAsync = async month => {
 				dates: new Date(item.date)
 			});
 		}
+		// 金毓燊照猫画虎写的，不知道对不对
+		bookingAttributes.push(...bookings)
 
 		newData.push(...events, ...tasks, ...bookings);
 	});
@@ -314,6 +318,16 @@ let attributes = computed(() => {
 			);
 		}
 	}
+	// 金毓燊照猫画虎写的，不知道对不对
+	if (props.for && props.for === 'booking') {
+		if (filterValue.value === 'All') {
+			return bookingAttributes;
+		} else {
+			return bookingAttributes.filter(attr =>
+				attr.customData.pets.includes(filterValue.value)
+			);
+		}
+	}	
 	if (filterValue.value === 'All') {
 		return baseAttributes;
 	} else {

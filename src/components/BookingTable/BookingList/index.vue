@@ -99,6 +99,17 @@
 					sortable
 				/>
 
+				<el-table-column
+					prop="status"
+					align="center"
+					label="Status"
+					column-key="booking_id"
+					width="180"
+					sortable
+				/>
+					
+
+
 				<!-- Operations -->
 				<el-table-column label="Operations" align="center" width="150">
 					<template #default="scope">
@@ -109,7 +120,40 @@
 							>Edit
 						</el-button> -->
 
+						<!-- if the booking is pending, the cancel button should be disabled -->
+
 						<el-popconfirm
+							v-if="scope.row.status==='pending'"
+							confirm-button-text="Yes"
+							cancel-button-text="No, thanks"
+							:icon="InfoFilled"
+							icon-color="#f56c6c"
+							title="Are you sure to cancel this booking?"
+							@confirm="confirmDeleteEvent(scope.row.booking_id)"
+							@cancel="cancelDeleteEvent"
+						>
+							<template #reference>
+
+								<el-tooltip
+									class="box-item"
+									effect="dark"
+									content="Can't cancel a pending booking"
+									placement="top"
+								>
+									<div>
+										<el-button size="small" type="danger" disabled>
+											Cancel
+										</el-button>
+									</div>
+
+								</el-tooltip>
+
+
+							</template>
+						</el-popconfirm>
+
+						<el-popconfirm
+							v-else
 							confirm-button-text="Yes"
 							cancel-button-text="No, thanks"
 							:icon="InfoFilled"
