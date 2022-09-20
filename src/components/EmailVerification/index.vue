@@ -16,7 +16,7 @@ import httpServices from '@services';
 import router from '../../router';
 
 const toLogIn = () => {
-    router.push('/register')
+    router.push('/login')
 }
 </script>
 
