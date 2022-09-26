@@ -15,6 +15,9 @@
 				:src="UserAvatar"
 				@click="clickUserAvatar()"
 			/>
+			<el-button link type="primary" @click="signOff">
+				sign off
+			</el-button>
 			<el-button
 				style="margin-right: 1vw"
 				class="top-bar-settings"
@@ -57,7 +60,6 @@ export default {
 			this.$router.push({
 				path: '/home/userprofile'
 			});
-			console.log('redirect to userprofile');
 		},
 
 		//temporary add pet button
@@ -65,6 +67,14 @@ export default {
 			this.$router.push({
 				path: '/home/createpet'
 			});
+		},
+
+		signOff() {
+			this.$router.push({
+				name: 'Login'
+			});
+			localStorage.removeItem('token');
+			localStorage.removeItem('user');
 		}
 	}
 };

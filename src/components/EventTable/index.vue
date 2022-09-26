@@ -1,6 +1,6 @@
 <template>
 	<div class="record-header">
-		<p>Event Details</p>
+		<p>Events</p>
 	</div>
 
 	<div class="Record-content">

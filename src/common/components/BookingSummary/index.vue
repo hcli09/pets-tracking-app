@@ -4,7 +4,7 @@
 			<h3 class="task-heading">Booking</h3>
 			<div>
 				<el-button @click="router.push('/home/booking-table')"
-					>Details</el-button
+					>List</el-button
 				>
 			</div>
 		</div>

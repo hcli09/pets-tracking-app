@@ -1,6 +1,6 @@
 <template>
 	<div class="record-header">
-		<p>Booking Details</p>
+		<p>Bookings</p>
 	</div>
 
 	<div class="Record-content">

@@ -4,11 +4,11 @@
 			<h3 class="event-heading">Events</h3>
 			<div>
 				<el-button @click="router.push('/home/event-table')"
-					>Details</el-button
+					>List</el-button
 				>
 			</div>
 		</div>
-		<template v-if="events.length < 1">
+		<template v-if="events.length === 0">
 			<div
 				style="
 					width: 320px;
@@ -48,7 +48,11 @@ const getEventsByDateAsync = async () => {
 			date: moment().format('YYYY-MM-DD')
 		});
 		if (status === 200) {
-			Object.assign(events, res.data.eventList);
+			const data = res.data.eventList.filter(
+				event =>
+					event.petAbList.length > 0 && event.petIdList.length > 0
+			);
+			events.push(...data);
 		}
 	} catch (error) {
 		console.log(error);

@@ -66,7 +66,7 @@ const props = defineProps({
 	}
 });
 let { title, start_time, attendee, petAbList: pets } = props.customData;
-// const pets = toRaw(petAbList);
+
 const reload = inject('reload');
 </script>
 

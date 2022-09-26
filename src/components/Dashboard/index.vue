@@ -53,22 +53,22 @@
 	<div class="outer-folder-box">
 		<span class="main-title-text">Events and Tasks</span>
 		<div class="outer-events-tasks-box">
-			<el-row :gutter="20">
+			<el-row :gutter="5">
 				<!-- calender -->
 				<el-col :span="6">
 					<v-date-picker v-model="value" locale="eng" />
-					<router-link to="/home/calendar">
-						<el-button
-							class="add-button"
-							color="#76553f"
-							style="border: #fd6540"
-							type="primary"
-							:icon="Calendar"
-							plain
-						>
-							Calendar
-						</el-button>
-					</router-link>
+
+					<el-button
+						class="add-button"
+						color="#76553f"
+						style="border: #fd6540"
+						type="primary"
+						:icon="Calendar"
+						plain
+						@click="goCalendar"
+					>
+						Calendar
+					</el-button>
 				</el-col>
 				<el-col :span="6" class="summary-events-tasks-box">
 					<EventSummary />
@@ -148,11 +148,13 @@ import EventSummary from '@common/components/EventSummary/index.vue';
 import TaskSummary from '../../common/components/TaskSummary/index.vue';
 
 import httpServices from '@services';
-import router from '../../router';
+
 import BookingSummary from '../../common/components/BookingSummary/index.vue';
 import BookingDialog from '../../common/components/BookingDialog/index.vue';
 
 // import 'vue3-carousel/dist/carousel.css';
+import { useRoute, useRouter } from 'vue-router';
+const router = useRouter();
 
 const remarks = ref({ '2021-1-13': 'some tings' });
 const value = ref(new Date());
@@ -183,6 +185,10 @@ const toVaccination = () => {
 };
 const toMedication = () => {
 	router.push('/home/medication');
+};
+
+const goCalendar = () => {
+	router.push('/home/calendar');
 };
 </script>
 

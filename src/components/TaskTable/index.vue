@@ -1,6 +1,6 @@
 <template>
 	<div class="record-header">
-		<p>Task Details</p>
+		<p>Tasks</p>
 	</div>
 
 	<div class="Record-content">

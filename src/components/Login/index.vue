@@ -3,8 +3,7 @@
 		<div class="lc-left"></div>
 		<div class="lc-right">
 			<div class="lc-box">
-				<span class="welcome">Welcome</span>
-				<span class="login-to-your-account">Login to your account</span>
+				<span class="welcome">Welcome to Pet Pocket</span>
 				<el-form
 					ref="formRef"
 					:model="loginForm"
@@ -12,6 +11,8 @@
 					label-position="left"
 					class="demo-dynamic"
 					size="large"
+					v-loading="loading"
+					element-loading-text="Loading..."
 				>
 					<el-form-item
 						prop="username"
@@ -69,10 +70,6 @@
 					>Create an account<el-icon class="el-icon--right"
 						><User /></el-icon
 				></el-button>
-				<!-- <el-icon><user /></el-icon> -->
-				<!-- <el-link>
-                    Check<el-icon class="el-icon--right"><icon-view /></el-icon>
-                </el-link> -->
 			</div>
 		</div>
 	</div>
@@ -101,6 +98,7 @@ import httpServices from '@services';
 import { useRoute, useRouter } from 'vue-router';
 
 const formRef = ref(null);
+const loading = ref(false);
 const loginForm = reactive({});
 const route = useRoute();
 const router = useRouter();
@@ -112,6 +110,7 @@ const submitForm = formEl => {
 
 	formEl.validate(async valid => {
 		if (valid) {
+			loading.value = true;
 			try {
 				const { data: res } = await httpServices.registerLogin.login(
 					loginForm
@@ -123,7 +122,9 @@ const submitForm = formEl => {
 						message: 'Login Successfully',
 						type: 'success'
 					});
+					console.log('res.data', res.data);
 					const token = res.data.token;
+
 					localStorage.setItem('token', token);
 					router.push({
 						path: '/home'
@@ -136,6 +137,8 @@ const submitForm = formEl => {
 					type: 'error'
 				});
 				console.log('error', error);
+			} finally {
+				loading.value = false;
 			}
 		} else {
 			console.log('error submit!');
@@ -183,18 +186,10 @@ $lc-left-width: 50vw;
 			align-items: left;
 			width: 390px;
 			span {
-				margin: 10px 0;
-				&.welcome {
-					font-size: 2vw;
-					color: $--color-primary;
-					font-weight: bold;
-				}
-				&.login-to-your-account {
-					font-size: 2.5vw;
-					color: $--color-primary;
-					font-weight: bold;
-					padding-left: 15px;
-				}
+				font-weight: bold;
+				color: $--color-primary;
+				font-size: 2vw;
+				margin-bottom: 2vw;
 			}
 			.el-form {
 				:deep(.el-form-item__label) {

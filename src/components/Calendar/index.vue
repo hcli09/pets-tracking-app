@@ -91,126 +91,8 @@
 							:key="attr.key"
 							class="text-xs text-center leading-tight rounded-sm p-1 mt-0 mb-1"
 							:class="attr.customData.className"
-							@click="
-								() => {
-									onClickDateItem(day, attr);
-								}
-							"
 						>
-							<el-popover
-								placement="right-start"
-								:title="attr.customData.title"
-								:width="300"
-								trigger="hover"
-							>
-								<template #reference>
-									{{ attr.customData.title }}
-								</template>
-								<template #default>
-									<el-avatar
-										v-if="attr.customData.pets.length > 1"
-										v-for="pet in attr.customData.pets"
-										shape="square"
-										:size="100"
-										:fit="fit"
-										:src="pet.petAvatar"
-										style="margin: 5px"
-									/>
-
-									<img
-										v-else
-										class="rounded-lg shadow-md"
-										:src="attr.customData.pets[0].petAvatar"
-									/>
-
-									<ul class="info-list">
-										<li
-											v-if="
-												attr.customData?.detail
-													?.eventType
-											"
-										>
-											<label>Type:</label>
-											<span>{{
-												attr.customData?.detail
-													?.eventType
-											}}</span>
-										</li>
-										<li v-if="attr.customData?.startTime">
-											<label>From:</label>
-											<span>{{
-												attr.customData?.startTime
-											}}</span>
-										</li>
-										<li v-if="attr.customData?.endTime">
-											<label>To:</label>
-											<span>{{
-												attr.customData?.endTime
-											}}</span>
-										</li>
-										<li
-											v-if="
-												attr.customData?.detail
-													?.attendee
-											"
-										>
-											<label>With:</label>
-											<span>{{
-												attr.customData?.detail
-													?.attendee
-											}}</span>
-										</li>
-										<li
-											v-if="
-												attr.customData?.detail
-													?.location
-											"
-										>
-											<label>Location:</label>
-											<span>{{
-												attr.customData?.detail
-													?.location
-											}}</span>
-										</li>
-										<li
-											v-if="
-												attr.customData?.detail
-													?.description
-											"
-										>
-											<label>Description:</label>
-											<span>{{
-												attr.customData?.detail
-													?.description
-											}}</span>
-										</li>
-										<li
-											v-if="
-												typeof attr.customData?.detail
-													?.checked !== 'undefined'
-											"
-										>
-											<label>Finished:</label>
-											<span>{{
-												attr.customData?.detail?.checked
-													? 'Yes'
-													: 'No'
-											}}</span>
-										</li>
-										<li
-											v-if="
-												typeof attr.customData?.detail
-													?.dueDate !== 'undefined'
-											"
-										>
-											<label>Due:</label>
-											<span>{{
-												attr.customData?.detail?.dueDate
-											}}</span>
-										</li>
-									</ul>
-								</template>
-							</el-popover>
+							<CalPopover :attr="attr" />
 						</p>
 					</div>
 				</div>
@@ -231,7 +113,8 @@ import {
 	watch
 } from 'vue';
 import services from '../../services';
-import Close from '@common/components/CloseButton/index.vue';
+import CalPopover from '@common/components/CalPopover/index.vue';
+
 const month = new Date().getMonth();
 const year = new Date().getFullYear();
 const masks = { weekdays: 'WWW' };
@@ -269,10 +152,14 @@ const getCalendarByMonthAsync = async month => {
 	const newData = [];
 	filtered.forEach(item => {
 		const events = [];
-		for (let event of item.eventList) {
+		const eventList = item.eventList.filter(
+			event => event.petAbList.length > 0 && event.petIdList.length > 0
+		);
+		for (let event of eventList) {
 			events.push({
 				key: event.eventId,
 				customData: {
+					type: 'event',
 					title: event.eventTitle,
 					className: 'bg-blue-400',
 					pets: event.petAbList,
@@ -290,6 +177,7 @@ const getCalendarByMonthAsync = async month => {
 			tasks.push({
 				key: task.taskId,
 				customData: {
+					type: 'task',
 					title: task.taskTitle,
 					className: 'bg-rose-400',
 					pets: task.petAbList,
@@ -309,6 +197,7 @@ const getCalendarByMonthAsync = async month => {
 			bookings.push({
 				key: booking.booking_id,
 				customData: {
+					type: 'booking',
 					title: booking.title,
 					className:
 						booking.status === 'pending'
@@ -351,7 +240,7 @@ let attributes = computed(() => {
 	if (filterValueItems.value !== 'all') {
 		switch (filterValueItems.value) {
 			// case 'all':
-			// 	return baseAttributes;
+			//  return baseAttributes;
 			case 'events':
 				return eventAttributes;
 			case 'tasks':
@@ -366,7 +255,7 @@ let attributes = computed(() => {
 	if (filterValueBookings.value !== 'all') {
 		switch (filterValueBookings.value) {
 			// case 'all':
-			// 	return baseAttributes;
+			//  return baseAttributes;
 			case 'confirmed':
 				return bookingAttributes.filter(
 					attr => attr.customData.status === 'confirmed'
@@ -432,28 +321,14 @@ const inputEvent = page => {
 	console.log(page);
 };
 
-const onClickDateItem = (day, attributes) => {
-	console.log(day, attributes);
-};
+// const onClickDateItem = (day, attributes) => {
+//  console.log(day, attributes);
+// };
 </script>
 
 <style lang="scss" scoped>
 * {
 	font-family: 'Trebuchet MS';
-}
-.info-list {
-	li {
-		display: flex;
-		justify-content: space-between;
-		label {
-			width: 30%;
-			text-align: right;
-		}
-		span {
-			width: 68%;
-			text-align: left;
-		}
-	}
 }
 .filter-pets {
 	display: flex;

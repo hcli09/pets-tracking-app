@@ -72,11 +72,8 @@ const props = defineProps({
 });
 
 let { eventTitle: title, startDateTime, petAbList } = props.customData;
-const pets = toRaw(petAbList);
 
-const toCalendar = () => {
-	router.push('/home/calendar');
-};
+const pets = toRaw(petAbList);
 </script>
 
 <style lang="scss" scoped>
