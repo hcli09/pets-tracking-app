@@ -1,0 +1,141 @@
+<template>
+	<div class="petprofile-header">
+		<template v-if="petsummary">
+			<el-image class="pet-avatar" :src="petsummary.petAvatar" />
+			<p
+				style="
+					font-weight: 10;
+					font-size: large;
+					font-family: Trebuchet MS;
+					color: #76553f;
+				"
+				@click="toEditPage"
+				class="pet-name"
+			>
+				{{ petsummary.petName }}
+			</p>
+		</template>
+		<el-link
+			style="
+				font-weight: 10;
+				font-size: small;
+				font-family: Trebuchet MS;
+				color: #76553f;
+			"
+			@click="toTrackingDashboard"
+			>Main Tracking Dashboard</el-link
+		>
+	</div>
+
+	<div class="petprofile-main">
+		<el-tabs
+			class="petprofile-left"
+			v-model="activeName"
+			type="border-card"
+			@tab-click="handleClick"
+		>
+			<el-tab-pane label="Weight" name="first">
+				<WeightDashboard></WeightDashboard>
+			</el-tab-pane>
+			<el-tab-pane label="Calorie" name="second"> </el-tab-pane>
+			<el-tab-pane label="Sleep" name="third"></el-tab-pane>
+			<el-tab-pane label="Exercise" name="fourth"></el-tab-pane>
+			<el-tab-pane label="Food" name="fifth"></el-tab-pane>
+			<el-tab-pane label="Medication" name="sixth">
+				<MedicationDashboard></MedicationDashboard>
+			</el-tab-pane>
+		</el-tabs>
+	</div>
+</template>
+
+<script setup>
+import httpServices from '@services';
+import WeightDashboard from '../../common/components/WeightDashboard/index.vue';
+import MedicationDashboard from '../../common/components/MedicationDashboard/index.vue';
+</script>
+
+<script>
+export default {
+	data() {
+		return {
+			petsummary: {},
+			userInfo: {},
+			uid: '4EL4hp_qRUYMzzal_G29f',
+			petId: this.$route.query.id // get petid from url
+		};
+	},
+	created: function () {
+		this.$data.activeName = 'first';
+	},
+	methods: {
+		handleClick(tab, event) {
+			sessionStorage.setItem('currentTab', tab.props.name);
+		}
+	},
+	mounted() {
+		let name = sessionStorage.getItem('currentTab');
+		if (name) {
+			this.activeName = name;
+		}
+		//get pet profile
+		httpServices.petprofile
+			.getPet({ uid: this.$data.uid, petId: this.$data.petId })
+			.then(response => {
+				let petobject = response.data.data;
+				this.$data.petsummary = petobject;
+			})
+			.catch(error => {
+				console.log(error.message);
+			});
+	}
+};
+</script>
+
+<style lang="scss" scoped>
+.petprofile-header {
+	height: 150px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+
+	p {
+		font-size: large;
+		font-family: Trebuchet MS;
+		color: #76553f;
+		font-weight: 600;
+	}
+
+	.pet-avatar {
+		width: 6vw;
+		border-radius: 50%;
+		margin-bottom: 1vh;
+	}
+}
+
+.petprofile-main {
+	margin-top: 20px;
+	display: flex;
+	justify-content: space-around;
+	height: 470px;
+
+	.petprofile-left {
+		width: 70vw;
+		border: #f2f4f7;
+
+		:deep(.el-tabs__content) {
+			height: 50vh;
+			background-color: white;
+		}
+
+		:deep(.el-tabs__nav-scroll) {
+			background-color: #f2f4f7;
+		}
+
+		:deep(.is-active) {
+			border-radius: 12% 12% 0 0;
+			border: #f2f4f7;
+		}
+	}
+}
+</style>

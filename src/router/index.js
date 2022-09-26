@@ -25,6 +25,7 @@ import BookingTable from '@/components/BookingTable/index.vue';
 import ConfirmPage from '@/components/ConfirmPage/index.vue';
 import CancelPage from '@/components/CancelPage/index.vue';
 import RejectPage from '@/components/RejectPage/index.vue';
+import TrackingDashboard from '@/components/TrackingDashboard/index.vue';
 
 const routes = [
 	{
@@ -111,6 +112,10 @@ const routes = [
 			{
 				path: 'booking-table',
 				component: BookingTable
+			},
+			{
+				path: 'tracking-dashboard',
+				component: TrackingDashboard
 			}
 		]
 	},
