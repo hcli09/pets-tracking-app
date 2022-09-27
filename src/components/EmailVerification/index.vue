@@ -15,9 +15,38 @@
 import httpServices from '@services';
 import router from '../../router';
 
+
 const toLogIn = () => {
     router.push('/login')
 }
+</script>
+
+<script>
+export default {
+	data() {
+		return {
+			loading: false,
+			verifyToken: this.$route.query.token
+		};
+	},
+	// created: function () {
+	// 	console.log(this.$data.verifyToken);
+	// 	httpServices.emailVerification
+	// 		.verifyEmail({ email: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', verifyToken: this.$data.verifyToken })
+	// 		.then(response => {
+	// 			if (response.status == 200) {
+	// 				this.$data.booking_details = response.data.data;
+	// 				console.log(this.$data.booking_details);
+	// 				this.$data.loading = true;
+	// 			}
+	// 		})
+	// 		.catch(error => {
+	// 			this.$data.loading = false;
+	// 			this.$data.booking_details = {};
+	// 			console.log(error.message);
+	// 		});
+	// }
+};
 </script>
 
 <style lang="scss" scoped>

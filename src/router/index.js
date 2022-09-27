@@ -44,7 +44,7 @@ const routes = [
 		component: CancelPage
 	},
 	{
-		path: '/email-verification',
+		path: '/user/verify/',
 		name: 'EmailVerification',
 		component: EmailVerification
 	},
