@@ -65,10 +65,10 @@
 						>
 					</el-form-item>
 				</el-form>
-				<el-link :underline="false" href="/register"
+				<el-button link @click="goRegister"
 					>Create an account<el-icon class="el-icon--right"
 						><User /></el-icon
-				></el-link>
+				></el-button>
 				<!-- <el-icon><user /></el-icon> -->
 				<!-- <el-link>
                     Check<el-icon class="el-icon--right"><icon-view /></el-icon>
@@ -82,8 +82,7 @@
 export default {
 	beforeRouteEnter: function (to, from, next) {
 		const token = localStorage.getItem('token');
-		console.log(token);
-        
+
 		if (token) {
 			next('/home');
 		} else {
@@ -142,6 +141,12 @@ const submitForm = formEl => {
 			console.log('error submit!');
 			return false;
 		}
+	});
+};
+
+const goRegister = () => {
+	router.push({
+		name: 'Register'
 	});
 };
 </script>
