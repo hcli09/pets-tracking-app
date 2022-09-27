@@ -1,12 +1,16 @@
 <template>
     <div class="container">
 
-        <div class="white-box">
+        
+        <div v-if="showSuccess" class="white-box">
             <div class="logo-container">
                 <img src="@assets/EmailVerificationSuccess/mail.png" alt="icon of an email">
             </div>
             <p>Your email is successfully verified.</p>
             <el-button class="button" type="primary" @click="toLogIn">Login To Your Account</el-button>
+        </div>
+        <div v-if="showFail">
+            <p>{{ errorMessage }}</p>
         </div>
     </div>
 </template>
@@ -25,27 +29,33 @@ const toLogIn = () => {
 export default {
 	data() {
 		return {
-			loading: false,
-			verifyToken: this.$route.query.token
+			loading: true,
+            showSuccess: false,
+            showFail: false,
+            email: this.$route.query.email,
+			verifyToken: this.$route.query.token,
+            errorMessage: ''
 		};
 	},
-	// created: function () {
-	// 	console.log(this.$data.verifyToken);
-	// 	httpServices.emailVerification
-	// 		.verifyEmail({ email: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', verifyToken: this.$data.verifyToken })
-	// 		.then(response => {
-	// 			if (response.status == 200) {
-	// 				this.$data.booking_details = response.data.data;
-	// 				console.log(this.$data.booking_details);
-	// 				this.$data.loading = true;
-	// 			}
-	// 		})
-	// 		.catch(error => {
-	// 			this.$data.loading = false;
-	// 			this.$data.booking_details = {};
-	// 			console.log(error.message);
-	// 		});
-	// }
+	created: function () {
+		console.log(this.$data.verifyToken);
+		httpServices.emailVerification
+			.verifyEmail({ email: this.$data.email, verify_token: this.$data.verifyToken })
+			.then(response => {
+				if (response.status == 200) {
+                    this.showSuccess = true;
+					
+					
+					this.$data.loading = false;
+				}
+                else {
+                    this.errorMessage = response.message;
+                }
+			})
+			.catch(error => {
+
+			});
+	}
 };
 </script>
 
