@@ -4,24 +4,25 @@
 			stripe
 			row-key="dataid"
 			ref="filterTable"
-			:data="medicationData"
+			:data="foodData"
 			class="folder-list"
 		>
 			<!-- Document title -->
 			<el-table-column
 				width="180"
-				prop="medi_name"
+				prop="food_name"
 				align="center"
-				label="Medication Name"
-				column-key="medi_name"
+				label="Food"
+				column-key="food_name"
 			>
 			</el-table-column>
 
 			<el-table-column
-				label="Frequency"
-				prop="frequency"
+				width="180"
+				prop="amount"
 				align="center"
-				column-key="frequency"
+				label="Amount"
+				column-key="amount"
 			>
 			</el-table-column>
 
@@ -31,6 +32,16 @@
 				align="center"
 				label="Notes"
 				column-key="notes"
+			>
+			</el-table-column>
+
+			<el-table-column
+				sortable=""
+				width="130"
+				prop="date"
+				align="center"
+				label="Date"
+				column-key="date"
 			>
 			</el-table-column>
 
@@ -56,6 +67,15 @@
 
 	<div class="right">
 		<div class="filter_add">
+			<div class="filtertime">
+				<el-radio-group v-model="radio" @change="applyFilter">
+					<el-radio :label="1">All Data</el-radio>
+					<el-radio :label="2">This Week </el-radio>
+					<el-radio :label="3">Last Month</el-radio>
+					<el-radio :label="4">Last 6Months</el-radio>
+					<el-radio :label="5">Last Year</el-radio>
+				</el-radio-group>
+			</div>
 			<!-- add new document pop up window -->
 			<el-button
 				class="rihgt_buttons"
@@ -72,24 +92,31 @@
 	<!-- add dialog -->
 	<el-dialog width="700px" title="Add Data" v-model="AdddialogFormVisible">
 		<el-form :model="documentForm">
-			<el-form-item label="Medication Name">
+			<el-form-item label="Food">
 				<el-input
-					v-model="documentForm.medi_name"
-					placeholder="Enter Medication"
+					v-model="documentForm.food_name"
+					placeholder="Enter Food"
 					autocomplete="off"
 				></el-input>
 			</el-form-item>
 
-			<el-form-item label="Frequency">
-				<el-select v-model="documentForm.frequency" placeholder="">
-					<el-option
-						v-for="item in options"
-						:key="item.value"
-						:label="item.label"
-						:value="item.value"
-					>
-					</el-option>
-				</el-select>
+			<el-form-item label="Amount">
+				<el-input
+					v-model="documentForm.amount"
+					placeholder="Enter Amount"
+					autocomplete="off"
+				></el-input>
+			</el-form-item>
+
+			<el-form-item label="Date">
+				<el-date-picker
+					type="date"
+					placeholder="Select a Date"
+					v-model="documentForm.date"
+					format="YYYY-MM-DD"
+					value-format="YYYY-MM-DD"
+				>
+				</el-date-picker>
 			</el-form-item>
 
 			<el-form-item label="Notes">
@@ -125,22 +152,29 @@
 		<el-form :model="EditdocumentForm">
 			<el-form-item label="Medication Name">
 				<el-input
-					v-model="EditdocumentForm.medi_name"
+					v-model="EditdocumentForm.food_name"
 					placeholder="Enter Medication"
 					autocomplete="off"
 				></el-input>
 			</el-form-item>
 
-			<el-form-item label="Frequency">
-				<el-select v-model="EditdocumentForm.frequency" placeholder="">
-					<el-option
-						v-for="item in options"
-						:key="item.value"
-						:label="item.label"
-						:value="item.value"
-					>
-					</el-option>
-				</el-select>
+			<el-form-item label="Amount">
+				<el-input
+					v-model="EditdocumentForm.amount"
+					placeholder="Enter Amount"
+					autocomplete="off"
+				></el-input>
+			</el-form-item>
+
+			<el-form-item label="Date">
+				<el-date-picker
+					type="date"
+					placeholder="Select a Date"
+					v-model="EditdocumentForm.date"
+					format="YYYY-MM-DD"
+					value-format="YYYY-MM-DD"
+				>
+				</el-date-picker>
 			</el-form-item>
 
 			<el-form-item label="Notes">
@@ -174,7 +208,7 @@
 		width="30%"
 		:before-close="handleClose"
 	>
-		<span>Are you sure to delete this medication ?</span>
+		<span>Are you sure to delete this record ?</span>
 		<template #footer>
 			<span class="dialog-footer">
 				<el-button @click="deletedialogVisible = false"
@@ -196,44 +230,19 @@ import httpServices from '@services';
 export default {
 	data() {
 		return {
+			radio: '1',
 			petId: this.$route.query.id,
-			medicationData: [],
-			options: [
-				{
-					value: 'Four times a day',
-					label: 'Four times a day'
-				},
-				{
-					value: 'Three times a day',
-					label: 'Three times a day'
-				},
-				{
-					value: 'Twice Daily',
-					label: 'Twice Daily'
-				},
-				{
-					value: 'Everyday',
-					label: 'Everyday'
-				},
-				{
-					value: 'By Month',
-					label: 'By Month'
-				},
-				{
-					value: 'As Needed',
-					label: 'As Needed'
-				}
-			],
+			foodData: [],
 			value: ''
 		};
 	},
 	mounted() {
-		//get medication data
+		//get food data
 		httpServices.healthTracking
-			.getmedi({ pet_id: this.$data.petId, range: 'All' })
+			.getfood({ pet_id: this.$data.petId, range: 'All' })
 			.then(response => {
-				this.$data.medicationData = response.data.data;
-				console.log(this.$data.medicationData);
+				this.$data.foodData = response.data.data;
+				console.log(this.$data.foodData, 'haha');
 			})
 			.catch(error => {
 				console.log(error.message);
@@ -243,9 +252,9 @@ export default {
 		this.$data.AdddialogFormVisible = false;
 		this.$data.documentForm = {
 			pet_id: this.$data.petId,
-			date: '2021-09-03',
-			medi_name: '',
-			frequency: '',
+			date: '',
+			food_name: '',
+			amount: '',
 			notes: ''
 		};
 
@@ -254,9 +263,9 @@ export default {
 		this.$data.EditdocumentForm = {
 			data_id: '',
 			pet_id: this.$data.petId,
-			date: '2021-09-03',
-			medi_name: '',
-			frequency: '',
+			date: '',
+			food_name: '',
+			amount: '',
 			notes: ''
 		};
 
@@ -271,7 +280,7 @@ export default {
 
 			// add new medication data
 			httpServices.healthTracking
-				.addmedi(this.$data.documentForm)
+				.addfood(this.$data.documentForm)
 				.then(response => {
 					console.log(response);
 					location.reload();
@@ -284,9 +293,10 @@ export default {
 		handleEdit(index, row) {
 			this.$data.EditdialogFormVisible = true;
 			this.$data.EditdocumentForm.data_id = row.data_id;
-			this.$data.EditdocumentForm.petId = row.petId;
-			this.$data.EditdocumentForm.medi_name = row.medi_name;
-			this.$data.EditdocumentForm.frequency = row.frequency;
+			this.$data.EditdocumentForm.pet_id = row.pet_id;
+			this.$data.EditdocumentForm.date = row.date;
+			this.$data.EditdocumentForm.food_name = row.food_name;
+			this.$data.EditdocumentForm.amount = row.amount;
 			this.$data.EditdocumentForm.notes = row.notes;
 
 			console.log(this.$data.EditdocumentForm);
@@ -295,7 +305,7 @@ export default {
 
 		editdocument() {
 			httpServices.healthTracking
-				.editmedi(this.$data.EditdocumentForm)
+				.editfood(this.$data.EditdocumentForm)
 				.then(response => {
 					console.log(response);
 					location.reload();
@@ -322,6 +332,29 @@ export default {
 				.catch(error => {
 					console.log(error);
 				});
+		},
+
+		applyFilter() {
+			var dict = {
+				1: 'All',
+				2: 'Week',
+				3: 'Month',
+				4: '6Month',
+				5: 'Year'
+			};
+			// get food data
+			httpServices.healthTracking
+				.getfood({
+					pet_id: this.$data.petId,
+					range: dict[this.$data.radio]
+				})
+				.then(response => {
+					this.$data.foodData = response.data.data;
+					console.log(this.$data.foodData, 'haha');
+				})
+				.catch(error => {
+					console.log(error.message);
+				});
 		}
 	}
 };
@@ -338,7 +371,7 @@ export default {
 }
 
 .filter_add {
-	margin-top: 50%;
+	margin-top: 10%;
 	display: flex;
 	justify-content: space-evenly;
 	flex-direction: column;
@@ -349,6 +382,15 @@ export default {
 		margin-right: 0;
 		width: 100px;
 		height: 40px;
+	}
+
+	.filtertime {
+		display: flex;
+		justify-content: space-evenly;
+		flex-direction: column;
+		align-items: center;
+		margin-left: 50px;
+		margin-top: 20px;
 	}
 }
 

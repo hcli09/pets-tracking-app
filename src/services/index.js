@@ -12,6 +12,7 @@ import petprofile from './modules/petprofile';
 import notification from './modules/notification';
 import bookingTable from './modules/booking-table';
 import resultPage from './modules/resultpage';
+import healthTracking from './modules/health-tracking';
 
 export default {
 	registerLogin,
@@ -27,5 +28,6 @@ export default {
 	petprofile,
 	notification,
 	bookingTable,
-	resultPage
+	resultPage,
+	healthTracking
 };

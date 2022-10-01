@@ -1,30 +1,82 @@
 <template>
-	<div class="left">
-		<div class="date_filter">
-			<el-checkbox-group
-				style="margin-left: 20%"
-				class="checkbox"
-				v-model="checkList"
-			>
-				<el-checkbox label="All"></el-checkbox>
-				<el-checkbox label="Week"></el-checkbox>
-				<el-checkbox label="Month"></el-checkbox>
-				<el-checkbox label="6Month"></el-checkbox>
-				<el-checkbox label="Year"></el-checkbox>
-			</el-checkbox-group>
-		</div>
+	<div class="left" v-if="!showListView">
 		<div class="line_chart">
 			<div id="main" style="height: 370px"></div>
 		</div>
 	</div>
+
+	<div v-else class="left">
+		<el-table
+			stripe
+			row-key="dataid"
+			ref="filterTable"
+			:data="weightData"
+			class="folder-list"
+		>
+			<!-- Document title -->
+			<el-table-column
+				sortable=""
+				width="300"
+				prop="weight"
+				align="center"
+				label="Weight"
+				column-key="weight"
+			>
+			</el-table-column>
+
+			<el-table-column
+				sortable=""
+				width="200"
+				prop="date"
+				align="center"
+				label="Date"
+				column-key="date"
+			>
+			</el-table-column>
+
+			<!-- Operations -->
+			<el-table-column label="Operations" align="center">
+				<template #default="scope">
+					<el-button
+						size="small"
+						@click="handleDelete(scope.$index, scope.row)"
+						style="background: #f1eeec"
+						>Delete</el-button
+					>
+				</template>
+			</el-table-column>
+		</el-table>
+	</div>
+
 	<div class="right">
 		<div class="filter_add">
+			<div class="filtertime">
+				<el-radio-group v-model="radio" @change="applyFilter">
+					<el-radio :label="1">All Data</el-radio>
+					<el-radio :label="2">This Week </el-radio>
+					<el-radio :label="3">Last Month</el-radio>
+					<el-radio :label="4">Last 6Months</el-radio>
+					<el-radio :label="5">Last Year</el-radio>
+				</el-radio-group>
+			</div>
+
 			<el-button
+				v-if="!showListView"
 				class="rihgt_buttons"
 				style="margin-top: 1vw"
 				type="primary"
 				plain
+				@click="showListView = true"
 				>Show All Data</el-button
+			>
+			<el-button
+				v-else
+				class="rihgt_buttons"
+				style="margin-top: 1vw"
+				type="primary"
+				plain
+				@click="(showListView = False), getdata(petId, 'All')"
+				>Show Chart</el-button
 			>
 			<!-- add new document pop up window -->
 			<el-button
@@ -38,10 +90,10 @@
 			>
 		</div>
 	</div>
-
-	<el-dialog width="300px" title="Add Data" v-model="AdddialogFormVisible">
+	<!-- add dialog -->
+	<el-dialog width="350px" title="Add Data" v-model="AdddialogFormVisible">
 		<el-form :model="documentForm">
-			<el-form-item label="Kg">
+			<el-form-item label="Weight">
 				<el-input
 					v-model="documentForm.weight"
 					placeholder="Enter Data"
@@ -49,11 +101,11 @@
 				></el-input>
 			</el-form-item>
 
-			<el-form-item label="Time">
+			<el-form-item label="Date">
 				<el-date-picker
 					type="date"
 					placeholder="Select a Date"
-					v-model="documentForm.time"
+					v-model="documentForm.date"
 					format="YYYY-MM-DD"
 					value-format="YYYY-MM-DD"
 				>
@@ -74,52 +126,163 @@
 			</span>
 		</template>
 	</el-dialog>
+
+	<!-- delete dialog -->
+	<el-dialog
+		v-model="deletedialogVisible"
+		title=""
+		width="30%"
+		:before-close="handleClose"
+	>
+		<span>Are you sure to delete this record?</span>
+		<template #footer>
+			<span class="dialog-footer">
+				<el-button @click="deletedialogVisible = false"
+					>Cancel</el-button
+				>
+				<el-button type="primary" @click="documentDelete()"
+					>Delete</el-button
+				>
+			</span>
+		</template>
+	</el-dialog>
 </template>
 
 <script setup>
 import { onMounted } from 'vue';
 import * as echarts from 'echarts';
-onMounted(() => {
-	let myChart = echarts.init(document.getElementById('main'));
-	myChart.setOption({
-		title: {
-			text: 'Weight'
-		},
-		tooltip: {},
-		xAxis: {
-			data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-		},
-		yAxis: {},
-		series: [
-			{
-				name: 'Weight',
-				type: 'line',
-				data: [7, 8, 6, 9, 10, 12, 11]
-			}
-		]
-	});
-	window.onresize = function () {
-		myChart.resize();
-	};
-});
+import httpServices from '@services';
 </script>
 
 <script>
 export default {
 	data() {
 		return {
-			checkList: ['All']
+			radio: '1',
+			petId: this.$route.query.id,
+			weightData: []
 		};
 	},
+	mounted() {
+		this.getdata(this.$data.petId, 'All');
+	},
 	created() {
+		this.$data.showListView = false;
 		this.$data.AdddialogFormVisible = false;
 		this.$data.documentForm = {
-			recordTitle: '',
-			petId: '',
+			pet_id: this.$data.petId,
 			date: '',
-			fileDir: '',
-			fileFormat: ''
+			weight: ''
 		};
+
+		//delete dialog related
+		this.$data.deletedialogVisible = false;
+		this.$data.delete_data_id = '';
+	},
+	methods: {
+		applyFilter() {
+			var dict = {
+				1: 'All',
+				2: 'Week',
+				3: 'Month',
+				4: '6Month',
+				5: 'Year'
+			};
+			this.getdata(this.$data.petId, dict[this.$data.radio]);
+			// // get food data
+			// httpServices.healthTracking
+			// 	.getweight({
+			// 		pet_id: this.$data.petId,
+			// 		range: dict[this.$data.radio]
+			// 	})
+			// 	.then(response => {
+			// 		this.$data.foodData = response.data.data;
+			// 		console.log(this.$data.foodData, 'haha');
+			// 	})
+			// 	.catch(error => {
+			// 		console.log(error.message);
+			// 	});
+		},
+		getdata(petid, range) {
+			//get weight data
+			httpServices.healthTracking
+				.getweight({ pet_id: petid, range: range })
+				.then(response => {
+					this.$data.weightData = response.data.data;
+					console.log(this.$data.weightData, 'hehe');
+					let temp_dates = [];
+					let temp_weights = [];
+					for (const record of this.$data.weightData) {
+						temp_weights.push(record.weight);
+						temp_dates.push(record.date);
+						console.log();
+					}
+					this.renderChart(temp_dates, temp_weights);
+				})
+				.catch(error => {
+					console.log(error.message);
+				});
+		},
+		renderChart(date, weight) {
+			console.log(this.$data.weightData, 'hahaha');
+			let myChart = echarts.init(document.getElementById('main'));
+			myChart.setOption({
+				title: {
+					text: 'Weight'
+				},
+				tooltip: {},
+				xAxis: {
+					data: date
+				},
+				yAxis: {},
+				series: [
+					{
+						name: 'Weight',
+						type: 'line',
+						data: weight
+					}
+				]
+			});
+			window.onresize = function () {
+				myChart.resize();
+			};
+		},
+
+		adddocument() {
+			this.$data.AdddialogFormVisible = false;
+			console.log(this.$data.documentForm);
+
+			// add new weight data
+			httpServices.healthTracking
+				.addweight(this.$data.documentForm)
+				.then(response => {
+					console.log(response);
+					location.reload();
+				})
+				.catch(error => {
+					console.log(error);
+				});
+		},
+
+		//delete document related
+		handleDelete(index, row) {
+			this.$data.deletedialogVisible = true;
+			this.$data.delete_data_id = row.data_id;
+			console.log(this.$data.delete_data_id);
+		},
+		documentDelete() {
+			this.$data.deletedialogVisible = false;
+			//delete record list
+			httpServices.healthTracking
+				.deletedata({ data_id: this.$data.delete_data_id })
+				.then(response => {
+					console.log(response);
+					location.reload();
+				})
+				.catch(error => {
+					console.log(error);
+				});
+		}
 	}
 };
 </script>
@@ -135,7 +298,7 @@ export default {
 }
 
 .filter_add {
-	margin-top: 50%;
+	margin-top: 10%;
 	display: flex;
 	justify-content: space-evenly;
 	flex-direction: column;
@@ -147,6 +310,15 @@ export default {
 		width: 100px;
 		height: 40px;
 	}
+
+	.filtertime {
+		display: flex;
+		justify-content: space-evenly;
+		flex-direction: column;
+		align-items: center;
+		margin-left: 50px;
+		margin-top: 20px;
+	}
 }
 
 :deep(.el-input__inner) {
@@ -154,6 +326,11 @@ export default {
 }
 
 :deep(.el-form-item__label) {
-	width: 50px;
+	width: 80px;
+}
+
+.line_chart {
+	margin-top: 2%;
+	margin-left: 2%;
 }
 </style>
