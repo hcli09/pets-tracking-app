@@ -63,5 +63,47 @@ export default {
 			method: 'post',
 			data
 		});
+	},
+	getcalorie(params) {
+		return axios({
+			url: '/user/pet/calorie',
+			method: 'post',
+			params
+		});
+	},
+	addcalorie(data) {
+		return axios({
+			url: '/user/pet/calorie/add',
+			method: 'post',
+			data
+		});
+	},
+	getsleep(params) {
+		return axios({
+			url: '/user/pet/sleep',
+			method: 'post',
+			params
+		});
+	},
+	addsleep(data) {
+		return axios({
+			url: '/user/pet/sleep/add',
+			method: 'post',
+			data
+		});
+	},
+	getexercise(params) {
+		return axios({
+			url: '/user/pet/exercise',
+			method: 'post',
+			params
+		});
+	},
+	addexercise(data) {
+		return axios({
+			url: '/user/pet/exercise/add',
+			method: 'post',
+			data
+		});
 	}
 };

@@ -37,7 +37,9 @@
 			<el-tab-pane label="Weight" name="first">
 				<WeightDashboard></WeightDashboard>
 			</el-tab-pane>
-			<el-tab-pane label="Calorie" name="second"> </el-tab-pane>
+			<el-tab-pane label="Calorie" name="second">
+				<CalorieDashboard></CalorieDashboard>
+			</el-tab-pane>
 			<el-tab-pane label="Sleep" name="third"></el-tab-pane>
 			<el-tab-pane label="Exercise" name="fourth"></el-tab-pane>
 			<el-tab-pane label="Food" name="fifth">
@@ -52,6 +54,7 @@
 
 <script setup>
 import httpServices from '@services';
+import CalorieDashboard from '../../common/components/CalorieDashboard/index.vue';
 import WeightDashboard from '../../common/components/WeightDashboard/index.vue';
 import MedicationDashboard from '../../common/components/MedicationDashboard/index.vue';
 import FoodDashboard from '../../common/components/FoodDashboard/index.vue';

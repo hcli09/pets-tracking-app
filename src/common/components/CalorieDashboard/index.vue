@@ -1,7 +1,7 @@
 <template>
 	<div class="left" v-if="!showListView">
 		<div class="line_chart">
-			<div id="weight_chart" style="height: 370px"></div>
+			<div id="calorie_chart" style="height: 370px"></div>
 		</div>
 	</div>
 
@@ -10,17 +10,17 @@
 			stripe
 			row-key="dataid"
 			ref="filterTable"
-			:data="weightData"
+			:data="calorieData"
 			class="folder-list"
 		>
 			<!-- Document title -->
 			<el-table-column
 				sortable=""
 				width="300"
-				prop="weight"
+				prop="calorie"
 				align="center"
-				label="Weight"
-				column-key="weight"
+				label="Calorie"
+				column-key="calorie"
 			>
 			</el-table-column>
 
@@ -93,10 +93,10 @@
 	<!-- add dialog -->
 	<el-dialog width="350px" title="Add Data" v-model="AdddialogFormVisible">
 		<el-form :model="documentForm">
-			<el-form-item label="Weight">
+			<el-form-item label="Calorie">
 				<el-input
-					v-model="documentForm.weight"
-					placeholder="In Kg"
+					v-model="documentForm.calorie"
+					placeholder="In Kcal"
 					autocomplete="off"
 				></el-input>
 			</el-form-item>
@@ -160,7 +160,7 @@ export default {
 		return {
 			radio: '1',
 			petId: this.$route.query.id,
-			weightData: []
+			calorieData: []
 		};
 	},
 	mounted() {
@@ -172,7 +172,7 @@ export default {
 		this.$data.documentForm = {
 			pet_id: this.$data.petId,
 			date: '',
-			weight: ''
+			calorie: ''
 		};
 
 		//delete dialog related
@@ -189,46 +189,35 @@ export default {
 				5: 'Year'
 			};
 			this.getdata(this.$data.petId, dict[this.$data.radio]);
-			// // get food data
-			// httpServices.healthTracking
-			// 	.getweight({
-			// 		pet_id: this.$data.petId,
-			// 		range: dict[this.$data.radio]
-			// 	})
-			// 	.then(response => {
-			// 		this.$data.foodData = response.data.data;
-			// 		console.log(this.$data.foodData, 'haha');
-			// 	})
-			// 	.catch(error => {
-			// 		console.log(error.message);
-			// 	});
 		},
 		getdata(petid, range) {
-			//get weight data
+			//get calorie data
 			httpServices.healthTracking
-				.getweight({ pet_id: petid, range: range })
+				.getcalorie({ pet_id: petid, range: range })
 				.then(response => {
-					this.$data.weightData = response.data.data;
-					console.log(this.$data.weightData, 'hehe');
+					this.$data.calorieData = response.data.data;
+					console.log(this.$data.calorieData, 'hehe');
 					let temp_dates = [];
-					let temp_weights = [];
-					for (const record of this.$data.weightData) {
-						temp_weights.push(record.weight);
+					let temp_calorie = [];
+					for (const record of this.$data.calorieData) {
+						temp_calorie.push(record.calorie);
 						temp_dates.push(record.date);
 						console.log();
 					}
-					this.renderChart(temp_dates, temp_weights);
+					this.renderChart(temp_dates, temp_calorie);
 				})
 				.catch(error => {
 					console.log(error.message);
 				});
 		},
-		renderChart(date, weight) {
-			console.log(this.$data.weightData, 'hahaha');
-			let myChart = echarts.init(document.getElementById('weight_chart'));
-			myChart.setOption({
+		renderChart(date, calorie) {
+			console.log(this.$data.calorieData, 'hahaha');
+			let calorieChart = echarts.init(
+				document.getElementById('calorie_chart')
+			);
+			calorieChart.setOption({
 				title: {
-					text: 'Weight'
+					text: 'Calorie'
 				},
 				tooltip: {},
 				xAxis: {
@@ -237,14 +226,14 @@ export default {
 				yAxis: {},
 				series: [
 					{
-						name: 'Weight',
+						name: 'Calorie',
 						type: 'line',
-						data: weight
+						data: calorie
 					}
 				]
 			});
 			window.onresize = function () {
-				myChart.resize();
+				calorieChart.resize();
 			};
 		},
 
@@ -252,9 +241,9 @@ export default {
 			this.$data.AdddialogFormVisible = false;
 			console.log(this.$data.documentForm);
 
-			// add new weight data
+			// add new calorie data
 			httpServices.healthTracking
-				.addweight(this.$data.documentForm)
+				.addcalorie(this.$data.documentForm)
 				.then(response => {
 					console.log(response);
 					location.reload();
