@@ -7,14 +7,14 @@
             <p>Your email is successfully verified.</p>
             <el-button class="button" type="primary" @click="toLogIn">Login To Your Account</el-button>
         </div>
-        <div v-if="showFail" class="white-box">
+        <!-- <div v-if="showFail" class="white-box">
             <div class="logo-container">
                 <img src="@assets/EmailVerification/error.png" alt="icon of an error">
             </div>
             <p>Oops!</p>
             <p>{{ errorMessage }}</p>
             <el-button class="button" type="primary" @click="toRegister">Go back to register</el-button>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -38,7 +38,7 @@ export default {
 	data() {
 		return {
             showSuccess: false,
-            showFail: false,
+            // showFail: false,
             email: this.$route.query.email,
 			verifyToken: this.$route.query.token,
             errorMessage: ''
@@ -52,15 +52,14 @@ export default {
                 .verifyEmail({ email: this.$data.email, verify_token: this.$data.verifyToken })
                 .then(response => {
                         this.showSuccess = true;
-                        this.showFail = false;
                                          
                 }).catch(error => {
 
 				console.log(error.message);
-                console.log(error.response);
-                this.showFail = true;
-                this.showSuccess = false;
-                this.errorMessage = error.response.data.message;
+                console.log(error.response); 
+                if(error.response.data.message === "This email has been verified before") {
+                    this.showSuccess = true;
+                }
 			});
 
 	}
