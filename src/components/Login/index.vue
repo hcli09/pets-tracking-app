@@ -130,11 +130,21 @@ const submitForm = formEl => {
 					});
 				}
 			} catch (error) {
-				ElNotification({
-					title: 'Login',
-					message: 'Wrong email or password. Please check',
-					type: 'error'
-				});
+				if(error.response.data.message === "Bad credentials") {
+					ElNotification({
+						title: 'Login',
+						message: error.response.data.message,
+						type: 'error'
+					});
+				}
+				else {
+					ElNotification({
+						title: 'Login',
+						message: error.response.data.message,
+						type: 'error'
+					});
+				}
+
 				console.log('error', error);
 			}
 		} else {

@@ -1,16 +1,19 @@
 <template>
     <div class="container">
-
-        
         <div v-if="showSuccess" class="white-box">
             <div class="logo-container">
-                <img src="@assets/EmailVerificationSuccess/mail.png" alt="icon of an email">
+                <img src="@assets/EmailVerification/mail.png" alt="icon of an email">
             </div>
             <p>Your email is successfully verified.</p>
             <el-button class="button" type="primary" @click="toLogIn">Login To Your Account</el-button>
         </div>
-        <div v-if="showFail">
+        <div v-if="showFail" class="white-box">
+            <div class="logo-container">
+                <img src="@assets/EmailVerification/error.png" alt="icon of an error">
+            </div>
+            <p>Oops!</p>
             <p>{{ errorMessage }}</p>
+            <el-button class="button" type="primary" @click="toRegister">Go back to register</el-button>
         </div>
     </div>
 </template>
@@ -18,10 +21,15 @@
 <script setup>
 import httpServices from '@services';
 import router from '../../router';
+import { inject } from 'vue';
 
+const reload = inject('reload');
 
 const toLogIn = () => {
     router.push('/login')
+}
+const toRegister = () => {
+    router.push('/register')
 }
 </script>
 
@@ -29,7 +37,6 @@ const toLogIn = () => {
 export default {
 	data() {
 		return {
-			loading: true,
             showSuccess: false,
             showFail: false,
             email: this.$route.query.email,
@@ -38,23 +45,24 @@ export default {
 		};
 	},
 	created: function () {
-		console.log(this.$data.verifyToken);
-		httpServices.emailVerification
-			.verifyEmail({ email: this.$data.email, verify_token: this.$data.verifyToken })
-			.then(response => {
-				if (response.status == 200) {
-                    this.showSuccess = true;
-					
-					
-					this.$data.loading = false;
-				}
-                else {
-                    this.errorMessage = response.message;
-                }
-			})
-			.catch(error => {
+		console.log("token:", this.$data.verifyToken);;
+        console.log("verify:", httpServices.emailVerification);
 
+            httpServices.emailVerification
+                .verifyEmail({ email: this.$data.email, verify_token: this.$data.verifyToken })
+                .then(response => {
+                        this.showSuccess = true;
+                        this.showFail = false;
+                                         
+                }).catch(error => {
+
+				console.log(error.message);
+                console.log(error.response);
+                this.showFail = true;
+                this.showSuccess = false;
+                this.errorMessage = error.response.data.message;
 			});
+
 	}
 };
 </script>
