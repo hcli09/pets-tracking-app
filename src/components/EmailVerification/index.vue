@@ -45,7 +45,7 @@ export default {
 		};
 	},
 	created: function () {
-		console.log("token:", this.$data.verifyToken);;
+		console.log("token:", this.$data.verifyToken);
         console.log("verify:", httpServices.emailVerification);
 
             httpServices.emailVerification
