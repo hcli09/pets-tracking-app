@@ -33,6 +33,7 @@
 			v-model="activeName"
 			type="border-card"
 			@tab-click="handleClick"
+			:key="activeName"
 		>
 			<el-tab-pane label="Weight" name="first">
 				<WeightDashboard></WeightDashboard>
@@ -40,8 +41,12 @@
 			<el-tab-pane label="Calorie" name="second">
 				<CalorieDashboard></CalorieDashboard>
 			</el-tab-pane>
-			<el-tab-pane label="Sleep" name="third"></el-tab-pane>
-			<el-tab-pane label="Exercise" name="fourth"></el-tab-pane>
+			<el-tab-pane label="Sleep" name="third">
+				<SleepDashboard></SleepDashboard>
+			</el-tab-pane>
+			<el-tab-pane label="Exercise" name="fourth">
+				<ExerciseDashboard></ExerciseDashboard>
+			</el-tab-pane>
 			<el-tab-pane label="Food" name="fifth">
 				<FoodDashboard></FoodDashboard>
 			</el-tab-pane>
@@ -58,6 +63,8 @@ import CalorieDashboard from '../../common/components/CalorieDashboard/index.vue
 import WeightDashboard from '../../common/components/WeightDashboard/index.vue';
 import MedicationDashboard from '../../common/components/MedicationDashboard/index.vue';
 import FoodDashboard from '../../common/components/FoodDashboard/index.vue';
+import SleepDashboard from '../../common/components/SleepDashboard/index.vue';
+import ExerciseDashboard from '../../common/components/ExerciseDashboard/index.vue';
 </script>
 
 <script>
