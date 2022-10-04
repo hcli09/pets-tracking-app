@@ -8,6 +8,13 @@ export default {
 			method: 'post',
 			params
 		});
+	},
+	sendVerifyEmail(params) {
+		return axios({
+			url: '/verify/send',
+			method: 'post',
+			params
+		});
 	}
 
 };

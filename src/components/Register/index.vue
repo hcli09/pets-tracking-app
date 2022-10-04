@@ -168,33 +168,45 @@ const submitForm = formEl => {
         const emailTemp = registerForm.email
         if (valid) {
             // console.log('submit!');
-            delete registerForm.checkPass;
-            const { data } = await httpServices.registerLogin.register(
-                registerForm
-            );
+            // delete registerForm.checkPass;
+			// formRef.value.resetFields();
+            
+			try {
+				const { data } = await httpServices.registerLogin.register(registerForm)
+				if (data.status === 200) {
+					ElNotification({
+						title: 'Register',
+						message: 'Register Successfully',
+						type: 'success',
+					});
+					// go to email verification page
+					router.push({name: 'SendVerifyEmail', params: {email: emailTemp}})
+            	}
+			}
+			catch (error){
+				if(error.response.data.message.startsWith('Duplicate email')) {
+					ElNotification({
+						title: 'Register',
+						message: 'This email has been registered',
+						type: 'error',
+					});					
+				}
+			}
+            
             formRef.value.resetFields();
 
-            // if (data.status === 200) {
-            //     ElNotification({
-            //         title: 'Register',
-            //         message: 'Register Successfully',
-            //         type: 'success',
-            //     });
-            //     router.push({
-            //         name: 'Login',
-            //     });
-            // }
+
 
 
             // display a message about email verification
-            ElMessage({
-                message: 'We have sent an message to ' + emailTemp + ', please click the link included to verify your email address',
-                duration: 5000,
-                offset: 60,
-                showClose: true,
-                customClass: 'email-varification-message',
+            // ElMessage({
+            //     message: 'We have sent an message to ' + emailTemp + ', please click the link included to verify your email address',
+            //     duration: 5000,
+            //     offset: 60,
+            //     showClose: true,
+            //     customClass: 'email-varification-message',
 
-            })
+            // })
 
         } else {
             console.log('error submit!');
