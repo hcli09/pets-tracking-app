@@ -12,11 +12,7 @@
 		<el-container style="position: relative">
 			<!-- side bar -->
 			<el-aside style="width: 65px">
-				<!-- <PetsSideBar :petList="userObject.petList" :uid="userObject.uid" /> -->
-				<SideMenu
-					:petList="userObject.petList"
-					:uid="userObject.uid"
-				></SideMenu>
+				<SideMenu :petList="userObject.petList" />
 			</el-aside>
 
 			<!-- Main part -->
@@ -39,117 +35,29 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
-import { onMounted } from 'vue';
-import httpServices from '@services';
+import { onBeforeMount, reactive } from 'vue';
 import PetsTopBar from '@common/components/TopBar/index.vue';
-import { Setting } from '@element-plus/icons-vue';
-import { Plus } from '@element-plus/icons-vue';
-import { CirclePlusFilled } from '@element-plus/icons-vue';
 import SideMenu from '../../common/components/SideMenu/index.vue';
-import { Carousel, Pagination, Slide } from 'vue3-carousel';
-import { FireBaseStorage as storage } from '@services/firebase.js';
 
-import {
-	ref as ref_upload,
-	ref as ref_user,
-	uploadBytes,
-	getDownloadURL
-} from 'firebase/storage';
-
-import 'vue3-carousel/dist/carousel.css';
 import BackButton from '../../common/components/BackButton/index.vue';
-import { useRoute } from 'vue-router';
+import httpServices from '@services';
 
-const remarks = ref({ '2021-1-13': 'some tings' });
-const value = ref(new Date());
-const route = useRoute();
+let userObject = reactive({});
 
-// let isRenderBackButton;
-// if (route.fullPath === '/home') {
-// 	isRenderBackButton = ref(false);
-// } else {
-// 	isRenderBackButton = ref(true);
-// }
+const getUserInfo = async () => {
+	const { data: res } = await httpServices.dashboard.user_dashboard({
+		uid: '4EL4hp_qRUYMzzal_G29f'
+	});
 
-onMounted(() => {
-	// getUserProfile();
-});
-
-// const getUserProfile = async() => {
-//     const res = await httpServices.userProfile.getUserProfile({
-//         uid: '4EL4hp_qRUYMzzal_G29f',
-//     });
-//     userObject.image = res.data.data.image;
-//     userObject.firstName = res.data.data.firstName;
-//     userObject.lastName = res.data.data.lastName;
-//     userObject.petList = res.data.data.petList;
-//     console.log('res', res);
-//     console.log('firstName:', userObject.firstName);
-// }
-</script>
-
-<script>
-export default {
-	data() {
-		return {
-			uid: '4EL4hp_qRUYMzzal_G29f',
-			userObject: {
-				firstName: '',
-				lastName: '',
-				image: '',
-				petList: []
-			}
-		};
-	},
-
-	created: function () {
-		httpServices.dashboard
-			.user_dashboard({ uid: this.$data.uid })
-			.then(response => {
-				let userObject = response.data.data;
-				localStorage.setItem('user', JSON.stringify(userObject));
-				//edit page, assign pet object to pet form
-				this.$data.userObject.firstName = userObject.firstName;
-				this.$data.userObject.lastName = userObject.lastName;
-				this.$data.userObject.petList = userObject.petList;
-				this.$data.userObject.image = userObject.image;
-			})
-			.catch(error => {
-				console.log(error);
-			});
-	},
-	methods: {
-		// these two functions are used for temporary needs,
-		// once the real upload image function is updated, they should be replaced
-		changeAvatar(url) {
-			this.userObject.image = url;
-			console.log("url of the topbar's avatar changed", url);
-		},
-		changeInfo(firstName, lastName) {
-			this.userObject.firstName = firstName;
-			this.userObject.lastName = lastName;
-		}
-		// this function send a request and get the most up-to-date user infomation (when user infomation is changed)
-		// getUserInfo() {
-		// 	httpServices.dashboard
-		// 		.user_dashboard({ uid: this.$data.uid })
-		// 		.then(response => {
-		// 			let userObject = response.data.data;
-		// 			//edit page, assign pet object to pet form
-		// 			this.$data.userObject.firstName = userObject.firstName;
-		// 			this.$data.userObject.lastName = userObject.lastName;
-		// 			// update user avatar
-		// 		});
-		// }
-	}
+	Object.assign(userObject, res.data);
 };
+
+onBeforeMount(() => {
+	getUserInfo();
+});
 </script>
 
 <style lang="scss" scoped>
-// .main-scroll :deep(.el-scrollbar__view:nth-of-type(1)) {
-// 	width: calc(100vw - 75px);
-// }
 .dashboard-home {
 	position: absolute;
 	top: 0px;
@@ -361,10 +269,6 @@ export default {
 		width: 7rem;
 		height: 3rem;
 		border-radius: 1rem;
-		// margin-bottom: 30px;
-		// &:last-child {
-		//     margin-bottom: 0;
-		// }
 	}
 }
 </style>

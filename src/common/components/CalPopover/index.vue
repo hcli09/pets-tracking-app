@@ -93,7 +93,7 @@
 					type="danger"
 					plain
 					@click="
-						acceptBookingProm(attr.customData.detail.booking_id)
+						cancelBookingProm(attr.customData.detail.booking_id)
 					"
 					>Cancel</el-button
 				>

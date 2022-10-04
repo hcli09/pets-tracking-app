@@ -1,0 +1,203 @@
+pets-tracking-app
+├─.eslintrc.js
+├─.gitignore
+├─.prettierrc.js
+├─README.md
+├─index.html
+├─package-lock.json
+├─package.json
+├─postcss.config.js
+├─result.txt
+├─tailwind.config.js
+├─vite.config.js
+├─yarn.lock
+├─src
+|  ├─App.vue
+|  ├─index.css
+|  ├─main.js
+|  ├─vendor.d.ts
+|  ├─styles
+|  |   ├─variables
+|  |   |     └index.js
+|  |   ├─side-menu
+|  |   |     └custom-var.scss
+|  |   ├─element
+|  |   |    ├─index.css
+|  |   |    ├─index.min.css
+|  |   |    └index.scss
+|  ├─services
+|  |    ├─firebase.js
+|  |    ├─index.js
+|  |    ├─test.html
+|  |    ├─modules
+|  |    |    ├─vaccination-history
+|  |    |    |          └index.js
+|  |    |    ├─user-profile-edit
+|  |    |    |         └index.js
+|  |    |    ├─user-profile
+|  |    |    |      └index.js
+|  |    |    ├─tasks
+|  |    |    |   └index.js
+|  |    |    ├─register-login
+|  |    |    |       └index.js
+|  |    |    ├─petprofile
+|  |    |    |     └index.js
+|  |    |    ├─petInfo
+|  |    |    |    └index.js
+|  |    |    ├─notification
+|  |    |    |      └index.js
+|  |    |    ├─invoicemed
+|  |    |    |     └index.js
+|  |    |    ├─events
+|  |    |    |   └index.js
+|  |    |    ├─dashboard
+|  |    |    |     └index.js
+|  |    |    ├─calendar
+|  |    |    |    └index.js
+|  |    |    ├─booking-table
+|  |    |    |       └index.js
+|  |    |    ├─booking
+|  |    |    |    └index.js
+|  ├─router
+|  |   └index.js
+|  ├─components
+|  |     ├─VaccinationHistory
+|  |     |         └index.vue
+|  |     ├─UserProfile
+|  |     |      └index.vue
+|  |     ├─TaskTable
+|  |     |     ├─index.vue
+|  |     |     ├─TaskList
+|  |     |     |    └index.vue
+|  |     ├─Settings
+|  |     |    └index.vue
+|  |     ├─RejectPage
+|  |     |     └index.vue
+|  |     ├─Register
+|  |     |    └index.vue
+|  |     ├─PetProfile
+|  |     |     └index.vue
+|  |     ├─NotFound
+|  |     |    └index.vue
+|  |     ├─Medication
+|  |     |     └index.vue
+|  |     ├─Login
+|  |     |   └index.vue
+|  |     ├─Invoice
+|  |     |    └index.vue
+|  |     ├─Home
+|  |     |  └index.vue
+|  |     ├─EventTable
+|  |     |     ├─index.vue
+|  |     |     ├─EventList
+|  |     |     |     └index.vue
+|  |     ├─EditUserProfile
+|  |     |        └index.vue
+|  |     ├─EditPet
+|  |     |    └index.vue
+|  |     ├─Dashboard
+|  |     |     └index.vue
+|  |     ├─CreatePet
+|  |     |     └index.vue
+|  |     ├─ConfirmPage
+|  |     |      └index.vue
+|  |     ├─CancelPage
+|  |     |     └index.vue
+|  |     ├─Calendar
+|  |     |    └index.vue
+|  |     ├─BookingTable
+|  |     |      ├─index.vue
+|  |     |      ├─BookingList
+|  |     |      |      └index.vue
+|  ├─common
+|  |   ├─utils
+|  |   |   └getPetAvatar.js
+|  |   ├─components
+|  |   |     ├─TopBar
+|  |   |     |   └index.vue
+|  |   |     ├─TaskSummary
+|  |   |     |      └index.vue
+|  |   |     ├─TaskDialog
+|  |   |     |     └index.vue
+|  |   |     ├─TaskBox
+|  |   |     |    └index.vue
+|  |   |     ├─SideMenu
+|  |   |     |    └index.vue
+|  |   |     ├─RecordList
+|  |   |     |     └index.vue
+|  |   |     ├─RecordGrid
+|  |   |     |     └index.vue
+|  |   |     ├─PetSummary
+|  |   |     |     └index.vue
+|  |   |     ├─PetProfileTask
+|  |   |     |       └index.vue
+|  |   |     ├─PetProfileEvent
+|  |   |     |        └index.vue
+|  |   |     ├─EventSummary
+|  |   |     |      └index.vue
+|  |   |     ├─EventDialog
+|  |   |     |      └index.vue
+|  |   |     ├─EventBox
+|  |   |     |    └index.vue
+|  |   |     ├─CloseButton
+|  |   |     |      └index.vue
+|  |   |     ├─CalPopover
+|  |   |     |     └index.vue
+|  |   |     ├─BookingSummary
+|  |   |     |       └index.vue
+|  |   |     ├─BookingDialog
+|  |   |     |       └index.vue
+|  |   |     ├─BookingBox
+|  |   |     |     └index.vue
+|  |   |     ├─BackButton
+|  |   |     |     └index.vue
+|  ├─assets
+|  |   ├─.DS_Store
+|  |   ├─home-logo.jpeg
+|  |   ├─logo.png
+|  |   ├─user-profile
+|  |   |      └email.png
+|  |   ├─not-found
+|  |   |     └not-found.jpeg
+|  |   ├─login
+|  |   |   ├─dog-background
+|  |   |   |       ├─dog-bgd.png
+|  |   |   |       └dog-bgd@2x.png
+|  |   ├─dialog
+|  |   |   ├─add_booking.jpeg
+|  |   |   ├─dialog-1.png
+|  |   |   ├─dialog-2.png
+|  |   |   ├─dialog-3.png
+|  |   |   └dialog-bgd.jpg
+|  |   ├─booking-table-temp
+|  |   |         ├─bernard.jpg
+|  |   |         └olive.jpg
+|  |   ├─Settings
+|  |   |    └notificationExample.png
+|  |   ├─Resultpage
+|  |   |     ├─cancel_Image.png
+|  |   |     ├─confirm_Image.png
+|  |   |     └reject_Image.png
+|  |   ├─Record
+|  |   |   ├─InvoiceExample2.png
+|  |   |   └invoiceExample1.pdf
+|  |   ├─Dashboard
+|  |   |     ├─doglucy.jpeg
+|  |   |     ├─folder.jpeg
+|  |   |     └home-logo.svg
+├─public
+|   └favicon.ico
+├─dist
+|  ├─favicon.ico
+|  ├─index.html
+|  ├─assets
+|  |   ├─add_booking.73926dc1.jpeg
+|  |   ├─dialog-2.521603a3.png
+|  |   ├─dialog-3.9edc71eb.png
+|  |   ├─home-logo.f92839b9.svg
+|  |   ├─index.15cbdcb5.js
+|  |   ├─index.9403b000.css
+|  |   └not-found.02dc4ddc.jpeg
+├─.vscode
+|    ├─extensions.json
+|    └settings.json

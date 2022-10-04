@@ -65,11 +65,25 @@
 							>Login</el-button
 						>
 					</el-form-item>
+
+					<div
+						style="
+							width: 100%;
+							display: flex;
+							justify-content: center;
+						"
+					>
+						<el-button @click="goRegister"
+							>Create an account<el-icon class="el-icon--right"
+								><User /></el-icon
+						></el-button>
+						<el-button @click="loginAsGuest"
+							>Sign in as a guest user<el-icon
+								style="margin-left: 5px"
+								><Avatar /></el-icon
+						></el-button>
+					</div>
 				</el-form>
-				<el-button link @click="goRegister"
-					>Create an account<el-icon class="el-icon--right"
-						><User /></el-icon
-				></el-button>
 			</div>
 		</div>
 	</div>
@@ -93,7 +107,7 @@ export default {
 // import { ElButton } from 'element-plus';
 import { ref, reactive, onMounted } from 'vue';
 import { User } from '@element-plus/icons-vue';
-import { ElMessage, ElNotification } from 'element-plus';
+import { ElNotification } from 'element-plus';
 import httpServices from '@services';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -115,17 +129,32 @@ const submitForm = formEl => {
 				const { data: res } = await httpServices.registerLogin.login(
 					loginForm
 				);
-				formRef.value.resetFields();
+				// formRef.value.resetFields();
 				if (res.status === 200) {
 					ElNotification({
 						title: 'Login',
 						message: 'Login Successfully',
 						type: 'success'
 					});
-					console.log('res.data', res.data);
-					const token = res.data.token;
 
+					const token = res.data.token;
 					localStorage.setItem('token', token);
+
+					httpServices.dashboard
+						.user_dashboard({
+							uid: '4EL4hp_qRUYMzzal_G29f'
+						})
+						.then(response => {
+							let userObject = response.data.data;
+							localStorage.setItem(
+								'user',
+								JSON.stringify(userObject)
+							);
+						})
+						.catch(error => {
+							console.log(error);
+						});
+
 					router.push({
 						path: '/home'
 					});
@@ -151,6 +180,50 @@ const goRegister = () => {
 	router.push({
 		name: 'Register'
 	});
+};
+
+const loginAsGuest = async () => {
+	loading.value = true;
+	try {
+		const { data: res } = await httpServices.registerLogin.login({
+			username: 'xinyukang22@gmail.com',
+			password: 123456
+		});
+		if (res.status === 200) {
+			ElNotification({
+				title: 'Login',
+				message: 'Login Successfully',
+				type: 'success'
+			});
+			const token = res.data.token;
+			localStorage.setItem('token', token);
+
+			httpServices.dashboard
+				.user_dashboard({
+					uid: '4EL4hp_qRUYMzzal_G29f'
+				})
+				.then(response => {
+					let userObject = response.data.data;
+					localStorage.setItem('user', JSON.stringify(userObject));
+				})
+				.catch(error => {
+					console.log(error);
+				});
+
+			router.push({
+				path: '/home'
+			});
+		}
+	} catch (error) {
+		ElNotification({
+			title: 'Login',
+			message: 'Wrong email or password. Please check',
+			type: 'error'
+		});
+		console.log('error', error);
+	} finally {
+		loading.value = false;
+	}
 };
 </script>
 

@@ -111,7 +111,7 @@ const routes = [
 			{
 				path: 'booking-table',
 				component: BookingTable
-			},
+			}
 		]
 	},
 	{
@@ -129,6 +129,20 @@ const routes = [
 const router = createRouter({
 	history: createWebHashHistory(),
 	routes
+});
+
+router.beforeEach((to, from, next) => {
+	if (!localStorage.getItem('token')) {
+		if (to.name === 'Login' || to.name === 'Register') {
+			next();
+		} else {
+			router.push({
+				name: 'Login'
+			});
+		}
+	} else {
+		next();
+	}
 });
 
 export default router;

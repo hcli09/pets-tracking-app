@@ -1,7 +1,8 @@
 <template>
 	<sidebar-menu
-		:menu="petsMenu"
+		v-if="flag"
 		theme="white-theme"
+		:menu="petsMenu"
 		:collapsed="true"
 		@item-click="loadPetPage"
 	/>
@@ -12,33 +13,20 @@ export default {
 	props: ['petList', 'uid'],
 	data() {
 		return {
-			menu: [
+			flag: false,
+			petsMenu: [
 				{
 					header: 'Your Lovely Pets',
 					hiddenOnCollapse: true
-				},
-				{
-					href: '/',
-					title: 'Dashboard',
-					icon: 'fa fa-user'
-				},
-				{
-					href: '/charts',
-					title: 'Charts',
-					icon: 'fa fa-chart-area',
-					child: [
-						{
-							href: '/charts/sublink',
-							title: 'Sub Link'
-						}
-					]
 				}
 			]
 		};
 	},
-	computed: {
-		petsMenu() {
-			const menu = this.petList.map(pet => {
+	watch: {
+		petList: function (newVal, _oldVal) {
+			const menu = JSON.parse(JSON.stringify(newVal));
+
+			this.petsMenu = menu.map(pet => {
 				return {
 					petId: pet.petId,
 					title: `${pet.petName}`,
@@ -49,18 +37,18 @@ export default {
 					}
 				};
 			});
-			menu.unshift({
+			this.petsMenu.unshift({
 				header: 'Your Lovely Pets',
 				hiddenOnCollapse: true
 			});
-			return menu;
+			this.flag = true;
 		}
 	},
+
 	methods: {
 		loadPetPage(event, item, node) {
 			location.href = `#/home/pet-profile?id=${item.petId}`;
 			location.reload();
-			// this.$router.push({ path: `/pet-profile?id=${item.petId}` });
 		}
 	}
 };

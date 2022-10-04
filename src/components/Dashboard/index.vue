@@ -132,8 +132,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
-import { Carousel, Pagination, Slide } from 'vue3-carousel';
+import { ref } from 'vue';
 import {
 	Flag,
 	CircleCheck,
@@ -147,12 +146,9 @@ import TaskDialog from '@common/components/TaskDialog/index.vue';
 import EventSummary from '@common/components/EventSummary/index.vue';
 import TaskSummary from '../../common/components/TaskSummary/index.vue';
 
-import httpServices from '@services';
-
 import BookingSummary from '../../common/components/BookingSummary/index.vue';
 import BookingDialog from '../../common/components/BookingDialog/index.vue';
 
-// import 'vue3-carousel/dist/carousel.css';
 import { useRoute, useRouter } from 'vue-router';
 const router = useRouter();
 
@@ -161,6 +157,10 @@ const value = ref(new Date());
 const month = new Date().getMonth();
 const year = new Date().getFullYear();
 const masks = { weekdays: 'WWW' };
+
+const userObject = {
+	...JSON.parse(localStorage.getItem('user'))
+};
 
 const eventDialogVisible = ref(false);
 const setEventDialogVisible = () => {
@@ -189,39 +189,6 @@ const toMedication = () => {
 
 const goCalendar = () => {
 	router.push('/home/calendar');
-};
-</script>
-
-<script>
-export default {
-	data() {
-		return {
-			uid: '4EL4hp_qRUYMzzal_G29f',
-			userObject: {
-				firstName: '',
-				lastName: '',
-				image: 'https://cdn-icons-png.flaticon.com/512/1320/1320933.png',
-				petList: [],
-				taskList: [],
-				eventList: []
-			}
-		};
-	},
-	created: function () {
-		httpServices.dashboard
-			.user_dashboard({ uid: this.$data.uid })
-			.then(response => {
-				let userObject = response.data.data;
-
-				// //edit page, assign pet object to pet form
-				// this.$data.userObject.firstName = userObject.firstName;
-				// this.$data.userObject.lastName = userObject.lastName;
-				// this.$data.userObject.petList = userObject.petList;
-			})
-			.catch(error => {
-				console.log(error);
-			});
-	}
 };
 </script>
 
