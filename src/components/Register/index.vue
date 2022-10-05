@@ -154,13 +154,7 @@ const formRef = ref(null);
 const registerForm = reactive({});
 const route = useRoute();
 const router = useRouter();
-            // ElMessage({
-            //     message: 'We have sent an message to , please click the link included to verify your email address',
-            //     duration: 0,
-            //     offset: 60,
-            //     customClass: 'email-varification-message',
 
-            // })
 const submitForm = formEl => {
 	if (!formEl) return;
 
@@ -204,7 +198,6 @@ const submitForm = formEl => {
             //     duration: 5000,
             //     offset: 60,
             //     showClose: true,
-            //     customClass: 'email-varification-message',
 
             // })
 
