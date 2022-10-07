@@ -158,30 +158,54 @@ const router = useRouter();
 const submitForm = formEl => {
 	if (!formEl) return;
 
-	formEl.validate(async valid => {
-		if (valid) {
-			// console.log('submit!');
-			delete registerForm.checkPass;
-			const { data } = await httpServices.registerLogin.register(
-				registerForm
-			);
-			formRef.value.resetFields();
-
-			if (data.status === 200) {
-				ElNotification({
-					title: 'Register',
-					message: 'Register Successfully',
-					type: 'success'
-				});
-				router.push({
-					name: 'Login'
-				});
+    formEl.validate(async valid => {
+        const emailTemp = registerForm.email
+        if (valid) {
+            // console.log('submit!');
+            // delete registerForm.checkPass;
+			// formRef.value.resetFields();
+            
+			try {
+				const { data } = await httpServices.registerLogin.register(registerForm)
+				if (data.status === 200) {
+					ElNotification({
+						title: 'Register',
+						message: 'Register Successfully',
+						type: 'success',
+					});
+					// go to email verification page
+					router.push({name: 'SendVerifyEmail', params: {email: emailTemp}})
+            	}
 			}
-		} else {
-			console.log('error submit!');
-			return false;
-		}
-	});
+			catch (error){
+				if(error.response.data.message.startsWith('Duplicate email')) {
+					ElNotification({
+						title: 'Register',
+						message: 'This email has been registered',
+						type: 'error',
+					});					
+				}
+			}
+            
+            formRef.value.resetFields();
+
+
+
+
+            // display a message about email verification
+            // ElMessage({
+            //     message: 'We have sent an message to ' + emailTemp + ', please click the link included to verify your email address',
+            //     duration: 5000,
+            //     offset: 60,
+            //     showClose: true,
+
+            // })
+
+        } else {
+            console.log('error submit!');
+            return false;
+        }
+    });
 };
 
 const validatePass = (rule, value, callback) => {
@@ -203,6 +227,7 @@ const goLogin = () => {
 
 <style lang="scss" scoped>
 $rc-left-width: 50vw;
+
 .register-container {
 	display: flex;
 	justify-content: space-between;
@@ -253,5 +278,26 @@ $rc-left-width: 50vw;
 			}
 		}
 	}
+}
+
+
+
+</style>
+<style lang="scss">
+.email-varification-message {
+    background-color: #F1EEEC !important;
+    width: 25vw !important;
+    // height: 4.5vw !important;
+    left: 75% !important;
+
+    p {
+        font-size: 0.85vw;
+        color: #C17754 !important;
+        line-height: 1.3vw;
+        
+    }
+    i {
+        color: #C17754 !important;
+    }
 }
 </style>

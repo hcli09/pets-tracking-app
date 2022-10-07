@@ -11,6 +11,7 @@ import vaccinationHistory from './modules/vaccination-history';
 import petprofile from './modules/petprofile';
 import notification from './modules/notification';
 import bookingTable from './modules/booking-table';
+import emailVerification from './modules/email-verification';
 
 export default {
 	registerLogin,
@@ -26,4 +27,6 @@ export default {
 	petprofile,
 	notification,
 	bookingTable,
+	emailVerification
+
 };

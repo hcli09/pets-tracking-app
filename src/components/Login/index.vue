@@ -125,6 +125,8 @@ const submitForm = formEl => {
 	formEl.validate(async valid => {
 		if (valid) {
 			loading.value = true;
+			// save the email temperory for email verification, when a user registered but not verified, clicking the login button will jump to email verification page
+			const emailTemp = loginForm.username
 			try {
 				const { data: res } = await httpServices.registerLogin.login(
 					loginForm
@@ -160,11 +162,24 @@ const submitForm = formEl => {
 					});
 				}
 			} catch (error) {
-				ElNotification({
-					title: 'Login',
-					message: 'Wrong email or password. Please check',
-					type: 'error'
-				});
+				if(error.response.data.message === "Bad credentials") {
+					ElNotification({
+						title: 'Login',
+						message: error.response.data.message,
+						type: 'error'
+					});
+				}
+				else if(error.response.data.message === "Email not verified") {
+					// ElNotification({
+					// 	title: 'Login',
+					// 	message: error.response.data.message,
+					// 	type: 'error'
+					// });
+
+					// go to email verification page
+					router.push({name: 'SendVerifyEmail', params: {email: emailTemp}})
+				}
+
 				console.log('error', error);
 			} finally {
 				loading.value = false;
