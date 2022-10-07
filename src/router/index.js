@@ -145,7 +145,11 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
 	if (!localStorage.getItem('token')) {
-		if (to.name === 'Login' || to.name === 'Register') {
+		if (
+			to.name === 'Login' ||
+			to.name === 'Register' ||
+			to.name === 'SendVerifyEmail'
+		) {
 			next();
 		} else {
 			router.push({

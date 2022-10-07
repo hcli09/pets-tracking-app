@@ -143,7 +143,6 @@
 </template>
 
 <script setup>
-// import { ElButton } from 'element-plus';
 import { ref, reactive, onMounted } from 'vue';
 import { UserFilled } from '@element-plus/icons-vue';
 import { ElMessage, ElNotification } from 'element-plus';
@@ -158,54 +157,50 @@ const router = useRouter();
 const submitForm = formEl => {
 	if (!formEl) return;
 
-    formEl.validate(async valid => {
-        const emailTemp = registerForm.email
-        if (valid) {
-            // console.log('submit!');
-            // delete registerForm.checkPass;
-			// formRef.value.resetFields();
-            
+	formEl.validate(async valid => {
+		const emailTemp = registerForm.email;
+		if (valid) {
 			try {
-				const { data } = await httpServices.registerLogin.register(registerForm)
+				const { data } = await httpServices.registerLogin.register(
+					registerForm
+				);
 				if (data.status === 200) {
 					ElNotification({
-						title: 'Register',
-						message: 'Register Successfully',
-						type: 'success',
+						title: 'Verification',
+						message: 'Please verify your email',
+						type: 'info'
 					});
 					// go to email verification page
-					router.push({name: 'SendVerifyEmail', params: {email: emailTemp}})
-            	}
-			}
-			catch (error){
-				if(error.response.data.message.startsWith('Duplicate email')) {
+					router.push({
+						name: 'SendVerifyEmail',
+						params: { email: emailTemp }
+					});
+				}
+			} catch (error) {
+				if (error.response.data.message.startsWith('Duplicate email')) {
 					ElNotification({
 						title: 'Register',
 						message: 'This email has been registered',
-						type: 'error',
-					});					
+						type: 'error'
+					});
 				}
 			}
-            
-            formRef.value.resetFields();
 
+			formRef.value.resetFields();
 
+			// display a message about email verification
+			// ElMessage({
+			//     message: 'We have sent an message to ' + emailTemp + ', please click the link included to verify your email address',
+			//     duration: 5000,
+			//     offset: 60,
+			//     showClose: true,
 
-
-            // display a message about email verification
-            // ElMessage({
-            //     message: 'We have sent an message to ' + emailTemp + ', please click the link included to verify your email address',
-            //     duration: 5000,
-            //     offset: 60,
-            //     showClose: true,
-
-            // })
-
-        } else {
-            console.log('error submit!');
-            return false;
-        }
-    });
+			// })
+		} else {
+			console.log('error submit!');
+			return false;
+		}
+	});
 };
 
 const validatePass = (rule, value, callback) => {
@@ -279,25 +274,21 @@ $rc-left-width: 50vw;
 		}
 	}
 }
-
-
-
 </style>
 <style lang="scss">
 .email-varification-message {
-    background-color: #F1EEEC !important;
-    width: 25vw !important;
-    // height: 4.5vw !important;
-    left: 75% !important;
+	background-color: #f1eeec !important;
+	width: 25vw !important;
+	// height: 4.5vw !important;
+	left: 75% !important;
 
-    p {
-        font-size: 0.85vw;
-        color: #C17754 !important;
-        line-height: 1.3vw;
-        
-    }
-    i {
-        color: #C17754 !important;
-    }
+	p {
+		font-size: 0.85vw;
+		color: #c17754 !important;
+		line-height: 1.3vw;
+	}
+	i {
+		color: #c17754 !important;
+	}
 }
 </style>
