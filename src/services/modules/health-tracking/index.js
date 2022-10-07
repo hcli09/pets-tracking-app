@@ -105,5 +105,12 @@ export default {
 			method: 'post',
 			data
 		});
+	},
+	getallhealth(params) {
+		return axios({
+			url: '/user/pet/health',
+			method: 'post',
+			params
+		});
 	}
 };

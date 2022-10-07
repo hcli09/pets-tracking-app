@@ -221,9 +221,12 @@ export default {
 				},
 				tooltip: {},
 				xAxis: {
-					data: date
+					data: date,
+					name: 'Date'
 				},
-				yAxis: {},
+				yAxis: {
+					name: 'Kcal'
+				},
 				series: [
 					{
 						name: 'Calorie',

@@ -26,6 +26,7 @@ import ConfirmPage from '@/components/ConfirmPage/index.vue';
 import CancelPage from '@/components/CancelPage/index.vue';
 import RejectPage from '@/components/RejectPage/index.vue';
 import TrackingDashboard from '@/components/TrackingDashboard/index.vue';
+import MainTrackingDashboard from '@/components/MainTrackingDashboard/index.vue';
 
 const routes = [
 	{
@@ -116,6 +117,10 @@ const routes = [
 			{
 				path: 'tracking-dashboard',
 				component: TrackingDashboard
+			},
+			{
+				path: 'main-tracking-dashboard',
+				component: MainTrackingDashboard
 			}
 		]
 	},

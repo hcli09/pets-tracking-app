@@ -232,9 +232,12 @@ export default {
 				},
 				tooltip: {},
 				xAxis: {
-					data: date
+					data: date,
+					name: 'Date'
 				},
-				yAxis: {},
+				yAxis: {
+					name: 'Kg'
+				},
 				series: [
 					{
 						name: 'Weight',

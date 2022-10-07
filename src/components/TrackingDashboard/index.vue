@@ -83,6 +83,12 @@ export default {
 	methods: {
 		handleClick(tab, event) {
 			sessionStorage.setItem('currentTab', tab.props.name);
+		},
+		toTrackingDashboard() {
+			this.$router.push({
+				path: '/home/main-tracking-dashboard',
+				query: { id: this.$data.petId }
+			});
 		}
 	},
 	mounted() {
