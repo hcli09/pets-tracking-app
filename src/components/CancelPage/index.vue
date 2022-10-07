@@ -1,47 +1,72 @@
 <template>
-	<div class="top">
-		<p class="text">
-			Sorry to see you go, you have cancelled the following appointment
-		</p>
-	</div>
+	<template v-if="loading">
+		<div class="top">
+			<p class="text">
+				Sorry to see you go, you have cancelled the following
+				appointment
+			</p>
+		</div>
 
-	<div class="middle">
-		<div class="backgroud-picture">
-			<el-image
-				class="pic"
-				src="src/assets/Resultpage/cancel_Image.png"
-			></el-image>
+		<div class="middle">
+			<div class="backgroud-picture">
+				<el-image
+					class="pic"
+					src="https://firebasestorage.googleapis.com/v0/b/pet-tracking-app-51857.appspot.com/o/Screen%20Shot%202022-08-28%20at%207.23.00%20PM.png?alt=media&token=37649e56-15a1-4bc5-a22b-52226587b02b"
+				></el-image>
+			</div>
+			<div class="details">
+				<div class="info-row">
+					<p style="font-weight: 900">Title</p>
+					<p>{{ booking_details.title }}</p>
+				</div>
+				<div class="info-row">
+					<p style="font-weight: 900">Email</p>
+					<p>{{ booking_details.attendee }}</p>
+				</div>
+				<div class="pet-row">
+					<p style="font-weight: 900">Pets</p>
+					<div class="pets-name">
+						<p
+							v-for="(item, index) in booking_details.petAbList"
+							:key="item.petId"
+						>
+							{{
+								(index ==
+									booking_details.petAbList.length - 1 &&
+									item.petName) ||
+								item.petName + ','
+							}}
+						</p>
+					</div>
+				</div>
+				<div class="info-row">
+					<p style="font-weight: 900">Start Time</p>
+					<p>{{ booking_details.start_time }}</p>
+				</div>
+				<div class="info-row">
+					<p style="font-weight: 900">End Time</p>
+					<p>{{ booking_details.end_time }}</p>
+				</div>
+				<div class="info-row">
+					<p style="font-weight: 900">Location</p>
+					<p>{{ booking_details.location }}</p>
+				</div>
+				<div class="info-row">
+					<p style="font-weight: 900">Description</p>
+					<p>{{ booking_details.description }}</p>
+				</div>
+			</div>
 		</div>
-		<div class="details">
-			<div class="info-row">
-				<p>Title</p>
-				<p>Play with John’s dog at the park</p>
-			</div>
-			<div class="info-row">
-				<p>Email</p>
-				<p>john.doe@gmail.com</p>
-			</div>
-			<div class="info-row">
-				<p>Pets</p>
-				<p>Bernard</p>
-			</div>
-			<div class="info-row">
-				<p>Time</p>
-				<p>Thu 25 Aug 13:00-15:00</p>
-			</div>
-			<div class="info-row">
-				<p>Location</p>
-				<p>1 Anthony Rolfe Ave, Gungahlin, ACT 2912</p>
-			</div>
-			<div class="info-row">
-				<p>Description</p>
-				<p>Please bring your own bottle</p>
-			</div>
+	</template>
+
+	<template v-else>
+		<div class="top">
+			<p style="color: coral" class="text">
+				You have already cancelled this booking!
+			</p>
 		</div>
-	</div>
+	</template>
 </template>
-
-<script setup></script>
 
 <style lang="scss" scoped>
 .top {
@@ -102,6 +127,87 @@
 				font-size: small;
 			}
 		}
+
+		.pet-row {
+			left: 0;
+			width: 60%;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 2.5vh;
+			text-align-last: justify;
+			padding: 0 1vw;
+			white-space: nowrap;
+
+			p {
+				color: #343e4d;
+				font-family: 'Trebuchet MS', 'Lucida Sans Unicode',
+					'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+				font-size: small;
+			}
+
+			.pets-name {
+			}
+		}
 	}
 }
 </style>
+
+<script setup>
+import httpServices from '@services';
+</script>
+
+<script>
+export default {
+	data() {
+		return {
+			loading: false,
+			booking_details: {},
+			bookingId: this.$route.query.id
+			// booking_details: {
+			// 	booking_id: 'ULr8fsXdwAhvjhYoTlwvn',
+			// 	uid: 'L2KY1s7PbESy2WEleFYfy',
+			// 	pet_id_list: ['cjmBiIwBYVFPcCvegpgmL', 'RKMUEpDLqQPO20BLGICwC'],
+			// 	attendee: 'bikinikang@gmail.com',
+			// 	title: 'WOOF at Infinity August',
+			// 	start_time: '2022-08-25 13:00',
+			// 	end_time: '2022-08-25 15:00',
+			// 	location: '1 Anthony Rolfe Ave, Gungahlin, ACT 2912',
+			// 	description: 'Please bring your own picnic blanket and cultery',
+			// 	status: 'pending',
+			// 	request_sender: true,
+			// 	pair_bk_id: null,
+			// 	petAbList: [
+			// 		{
+			// 			petId: 'cjmBiIwBYVFPcCvegpgmL',
+			// 			petName: 'Lucy',
+			// 			petAvatar: 'http://dummyimage.com/100x100'
+			// 		},
+			// 		{
+			// 			petId: 'RKMUEpDLqQPO20BLGICwC',
+			// 			petName: 'Huhu',
+			// 			petAvatar: 'http://dummyimage.com/100x100'
+			// 		}
+			// 	]
+			// }
+		};
+	},
+	created: function () {
+		console.log(this.$data.bookingId);
+		httpServices.resultPage
+			.cancelBooking({ booking_id: this.$data.bookingId })
+			.then(response => {
+				if (response.status == 200) {
+					this.$data.booking_details = response.data.data;
+					console.log(this.$data.booking_details);
+					this.$data.loading = true;
+				}
+			})
+			.catch(error => {
+				this.$data.loading = false;
+				this.$data.booking_details = {};
+				console.log(error.message);
+			});
+	}
+};
+</script>

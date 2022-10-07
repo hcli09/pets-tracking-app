@@ -39,6 +39,32 @@
 				<p>{{ petsummaryList.height }}</p>
 			</div>
 		</div>
+		<div class="right">
+			<div class="info-row">
+				<p>Microchip Number</p>
+				<p>00071A3357</p>
+			</div>
+			<div class="info-row">
+				<p>Litter Details</p>
+				<p>NA</p>
+			</div>
+			<div class="info-row">
+				<p>Desexed</p>
+				<p>No</p>
+			</div>
+			<div class="info-row">
+				<p>Medications</p>
+				<p>Ibuprofen</p>
+			</div>
+			<div class="last-row">
+				<p>Recommended Calorie Intake</p>
+				<p>250</p>
+			</div>
+			<div class="info-row" style="background-color: white">
+				<p></p>
+				<p></p>
+			</div>
+		</div>
 	</div>
 </template>
 <script setup>
@@ -84,7 +110,7 @@ export default {
 		justify-content: center;
 
 		.owner-box {
-			width: 15vw;
+			width: 12vw;
 			height: 38vh;
 			background-color: #f1eeec;
 			border-radius: 5%;
@@ -96,7 +122,7 @@ export default {
 			font-family: Trebuchet MS;
 			color: #76553f;
 			.user-image {
-				width: 6vw;
+				width: 5vw;
 				margin-top: 3vw;
 				border-radius: 5%;
 			}
@@ -118,7 +144,7 @@ export default {
 		flex-direction: column;
 
 		.info-row {
-			width: 20vw;
+			width: 17vw;
 			height: 4vh;
 			display: flex;
 			align-items: center;
@@ -128,9 +154,11 @@ export default {
 			margin-bottom: 2.5vh;
 			text-align-last: justify;
 			padding: 0 1vw;
+			overflow: hidden;
 
 			p {
-				font-size: medium;
+				overflow: hidden;
+				font-size: small;
 				font-family: Trebuchet MS;
 				color: #76553f;
 				font-weight: 600;
@@ -138,7 +166,7 @@ export default {
 		}
 
 		.last-row {
-			width: 20vw;
+			width: 17vw;
 			height: 4vh;
 			display: flex;
 			align-items: center;
@@ -146,8 +174,10 @@ export default {
 			background-color: #f1eeec;
 			border-radius: 10px 10px 10px 10px;
 			padding: 0 1vw;
+			overflow: hidden;
 			p {
-				font-size: medium;
+				overflow: hidden;
+				font-size: small;
 				font-family: Trebuchet MS;
 				color: #76553f;
 				font-weight: 600;

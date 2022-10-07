@@ -27,20 +27,22 @@ import CancelPage from '@/components/CancelPage/index.vue';
 import RejectPage from '@/components/RejectPage/index.vue';
 import EmailVerification from '@/components/EmailVerification/index.vue';
 import SendVerifyEmail from '@/components/VerifyEmail/index.vue';
+import TrackingDashboard from '@/components/TrackingDashboard/index.vue';
+import MainTrackingDashboard from '@/components/MainTrackingDashboard/index.vue';
 
 const routes = [
 	{
-		path: '/rejectpage',
+		path: '/user/booking/reject_page/',
 		name: 'RejectPage',
 		component: RejectPage
 	},
 	{
-		path: '/confirmpage',
+		path: '/user/booking/accept_page/',
 		name: 'ConfirmPage',
 		component: ConfirmPage
 	},
 	{
-		path: '/cancelpage',
+		path: '/user/booking/cancel_page/',
 		name: 'CancelPage',
 		component: CancelPage
 	},
@@ -123,6 +125,14 @@ const routes = [
 			{
 				path: 'booking-table',
 				component: BookingTable
+			},
+			{
+				path: 'tracking-dashboard',
+				component: TrackingDashboard
+			},
+			{
+				path: 'main-tracking-dashboard',
+				component: MainTrackingDashboard
 			}
 		]
 	},

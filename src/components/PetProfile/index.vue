@@ -3,9 +3,18 @@
 	<div class="petprofile-header">
 		<template v-if="petsummary">
 			<el-image class="pet-avatar" :src="petsummary.petAvatar" />
-			<p class="pet-name">
+			<el-link
+				style="
+					font-weight: 10;
+					font-size: large;
+					font-family: Trebuchet MS;
+					color: #76553f;
+				"
+				@click="toEditPage"
+				class="pet-name"
+			>
 				{{ petsummary.petName }}
-			</p>
+			</el-link>
 		</template>
 		<el-link
 			style="
@@ -14,8 +23,8 @@
 				font-family: Trebuchet MS;
 				color: #76553f;
 			"
-			@click="toEditPage"
-			>Edit Profile</el-link
+			@click="toTrackingDashboard"
+			>Tracking Dashboard</el-link
 		>
 	</div>
 
@@ -102,6 +111,12 @@ export default {
 		this.$data.record_activeName = 'first';
 	},
 	methods: {
+		toTrackingDashboard() {
+			this.$router.push({
+				path: '/home/tracking-dashboard',
+				query: { id: this.$data.petId }
+			});
+		},
 		toEditPage() {
 			this.$router.push({
 				path: '/home/editpet',
