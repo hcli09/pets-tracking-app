@@ -32,7 +32,7 @@
 			<el-radio :label="1">All Data</el-radio>
 			<el-radio :label="2">This Week </el-radio>
 			<el-radio :label="3">Last Month</el-radio>
-			<el-radio :label="4">Last 6Months</el-radio>
+			<el-radio :label="4">Last 6 Months</el-radio>
 			<el-radio :label="5">Last Year</el-radio>
 		</el-radio-group>
 	</div>
