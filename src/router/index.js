@@ -158,7 +158,8 @@ router.beforeEach((to, from, next) => {
 		if (
 			to.name === 'Login' ||
 			to.name === 'Register' ||
-			to.name === 'SendVerifyEmail'
+			to.name === 'SendVerifyEmail' ||
+			to.name === 'EmailVerification'
 		) {
 			next();
 		} else {
