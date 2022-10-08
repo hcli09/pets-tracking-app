@@ -209,7 +209,7 @@ export default {
 		this.getdata(this.$data.petId, 'All');
 	},
 	created() {
-		this.$data.radio = '1';
+		this.$data.radio = 'All';
 		this.$data.showListView = false;
 		this.$data.AdddialogFormVisible = false;
 		this.$data.documentForm = {
