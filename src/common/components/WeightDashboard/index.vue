@@ -158,7 +158,6 @@ import httpServices from '@services';
 export default {
 	data() {
 		return {
-			radio: '1',
 			petId: this.$route.query.id,
 			weightData: []
 		};
@@ -167,6 +166,7 @@ export default {
 		this.getdata(this.$data.petId, 'All');
 	},
 	created() {
+		this.$data.radio = '1';
 		this.$data.showListView = false;
 		this.$data.AdddialogFormVisible = false;
 		this.$data.documentForm = {
@@ -189,19 +189,6 @@ export default {
 				5: 'Year'
 			};
 			this.getdata(this.$data.petId, dict[this.$data.radio]);
-			// // get food data
-			// httpServices.healthTracking
-			// 	.getweight({
-			// 		pet_id: this.$data.petId,
-			// 		range: dict[this.$data.radio]
-			// 	})
-			// 	.then(response => {
-			// 		this.$data.foodData = response.data.data;
-			// 		console.log(this.$data.foodData, 'haha');
-			// 	})
-			// 	.catch(error => {
-			// 		console.log(error.message);
-			// 	});
 		},
 		getdata(petid, range) {
 			//get weight data
@@ -224,7 +211,10 @@ export default {
 				});
 		},
 		renderChart(date, weight) {
-			console.log(this.$data.weightData, 'hahaha');
+			if (document.getElementById('weight_chart') == null) {
+				return;
+			}
+			echarts.dispose(document.getElementById('weight_chart'));
 			let myChart = echarts.init(document.getElementById('weight_chart'));
 			myChart.setOption({
 				title: {
@@ -301,7 +291,7 @@ export default {
 }
 
 .filter_add {
-	margin-top: 10%;
+	margin-top: 3vh;
 	display: flex;
 	justify-content: space-evenly;
 	flex-direction: column;
@@ -321,6 +311,12 @@ export default {
 		align-items: center;
 		margin-left: 50px;
 		margin-top: 20px;
+	}
+
+	:deep(.el-radio-group) {
+		display: inline-flex;
+		align-items: flex-start;
+		flex-direction: column;
 	}
 }
 

@@ -13,7 +13,7 @@
 	},
 	"javascript.updateImportsOnFileMove.enabled": "always",
 	"editor.formatOnSave": true,
-	"window.zoomLevel": 0,
+	"window.zoomLevel": 1,
 	"files.eol": "\n",
 	"appService.defaultWebAppToDeploy": "/subscriptions/cbe8d77b-5379-4045-9b71-b54d9270f22f/microsoft.web/sites/subscriptions/cbe8d77b-5379-4045-9b71-b54d9270f22f/resourceGroups/pets/providers/Microsoft.Web/sites/pets-tracking",
 	"appService.deploySubpath": "dist"

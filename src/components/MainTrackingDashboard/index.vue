@@ -39,20 +39,10 @@
 
 	<div class="wrapper">
 		<div class="dashboard-box">
-			<div class="line_chart">
-				<div
-					id="weight_chart"
-					style="height: 250px; width: 400px; margin: 10px"
-				></div>
-			</div>
+			<div class="line_chart" id="weight_chart"></div>
 		</div>
 		<div class="dashboard-box">
-			<div class="line_chart">
-				<div
-					id="calorie_chart"
-					style="height: 250px; width: 400px; margin: 10px"
-				></div>
-			</div>
+			<div class="line_chart" id="calorie_chart"></div>
 		</div>
 		<div class="dashboard-box">
 			<p class="table-label">Food</p>
@@ -93,20 +83,10 @@
 			</el-table>
 		</div>
 		<div class="dashboard-box">
-			<div class="line_chart">
-				<div
-					id="sleep_chart"
-					style="height: 250px; width: 400px; margin: 10px"
-				></div>
-			</div>
+			<div class="line_chart" id="sleep_chart"></div>
 		</div>
 		<div class="dashboard-box">
-			<div class="line_chart">
-				<div
-					id="exercise_chart"
-					style="height: 250px; width: 400px; margin: 10px"
-				></div>
-			</div>
+			<div class="line_chart" id="exercise_chart"></div>
 		</div>
 		<div class="dashboard-box">
 			<p class="table-label">Medication</p>
@@ -158,7 +138,6 @@ import httpServices from '@services';
 export default {
 	data() {
 		return {
-			radio: '1',
 			weightData: [],
 			calorieData: [],
 			sleepData: [],
@@ -172,7 +151,9 @@ export default {
 			petId: this.$route.query.id // get petid from url
 		};
 	},
-	created: function () {},
+	created: function () {
+		this.$data.radio = '1';
+	},
 	mounted() {
 		this.getdata(this.$data.petId, 'All');
 		//get pet profile
@@ -423,7 +404,7 @@ export default {
 
 <style lang="scss" scoped>
 .petprofile-header {
-	height: 130px;
+	height: 20vh;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -437,7 +418,7 @@ export default {
 	}
 
 	.pet-avatar {
-		width: 70px;
+		width: 6vw;
 		border-radius: 50%;
 		margin-bottom: 1vh;
 	}
@@ -454,6 +435,16 @@ export default {
 		height: 240px;
 		background-color: #ffffff;
 		border-radius: 5% 5% 5% 5%;
+		position: relative;
+		.line_chart {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translateX(-50%) translateY(-50%);
+			height: 250px;
+			width: 400px;
+			margin: 10px;
+		}
 	}
 
 	.table-label {
