@@ -18,7 +18,7 @@
 				<el-table-column
 					align="left"
 					label="Title"
-					width="270"
+					width="150"
 					column-key="booking_id"
 				>
 					<template #default="scope">
@@ -52,7 +52,7 @@
 					align="left"
 					label="Pets"
 					column-key="booking_id"
-					width="80"
+					width="60"
 				>
 					<template #default="scope">
 						<el-tooltip
@@ -86,7 +86,7 @@
 					align="center"
 					label="Start Date and Time"
 					column-key="booking_id"
-					width="180"
+					width="155"
 					sortable
 				/>
 
@@ -95,7 +95,7 @@
 					align="center"
 					label="End Date and Time"
 					column-key="booking_id"
-					width="180"
+					width="150"
 					sortable
 				/>
 
@@ -104,14 +104,14 @@
 					align="center"
 					label="Status"
 					column-key="booking_id"
-					width="180"
+					width="130"
 					sortable
 				/>
 					
 
 
 				<!-- Operations -->
-				<el-table-column label="Operations" align="center" width="150">
+				<el-table-column label="Operations" align="center" width="110">
 					<template #default="scope">
 						<!-- <el-button
 							size="small"
