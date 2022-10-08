@@ -152,7 +152,7 @@ export default {
 		};
 	},
 	created: function () {
-		this.$data.radio = 'All';
+		this.$data.radio = 1;
 	},
 	mounted() {
 		this.getdata(this.$data.petId, 'All');

@@ -248,7 +248,7 @@ export default {
 			});
 	},
 	created() {
-		this.$data.radio = 'All';
+		this.$data.radio = 1;
 		this.$data.AdddialogFormVisible = false;
 		this.$data.documentForm = {
 			pet_id: this.$data.petId,
