@@ -18,7 +18,7 @@
 			</el-table-column>
 
 			<el-table-column
-				width="180"
+				width="130"
 				prop="amount"
 				align="center"
 				label="Amount"
@@ -230,7 +230,6 @@ import httpServices from '@services';
 export default {
 	data() {
 		return {
-			radio: '1',
 			petId: this.$route.query.id,
 			foodData: [],
 			value: ''
@@ -249,6 +248,7 @@ export default {
 			});
 	},
 	created() {
+		this.$data.radio = 1;
 		this.$data.AdddialogFormVisible = false;
 		this.$data.documentForm = {
 			pet_id: this.$data.petId,
@@ -371,7 +371,7 @@ export default {
 }
 
 .filter_add {
-	margin-top: 10%;
+	margin-top: 3vh;
 	display: flex;
 	justify-content: space-evenly;
 	flex-direction: column;
@@ -391,6 +391,12 @@ export default {
 		align-items: center;
 		margin-left: 50px;
 		margin-top: 20px;
+	}
+
+	:deep(.el-radio-group) {
+		display: inline-flex;
+		align-items: flex-start;
+		flex-direction: column;
 	}
 }
 

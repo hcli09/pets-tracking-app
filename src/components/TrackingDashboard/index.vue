@@ -112,7 +112,7 @@ export default {
 
 <style lang="scss" scoped>
 .petprofile-header {
-	height: 150px;
+	height: 20vh;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -133,10 +133,10 @@ export default {
 }
 
 .petprofile-main {
-	margin-top: 20px;
+	margin-top: 3vh;
 	display: flex;
 	justify-content: space-around;
-	height: 470px;
+	height: 55vh;
 
 	.petprofile-left {
 		width: 70vw;
