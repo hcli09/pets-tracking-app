@@ -18,7 +18,7 @@
 				<el-table-column
 					align="left"
 					label="Title"
-					width="150"
+					
 					column-key="booking_id"
 				>
 					<template #default="scope">
@@ -44,7 +44,7 @@
 					prop="attendee"
 					align="left"
 					label="Invitee"
-					width="200"
+					
 					column-key="booking_id"
 				/>
 
@@ -86,7 +86,7 @@
 					align="center"
 					label="Start Date and Time"
 					column-key="booking_id"
-					width="155"
+					
 					sortable
 				/>
 
@@ -95,7 +95,7 @@
 					align="center"
 					label="End Date and Time"
 					column-key="booking_id"
-					width="150"
+					
 					sortable
 				/>
 
@@ -104,14 +104,14 @@
 					align="center"
 					label="Status"
 					column-key="booking_id"
-					width="130"
+					
 					sortable
 				/>
 					
 
 
 				<!-- Operations -->
-				<el-table-column label="Operations" align="center" width="110">
+				<el-table-column label="Operations" align="center">
 					<template #default="scope">
 						<!-- <el-button
 							size="small"
