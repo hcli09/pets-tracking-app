@@ -119,6 +119,7 @@ import { CameraFilled } from '@element-plus/icons-vue';
 //     image: '',
 // })
 
+//jys uid
 const uid = '4EL4hp_qRUYMzzal_G29f';
 const formSize = ref('default');
 const ruleFormRef = ref();
@@ -194,6 +195,7 @@ const getLocationList = async () => {
 
 const getUserProfile = async () => {
 	const res = await httpServices.userProfile.getUserProfile({
+		//jys uid
 		uid: '4EL4hp_qRUYMzzal_G29f'
 	});
 	ruleForm.firstName = res.data.data.firstName;
@@ -220,6 +222,7 @@ const editUserProfile = async () => {
 	}
 
 	const res = await httpServices.userProfileEdit.editUserProfile({
+		//jys uid
 		uid: '4EL4hp_qRUYMzzal_G29f',
 		firstName: ruleForm.firstName,
 		lastName: ruleForm.lastName,

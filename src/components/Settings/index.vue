@@ -148,6 +148,7 @@ import router from '@/router';
 import axios from 'axios';
 
 let userAvatarURL = '';
+//jys uid
 const userID = ref('4EL4hp_qRUYMzzal_G29f');
 const emailNotifications = ref(true);
 const taskNotifications = ref(true);
@@ -229,6 +230,7 @@ const editSettings = async () => {
 	}
 
 	const res = await httpServices.userProfileEdit.editUserProfile({
+		//jys uid
 		uid: userID.value,
 		firstName: ruleForm.firstName,
 		lastName: ruleForm.lastName,
@@ -251,6 +253,7 @@ const editSettings = async () => {
 
 const getNotificationSettings = async () => {
 	const res = await httpServices.notification.getNotificationSettings({
+		//jys uid
 		uid: userID.value
 	});
 	console.log('notifi settings', res);
@@ -272,6 +275,7 @@ const getNotificationSettings = async () => {
 
 const editNotificationSettings = async (taskNtf, taskNtfTime, eventNtf) => {
 	const res = await httpServices.notification.editNotificationSettings({
+		//jys uid
 		uid: userID.value,
 		eventNtfOn: eventNtf,
 		taskNtfOn: taskNtf,
@@ -381,6 +385,7 @@ const getLocationList = async () => {
 
 const getUserProfile = async () => {
 	const res = await httpServices.userProfile.getUserProfile({
+		//jys uid
 		uid: userID.value
 	});
 	// user.image = res.data.data.image;
@@ -402,17 +407,6 @@ const sendNotification = () => {
 	});
 };
 
-//   fetch('https://pets-app.azurewebsites.net/data/location_list')
-//   .then(res => res.json())
-//   .then(json => {
-//       console.log(json);
-//       });
-
-// axios.post('https://pets-app.azurewebsites.net/user/profile', { uid: "EpLV3L5QqlanlrmH7dzjw" }).
-//     then(res => {
-//         console.log(res.data)
-//         userAvatarURL = res.image
-//     })
 </script>
 
 <style lang="scss" scoped>
