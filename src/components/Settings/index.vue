@@ -341,7 +341,7 @@ const handleEventNtf = () => {
 };
 
 const linkToDashboard = () => {
-	router.push('/dashboard');
+	router.push('/home');
 };
 
 let activeName = 'settings';
