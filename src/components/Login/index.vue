@@ -214,7 +214,10 @@ const loginAsGuest = async () => {
 				type: 'success'
 			});
 			const token = res.data.token;
+			const uid = res.data.uid;
 			localStorage.setItem('token', token);
+			localStorage.setItem('uid', uid);
+
 
 			httpServices.dashboard
 				.user_dashboard({
