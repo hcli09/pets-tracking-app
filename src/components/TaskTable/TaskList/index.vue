@@ -148,7 +148,7 @@
 							v-for="pet in petList"
 							:key="pet.petId"
 							:label="pet.petName"
-							:value="pet.petName"
+							:value="pet.petId"
 						>
 						</el-option>
 					</el-select>
@@ -159,24 +159,8 @@
 						class="right_button"
 						type="primary"
 						plain
-						@click="resetRecordList"
+						@click="resetFilters"
 						>Reset Filters</el-button
-					>
-					<!-- add new document pop up window -->
-					<el-button
-						class="right_button"
-						@click="AdddialogFormVisible = true"
-						label="Add"
-						type="primary"
-						plain
-						><el-icon><Plus /></el-icon> Add New</el-button
-					>
-					<!-- archived tasks -->
-					<el-button
-						class="right_button"
-						@click="router.push('/archived-tasks')"
-						type="text"
-						>Archived Tasks</el-button
 					>
 				</div>
 			</el-form>
@@ -184,10 +168,18 @@
 	</div>
 </template>
 <script setup>
-import { defineProps, reactive, inject, ref, defineAsyncComponent } from 'vue';
+import {
+	defineProps,
+	reactive,
+	inject,
+	ref,
+	defineAsyncComponent,
+	toRaw
+} from 'vue';
 import services from '../../../services';
 import { InfoFilled } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
+import moment from 'moment';
 const TaskDialog = defineAsyncComponent(() =>
 	import('../../../common/components/TaskDialog/index.vue')
 );
@@ -205,7 +197,10 @@ const props = defineProps({
 
 const { curUid, archived } = props;
 
-const tasks = reactive([]);
+const tasks = ref([]);
+const petList = reactive([...JSON.parse(localStorage.getItem('user')).petList]);
+const baseData = ref([]);
+
 const loading = ref(true);
 const getAllTasksAsync = async () => {
 	const { data: res } = await services.tasks.getAllTasks({
@@ -213,7 +208,8 @@ const getAllTasksAsync = async () => {
 	});
 	if (res.data) {
 		loading.value = false;
-		tasks.push(...res.data);
+		tasks.value = res.data;
+		baseData.value = res.data;
 	}
 };
 
@@ -223,7 +219,7 @@ const getAllArchivedTasksAsync = async () => {
 	});
 	if (res.data) {
 		loading.value = false;
-		tasks.push(...res.data);
+		tasks.value = res.data;
 	}
 };
 
@@ -271,149 +267,39 @@ const handleCheck = async (taskId, checked) => {
 		reload();
 	}
 };
-</script>
 
-<script>
-// export default {
-// 	props: ['petList', 'petOptions', 'initial_recordType', 'curr_uid'],
+const petSelected = ref('');
+const dateRange = ref('');
+const MOMENT_FORMAT = 'YYYY-MM-DD HH:mm';
+const applyFilter = () => {
+	tasks.value = baseData.value;
 
-// 	data() {
-// 		return {
-// 			editloading: false,
-// 			addloading: false,
-// 			uid: this.curr_uid,
-// 			recordList: [],
-// 			recordType: this.initial_recordType,
-// 			//filter related
-// 			dateRange: '',
-// 			petSelected: '',
-// 			displayedRecordList: [],
-// 			//add diaglog related
-// 			AdddialogFormVisible: false,
-// 			documentForm: {
-// 				recordTitle: '',
-// 				petId: '',
-// 				date: '',
-// 				fileDir: '',
-// 				fileFormat: ''
-// 			},
+	const range = dateRange.value
+		? toRaw(dateRange.value).map(item => moment(item).format(MOMENT_FORMAT))
+		: [];
 
-// 			//delete dialog related
-// 			deletedialogVisible: false,
-// 			delete_recordId: '',
-// 			delete_fileDir: '',
+	if (dateRange.value && petSelected.value) {
+		tasks.value = tasks.value
+			.filter(task =>
+				moment(task.dueDate + ' 00:00').isBetween(range[0], range[1])
+			)
+			.filter(task => task.petIdList.includes(petSelected.value));
+	} else if (dateRange.value) {
+		tasks.value = tasks.value.filter(task =>
+			moment(task.dueDate + ' 00:00').isBetween(range[0], range[1])
+		);
+	} else if (petSelected.value) {
+		tasks.value = tasks.value.filter(task =>
+			task.petIdList.includes(petSelected.value)
+		);
+	}
+};
 
-// 			//view pdf dialog related
-// 			dialogPDFVisible: false,
-// 			view_fileDir: '',
-// 			view_fileFormat: '',
-// 			view_recordTitle: '',
-
-// 			//edit dialog related
-// 			EditdialogFormVisible: false,
-// 			EditdocumentForm: {
-// 				recordId: '',
-// 				recordTitle: '',
-// 				petId: '',
-// 				date: '',
-// 				fileDir: '',
-// 				fileFormat: ''
-// 			}
-// 		};
-// 	},
-
-// 	created: function () {
-// 		//get record list
-// 		httpServices.invoicemed
-// 			.getAllRecords({
-// 				uid: this.$data.uid,
-// 				recordType: this.$data.recordType
-// 			})
-// 			.then(response => {
-// 				this.$data.recordList = response.data.data;
-// 				console.log('111', response.data.data);
-// 				this.$data.displayedRecordList = this.$data.recordList;
-// 			})
-// 			.catch(error => {
-// 				console.log(error);
-// 			});
-// 	},
-
-// 	methods: {
-// 		applyFilter() {
-// 			this.$data.displayedRecordList = this.$data.recordList.slice();
-
-// 			if (this.$data.dateRange !== '' && this.$data.petSelected === '') {
-// 				let startDate = new Date(
-// 					this.$data.dateRange[0].toISOString().split('T')[0]
-// 				);
-// 				let endDate = new Date(
-// 					this.$data.dateRange[1].toISOString().split('T')[0]
-// 				);
-
-// 				for (let record of this.$data.recordList) {
-// 					let recordDate = new Date(record.date);
-// 					if (
-// 						recordDate.getTime() < startDate.getTime() ||
-// 						recordDate.getTime() > endDate.getTime()
-// 					) {
-// 						var index =
-// 							this.$data.displayedRecordList.indexOf(record);
-// 						if (index !== -1) {
-// 							this.$data.displayedRecordList.splice(index, 1);
-// 						}
-// 					}
-// 				}
-// 			}
-
-// 			if (this.$data.petSelected !== '' && this.$data.dateRange === '') {
-// 				for (let record of this.$data.recordList) {
-// 					if (record.petName != this.$data.petSelected) {
-// 						var index =
-// 							this.$data.displayedRecordList.indexOf(record);
-// 						if (index !== -1) {
-// 							this.$data.displayedRecordList.splice(index, 1);
-// 						}
-// 					}
-// 				}
-// 			}
-
-// 			if (this.$data.dateRange !== '' && this.$data.petSelected !== '') {
-// 				let startDate = new Date(
-// 					this.$data.dateRange[0].toISOString().split('T')[0]
-// 				);
-// 				let endDate = new Date(
-// 					this.$data.dateRange[1].toISOString().split('T')[0]
-// 				);
-
-// 				for (let record of this.$data.recordList) {
-// 					let recordDate = new Date(record.date);
-// 					console.log(record);
-// 					if (
-// 						recordDate.getTime() < startDate.getTime() ||
-// 						recordDate.getTime() > endDate.getTime() ||
-// 						record.petName !== this.$data.petSelected
-// 					) {
-// 						var index =
-// 							this.$data.displayedRecordList.indexOf(record);
-// 						if (index !== -1) {
-// 							this.$data.displayedRecordList.splice(index, 1);
-// 						}
-// 					}
-// 				}
-// 			}
-// 		},
-// 		resetRecordList() {
-// 			this.$data.displayedRecordList = this.$data.recordList;
-// 			this.$data.dateRange = '';
-// 			this.$data.petSelected = '';
-// 		},
-// 		Upload() {},
-// 		handleClose(done) {
-// 			done();
-// 		}
-// 	}
-// };
+const resetFilters = () => {
+	dateRange.value = '';
+	petSelected.value = '';
+	tasks.value = baseData.value;
+};
 </script>
 
 <style lang="scss" scoped>

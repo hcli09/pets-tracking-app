@@ -15,9 +15,7 @@
 				:src="UserAvatar"
 				@click="clickUserAvatar()"
 			/>
-			<el-button link type="primary" @click="signOff">
-				sign off
-			</el-button>
+			<el-button type="text" @click="signOff"> sign off </el-button>
 			<el-button
 				style="margin-right: 1vw"
 				class="top-bar-settings"

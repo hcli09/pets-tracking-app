@@ -107,23 +107,14 @@
 					width="180"
 					sortable
 				/>
-					
-
 
 				<!-- Operations -->
 				<el-table-column label="Operations" align="center" width="150">
 					<template #default="scope">
-						<!-- <el-button
-							size="small"
-							@click="handleEdit(scope.row.booking_id)"
-							style="background: #f1eeec"
-							>Edit
-						</el-button> -->
-
 						<!-- if the booking is pending, the cancel button should be disabled -->
 
 						<el-popconfirm
-							v-if="scope.row.status==='pending'"
+							v-if="scope.row.status === 'pending'"
 							confirm-button-text="Yes"
 							cancel-button-text="No, thanks"
 							:icon="InfoFilled"
@@ -133,7 +124,6 @@
 							@cancel="cancelDeleteEvent"
 						>
 							<template #reference>
-
 								<el-tooltip
 									class="box-item"
 									effect="dark"
@@ -141,14 +131,15 @@
 									placement="top"
 								>
 									<div>
-										<el-button size="small" type="danger" disabled>
+										<el-button
+											size="small"
+											type="danger"
+											disabled
+										>
 											Cancel
 										</el-button>
 									</div>
-
 								</el-tooltip>
-
-
 							</template>
 						</el-popconfirm>
 
@@ -159,7 +150,9 @@
 							:icon="InfoFilled"
 							icon-color="#f56c6c"
 							title="Are you sure to cancel this booking?"
-							@confirm="confirmCancelBooking(scope.row.booking_id)"
+							@confirm="
+								confirmCancelBooking(scope.row.booking_id)
+							"
 							@cancel="cancelDeleteEvent"
 						>
 							<template #reference>
@@ -208,7 +201,7 @@
 							v-for="pet in petList"
 							:key="pet.petId"
 							:label="pet.petName"
-							:value="pet.petName"
+							:value="pet.petId"
 						>
 						</el-option>
 					</el-select>
@@ -220,18 +213,8 @@
 						style="margin-top: 1vw"
 						type="primary"
 						plain
-						@click="resetRecordList"
+						@click="resetFilters"
 						>Reset Filters</el-button
-					>
-					<!-- add new document pop up window -->
-					<el-button
-						class="right_button"
-						@click="AdddialogFormVisible = true"
-						label="Add"
-						type="primary"
-						plain
-						style="margin-top: 1vw"
-						><el-icon><Plus /></el-icon> Add New</el-button
 					>
 				</div>
 			</el-form>
@@ -239,9 +222,17 @@
 	</div>
 </template>
 <script setup>
-import { defineProps, reactive, inject, ref, defineAsyncComponent } from 'vue';
+import {
+	defineProps,
+	reactive,
+	inject,
+	ref,
+	defineAsyncComponent,
+	toRaw
+} from 'vue';
 import services from '../../../services';
 import { InfoFilled } from '@element-plus/icons-vue';
+import moment from 'moment';
 
 const EventDialog = defineAsyncComponent(() =>
 	import('../../../common/components/EventDialog/index.vue')
@@ -255,55 +246,21 @@ const props = defineProps({
 });
 
 const { currUid } = props;
-
-// const bookings = reactive([
-//     {
-//         booking_id: '02',
-//         pet_id_list: ["HASGu7OfvhJB0fhhLbIwA","AonE9egnd-QIG7W8J4CtK"],
-//         invitee: 'min.du@anu.edu.au',
-//         title: 'Health check',
-//         start_time: "2022-09-11 17:00",
-//         end_time: "2022-09-11 18:00",
-//         petAbList: [{petId: 'HASGu7OfvhJB0fhhLbIwA', petName: 'Olive', petAvatar: 'src/assets/booking-table-temp/bernard.jpg'},
-//         {petId: 'AonE9egnd-QIG7W8J4CtK', petName: 'Bernard', petAvatar: 'src/assets/booking-table-temp/olive.jpg'}]
-
-//     },
-// 	{
-//         booking_id: '03',
-//         pet_id_list: ["HASGu7OfvhJB0fhhLbIwA"],
-//         invitee: 'xinyu.kang@anu.edu.au',
-//         title: 'Vaccination Bernard',
-//         start_time: "2022-09-23 15:00",
-//         end_time: "2022-09-23 16:00",
-//         petAbList: [{petId: 'HASGu7OfvhJB0fhhLbIwA', petName: 'Olive', petAvatar: 'src/assets/booking-table-temp/bernard.jpg'},
-//         ]
-
-//     },
-// 	{
-//         booking_id: '04',
-//         pet_id_list: ["AonE9egnd-QIG7W8J4CtK"],
-//         invitee: 'harry.li@anu.edu.au',
-//         title: 'Bernard play date',
-//         start_time: "2022-09-29 17:00",
-//         end_time: "2022-09-29 18:00",
-//         petAbList: [{petId: 'HASGu7OfvhJB0fhhLbIwA', petName: 'Olive', petAvatar: 'src/assets/booking-table-temp/bernard.jpg'},
-//         ]
-
-//     },	
-// ]);
-const bookings = reactive([])
+const petList = reactive([...JSON.parse(localStorage.getItem('user')).petList]);
+const bookings = ref([]);
 const loading = ref(true);
-// const loading = ref(false);
 const editEventDialogVisible = ref(false);
+const baseData = ref([]);
+
 const getAllBookingsAsync = async () => {
 	const { data: res } = await services.bookingTable.getBookingList({
 		uid: props.currUid
 	});
 	if (res.data) {
 		loading.value = false;
-		bookings.push(...res.data);
+		bookings.value = res.data;
+		baseData.value = res.data;
 	}
-    console.log("uid: ", uid)
 };
 getAllBookingsAsync();
 
@@ -319,9 +276,8 @@ const confirmCancelBooking = async booking_id => {
 		reload();
 	}
 	if (!res) {
-		console.log("cancel fail: ", res.message)
-		ElMessage.error('error')
-
+		console.log('cancel fail: ', res.message);
+		ElMessage.error('error');
 	}
 };
 const eventIdToEdit = ref('');
@@ -333,18 +289,37 @@ const setEditEventDialogVisible = () => {
 	editEventDialogVisible.value = !editEventDialogVisible.value;
 };
 
+const petSelected = ref('');
+const dateRange = ref('');
+const MOMENT_FORMAT = 'YYYY-MM-DD HH:mm';
+const applyFilter = () => {
+	bookings.value = baseData.value;
 
-const test = () => {
+	const range = dateRange.value
+		? toRaw(dateRange.value).map(item => moment(item).format(MOMENT_FORMAT))
+		: [];
+	if (dateRange.value && petSelected.value) {
+		bookings.value = bookings.value
+			.filter(booking =>
+				moment(booking.start_time).isBetween(range[0], range[1])
+			)
+			.filter(booking => booking.pet_id_list.includes(petSelected.value));
+	} else if (dateRange.value) {
+		bookings.value = bookings.value.filter(booking =>
+			moment(booking.start_time).isBetween(range[0], range[1])
+		);
+	} else if (petSelected.value) {
+		bookings.value = bookings.value.filter(booking =>
+			booking.pet_id_list.includes(petSelected.value)
+		);
+	}
+};
 
-    console.log("bookings: ", bookings)
-}
-test()
-
-
-</script>
-
-<script>
-
+const resetFilters = () => {
+	dateRange.value = '';
+	petSelected.value = '';
+	bookings.value = baseData.value;
+};
 </script>
 
 <style lang="scss" scoped>

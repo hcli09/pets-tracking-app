@@ -158,7 +158,7 @@ import httpServices from '@services';
 export default {
 	data() {
 		return {
-			radio: '1',
+			radio: 1,
 			petId: this.$route.query.id,
 			calorieData: []
 		};
