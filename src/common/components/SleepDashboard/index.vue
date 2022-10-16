@@ -162,7 +162,6 @@ import httpServices from '@services';
 export default {
 	data() {
 		return {
-			radio: '1',
 			petId: this.$route.query.id,
 			sleepData: []
 		};
@@ -171,6 +170,7 @@ export default {
 		this.getdata(this.$data.petId, 'All');
 	},
 	created() {
+		this.$data.radio = 1;
 		this.$data.showListView = false;
 		this.$data.AdddialogFormVisible = false;
 		this.$data.documentForm = {
@@ -218,7 +218,10 @@ export default {
 				});
 		},
 		renderChart(date, minutes) {
-			console.log(this.$data.sleepData, 'hahaha');
+			if (document.getElementById('sleep_chart') == null) {
+				return;
+			}
+			echarts.dispose(document.getElementById('sleep_chart'));
 			let sleepChart = echarts.init(
 				document.getElementById('sleep_chart')
 			);
@@ -309,7 +312,7 @@ export default {
 }
 
 .filter_add {
-	margin-top: 10%;
+	margin-top: 3vh;
 	display: flex;
 	justify-content: space-evenly;
 	flex-direction: column;
@@ -329,6 +332,12 @@ export default {
 		align-items: center;
 		margin-left: 50px;
 		margin-top: 20px;
+	}
+
+	:deep(.el-radio-group) {
+		display: inline-flex;
+		align-items: flex-start;
+		flex-direction: column;
 	}
 }
 

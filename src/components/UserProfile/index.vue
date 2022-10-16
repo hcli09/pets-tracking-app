@@ -155,6 +155,7 @@ import {
 
 const upload = ref();
 const user = reactive({
+	//jys uid
 	uid: '4EL4hp_qRUYMzzal_G29f',
 	email: '',
 	firstName: '',
@@ -174,6 +175,7 @@ onMounted(() => {
 
 const getUserProfile = async () => {
 	const res = await httpServices.userProfile.getUserProfile({
+		//jys uid
 		uid: '4EL4hp_qRUYMzzal_G29f'
 	});
 	user.firstName = res.data.data.firstName;
@@ -236,6 +238,7 @@ const beforeAvatarUpload = function (rawFile) {
 
 	const storageRef = ref_upload(
 		storage,
+		//jys uid
 		user.uid + '_userAvatar' + '_' + timestamp
 	);
 
@@ -247,6 +250,7 @@ const beforeAvatarUpload = function (rawFile) {
 			//post user avatar to BE
 			httpServices.userProfile
 				.postUserImage({
+					//jys uid
 					uid: user.uid,
 					image: user.image
 				})

@@ -52,6 +52,7 @@ import httpServices from '@services';
 export default {
 	data() {
 		return {
+			//jys uid
 			uid: '4EL4hp_qRUYMzzal_G29f',
 			petList: [],
 			petOptions: [],
@@ -63,6 +64,7 @@ export default {
 	created: function () {
 		this.$data.activeName = 'first';
 		//get pet list
+		//jys uid
 		httpServices.invoicemed
 			.getPetList({ uid: this.$data.uid })
 			.then(response => {
@@ -85,6 +87,7 @@ export default {
 			});
 
 		//get record list
+		//jys uid
 		httpServices.invoicemed
 			.getAllRecords({
 				uid: this.$data.uid,

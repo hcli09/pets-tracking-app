@@ -140,11 +140,13 @@ const submitForm = formEl => {
 					});
 
 					const token = res.data.token;
+					const uid = res.data.uid;
 					localStorage.setItem('token', token);
+					localStorage.setItem('uid', uid);
 
 					httpServices.dashboard
 						.user_dashboard({
-							uid: '4EL4hp_qRUYMzzal_G29f'
+							uid: uid
 						})
 						.then(response => {
 							let userObject = response.data.data;
@@ -162,6 +164,7 @@ const submitForm = formEl => {
 					});
 				}
 			} catch (error) {
+				// console.log("error:", error)
 				if(error.response.data.message === "Bad credentials") {
 					ElNotification({
 						title: 'Login',
@@ -211,7 +214,10 @@ const loginAsGuest = async () => {
 				type: 'success'
 			});
 			const token = res.data.token;
+			const uid = res.data.uid;
 			localStorage.setItem('token', token);
+			localStorage.setItem('uid', uid);
+
 
 			httpServices.dashboard
 				.user_dashboard({

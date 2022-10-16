@@ -18,7 +18,7 @@
 				<el-table-column
 					align="left"
 					label="Title"
-					width="270"
+					
 					column-key="booking_id"
 				>
 					<template #default="scope">
@@ -44,7 +44,7 @@
 					prop="attendee"
 					align="left"
 					label="Invitee"
-					width="200"
+					
 					column-key="booking_id"
 				/>
 
@@ -52,7 +52,7 @@
 					align="left"
 					label="Pets"
 					column-key="booking_id"
-					width="80"
+					width="60"
 				>
 					<template #default="scope">
 						<el-tooltip
@@ -86,7 +86,7 @@
 					align="center"
 					label="Start Date and Time"
 					column-key="booking_id"
-					width="180"
+					
 					sortable
 				/>
 
@@ -95,7 +95,7 @@
 					align="center"
 					label="End Date and Time"
 					column-key="booking_id"
-					width="180"
+					
 					sortable
 				/>
 
@@ -104,12 +104,12 @@
 					align="center"
 					label="Status"
 					column-key="booking_id"
-					width="180"
+					
 					sortable
 				/>
 
 				<!-- Operations -->
-				<el-table-column label="Operations" align="center" width="150">
+				<el-table-column label="Operations" align="center">
 					<template #default="scope">
 						<!-- if the booking is pending, the cancel button should be disabled -->
 
