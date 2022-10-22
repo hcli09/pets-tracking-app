@@ -38,16 +38,10 @@ axios.interceptors.request.use(config=>{
 	console.log('config:', config)
 
 	if (config.hasOwnProperty("data")) {
-		let data = config.data;
-		if(data.hasOwnProperty("uid")) {
-			data.uid = window.localStorage.getItem('uid')
-		}
+			config.data.uid = window.localStorage.getItem('uid')
 	}
 	if (config.hasOwnProperty("params")) {
-		let params = config.params;
-		if(params.hasOwnProperty("uid")) {
-			params.uid = window.localStorage.getItem('uid')
-		}
+			config.params.uid = window.localStorage.getItem('uid')
 	}
 
 	return config
