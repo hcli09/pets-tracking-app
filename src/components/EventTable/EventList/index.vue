@@ -18,7 +18,6 @@
 				<el-table-column
 					align="left"
 					label="Event"
-					width="270"
 					column-key="eventId"
 				>
 					<template #default="scope">
