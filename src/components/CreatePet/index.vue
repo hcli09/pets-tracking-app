@@ -265,8 +265,6 @@ export default {
 						httpServices.petInfo
 							.addPet(petObject)
 							.then(response => {
-								// let petId = response.data.data.petId;
-								console.log(petObject);
 								location.href = '/';
 							});
 					} catch (error) {

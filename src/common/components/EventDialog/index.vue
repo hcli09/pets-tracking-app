@@ -271,10 +271,10 @@ const onChangeTimeType = isAllDay => {
 	}
 };
 
-const petList = reactive([]);
+const petList = ref([]);
 try {
 	let user = JSON.parse(localStorage.getItem('user'));
-	user && petList.push(...user.petList);
+	petList.value = user && user.petList;
 } catch (error) {
 	console.log('error', error);
 }

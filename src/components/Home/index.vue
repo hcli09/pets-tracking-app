@@ -50,6 +50,7 @@ const getUserInfo = async () => {
 	});
 
 	Object.assign(userObject, res.data);
+	localStorage.setItem('user', JSON.stringify(res.data));
 };
 
 onBeforeMount(() => {
