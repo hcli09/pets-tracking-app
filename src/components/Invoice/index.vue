@@ -53,7 +53,7 @@ import httpServices from '@services';
 export default {
 	data() {
 		return {
-			uid: '4EL4hp_qRUYMzzal_G29f',
+			uid: localStorage.getItem('uid'),
 			petList: [],
 			petOptions: [],
 			recordType: 'Invoice',

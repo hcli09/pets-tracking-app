@@ -102,7 +102,7 @@ export default {
 		return {
 			petsummary: {},
 			userInfo: {},
-			uid: '4EL4hp_qRUYMzzal_G29f',
+			uid: localStorage.getItem('uid'), //get uid from local storage
 			petId: this.$route.query.id // get petid from url
 		};
 	},
