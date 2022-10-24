@@ -168,7 +168,6 @@ export default {
 			.then(response => {
 				let userobject = response.data.data;
 				this.$data.userInfo = userobject;
-				// console.log(this.$data.userInfo);
 			})
 			.catch(error => {
 				console.log(error.message);

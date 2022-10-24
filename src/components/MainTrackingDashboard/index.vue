@@ -182,7 +182,6 @@ export default {
 			httpServices.healthTracking
 				.getallhealth({ pet_id: petid, range: range })
 				.then(response => {
-					console.log(response.data.data, 'checkcheck');
 					this.$data.weightData = response.data.data.weight_list;
 					this.$data.calorieData = response.data.data.calorie_list;
 					this.$data.sleepData = response.data.data.sleep_list;
@@ -205,7 +204,6 @@ export default {
 					for (const record of this.$data.calorieData) {
 						temp_calorie.push(record.calorie);
 						calorie_dates.push(record.date);
-						console.log();
 					}
 					this.renderCalorieChart(calorie_dates, temp_calorie);
 
@@ -218,7 +216,6 @@ export default {
 						);
 
 						sleep_dates.push(record.date);
-						console.log();
 					}
 					this.renderSleepChart(sleep_dates, temp_duration);
 

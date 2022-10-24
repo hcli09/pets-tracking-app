@@ -116,7 +116,6 @@ import httpServices from '@services';
 import { FireBaseStorage as storage } from '@services/firebase.js';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
-//check height and weight
 var checknumber = (rule, value, callback) => {
 	if (value < 1 && value != null && value != '') {
 		callback(new Error('Must be greater than 0'));
@@ -128,9 +127,7 @@ var checknumber = (rule, value, callback) => {
 export default {
 	data() {
 		return {
-			// mock uid for now
 			uid: localStorage.getItem('uid'),
-			// mock userobject data, use for sidebar and top bar. need uid to get userobject
 			userObject: {
 				firstName: '',
 				lastName: '',
@@ -139,7 +136,6 @@ export default {
 				folderList: []
 			},
 			petAvatar: '',
-			// rules for pet form input
 			rules: {
 				petName: [
 					{
@@ -183,7 +179,6 @@ export default {
 					}
 				]
 			},
-			// array for casecader
 			speciesAndBreedOptions: [],
 			//pet dob can not be earlier than today
 			disabledDateDob(time) {
@@ -203,7 +198,7 @@ export default {
 		};
 	},
 	mounted() {
-		//fetch breeds and species from backedn, generate species and breeds options to match the cascader format in element plus
+		//generate species and breeds options to match the cascader format in element plus
 		httpServices.petInfo.getSpecies().then(response => {
 			let species_list = response.data.data;
 			for (let species of species_list) {
@@ -234,15 +229,12 @@ export default {
 
 	methods: {
 		Upload() {},
-		//send petforms to backend
 		submitForm(petForm) {
 			this.$refs[petForm].validate(valid => {
 				if (valid) {
 					let petForm = this.$data.petForm;
 					let petObject = {
-						//mock uid for now
 						uid: this.$data.uid,
-						//from pet form
 						petName: petForm.petName,
 						gender: parseInt(petForm.gender),
 						petDob: petForm.petDob,
@@ -309,18 +301,14 @@ export default {
 			const currentDate = new Date();
 			const timestamp = currentDate.getTime();
 
-			//assign a unique name to the pet avatar
-			// this.$data.petAvatar =
-			// 	this.$data.uid + '_petAvatar' + '_' + timestamp;
 			const storageRef = ref(
 				storage,
 				this.$data.uid + '_petAvatar' + '_' + timestamp
 			);
 
-			//send image to firebase and get the temporary url of the image
+			//send image to firebase and get the url of the image
 			uploadBytes(storageRef, file).then(() => {
 				getDownloadURL(storageRef).then(url => {
-					console.log(url);
 					this.petAvatar = url;
 				});
 			});

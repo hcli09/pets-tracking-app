@@ -240,7 +240,6 @@ export default {
 				.getexercise({ pet_id: petid, range: range })
 				.then(response => {
 					this.$data.exerciseData = response.data.data;
-					console.log(this.$data.exerciseData, 'hehe');
 					let temp_dates = [];
 					let temp_duration = [];
 					for (const record of this.$data.exerciseData) {
@@ -249,7 +248,6 @@ export default {
 						);
 
 						temp_dates.push(record.date);
-						console.log();
 					}
 					this.renderChart(temp_dates, temp_duration);
 				})
@@ -304,13 +302,11 @@ export default {
 
 		adddocument() {
 			this.$data.AdddialogFormVisible = false;
-			console.log(this.$data.documentForm);
 
 			// add new exercise data
 			httpServices.healthTracking
 				.addexercise(this.$data.documentForm)
 				.then(response => {
-					console.log(response);
 					location.reload();
 				})
 				.catch(error => {
@@ -322,7 +318,6 @@ export default {
 		handleDelete(index, row) {
 			this.$data.deletedialogVisible = true;
 			this.$data.delete_data_id = row.data_id;
-			console.log(this.$data.delete_data_id);
 		},
 		documentDelete() {
 			this.$data.deletedialogVisible = false;
@@ -330,7 +325,6 @@ export default {
 			httpServices.healthTracking
 				.deletedata({ data_id: this.$data.delete_data_id })
 				.then(response => {
-					console.log(response);
 					location.reload();
 				})
 				.catch(error => {
