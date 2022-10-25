@@ -114,11 +114,9 @@ import { useRoute, useRouter } from 'vue-router';
 const formRef = ref(null);
 const loading = ref(false);
 const loginForm = reactive({});
-const route = useRoute();
 const router = useRouter();
 
-// console.log(validateForm);
-
+// the login business logic inside
 const submitForm = formEl => {
 	if (!formEl) return;
 
@@ -126,7 +124,7 @@ const submitForm = formEl => {
 		if (valid) {
 			loading.value = true;
 			// save the email temperory for email verification, when a user registered but not verified, clicking the login button will jump to email verification page
-			const emailTemp = loginForm.username
+			const emailTemp = loginForm.username;
 			try {
 				const { data: res } = await httpServices.registerLogin.login(
 					loginForm
@@ -154,6 +152,10 @@ const submitForm = formEl => {
 								'user',
 								JSON.stringify(userObject)
 							);
+							localStorage.setItem(
+								'uid',
+								JSON.stringify(userObject)
+							);
 						})
 						.catch(error => {
 							console.log(error);
@@ -165,14 +167,15 @@ const submitForm = formEl => {
 				}
 			} catch (error) {
 				// console.log("error:", error)
-				if(error.response.data.message === "Bad credentials") {
+				if (error.response.data.message === 'Bad credentials') {
 					ElNotification({
 						title: 'Login',
 						message: error.response.data.message,
 						type: 'error'
 					});
-				}
-				else if(error.response.data.message === "Email not verified") {
+				} else if (
+					error.response.data.message === 'Email not verified'
+				) {
 					// ElNotification({
 					// 	title: 'Login',
 					// 	message: error.response.data.message,
@@ -180,7 +183,10 @@ const submitForm = formEl => {
 					// });
 
 					// go to email verification page
-					router.push({name: 'SendVerifyEmail', params: {email: emailTemp}})
+					router.push({
+						name: 'SendVerifyEmail',
+						params: { email: emailTemp }
+					});
 				}
 
 				console.log('error', error);
@@ -218,10 +224,9 @@ const loginAsGuest = async () => {
 			localStorage.setItem('token', token);
 			localStorage.setItem('uid', uid);
 
-
 			httpServices.dashboard
 				.user_dashboard({
-					uid: '4EL4hp_qRUYMzzal_G29f'
+					uid: uid
 				})
 				.then(response => {
 					let userObject = response.data.data;

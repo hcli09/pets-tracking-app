@@ -49,9 +49,9 @@
 		</div>
 	</div>
 
-	<!-- Events and tasks -->
+	<!-- Events, Tasks, and Bookings -->
 	<div class="outer-folder-box">
-		<span class="main-title-text">Events and Tasks</span>
+		<span class="main-title-text">Events, Tasks and Bookings</span>
 		<div class="outer-events-tasks-box">
 			<el-row :gutter="5">
 				<!-- calender -->

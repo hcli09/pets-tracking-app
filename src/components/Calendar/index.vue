@@ -103,15 +103,7 @@
 
 <script setup>
 import moment from 'moment';
-import {
-	reactive,
-	computed,
-	ref,
-	onMounted,
-	defineProps,
-	toRaw,
-	watch
-} from 'vue';
+import { reactive, computed, ref, defineProps } from 'vue';
 import services from '../../services';
 import CalPopover from '@common/components/CalPopover/index.vue';
 
@@ -139,7 +131,7 @@ const bookingAttributes = reactive([]);
 
 const getCalendarByMonthAsync = async month => {
 	const { data: res, status } = await services.calendar.getCalendarByMonth({
-		uid: '4EL4hp_qRUYMzzal_G29f',
+		uid: localStorage.getItem('uid'),
 		month
 	});
 	const filtered = res.data.filter(
@@ -232,15 +224,12 @@ let { petList: newPetList } = JSON.parse(localStorage.getItem('user'));
 newPetList.unshift({ petId: 'All Pets', petName: 'All Pets' });
 petList.push(...newPetList);
 // filter implementation
-
 let getAttributesByPets = (props, filterValuePets) => {};
 
 let attributes = computed(() => {
 	// For general calendar - filter by items
 	if (filterValueItems.value !== 'all') {
 		switch (filterValueItems.value) {
-			// case 'all':
-			//  return baseAttributes;
 			case 'events':
 				return eventAttributes;
 			case 'tasks':
@@ -254,8 +243,6 @@ let attributes = computed(() => {
 	// For general calendar - filter by bookings
 	if (filterValueBookings.value !== 'all') {
 		switch (filterValueBookings.value) {
-			// case 'all':
-			//  return baseAttributes;
 			case 'confirmed':
 				return bookingAttributes.filter(
 					attr => attr.customData.status === 'confirmed'
@@ -320,10 +307,6 @@ let attributes = computed(() => {
 const inputEvent = page => {
 	console.log(page);
 };
-
-// const onClickDateItem = (day, attributes) => {
-//  console.log(day, attributes);
-// };
 </script>
 
 <style lang="scss" scoped>

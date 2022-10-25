@@ -187,15 +187,6 @@ const submitForm = formEl => {
 			}
 
 			formRef.value.resetFields();
-
-			// display a message about email verification
-			// ElMessage({
-			//     message: 'We have sent an message to ' + emailTemp + ', please click the link included to verify your email address',
-			//     duration: 5000,
-			//     offset: 60,
-			//     showClose: true,
-
-			// })
 		} else {
 			console.log('error submit!');
 			return false;

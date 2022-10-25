@@ -44,7 +44,7 @@ const events = reactive([]);
 const getEventsByDateAsync = async () => {
 	try {
 		const { data: res, status } = await services.events.getEventsByDate({
-			uid: '4EL4hp_qRUYMzzal_G29f',
+			uid: localStorage.getItem('uid'),
 			date: moment().format('YYYY-MM-DD')
 		});
 		if (status === 200) {

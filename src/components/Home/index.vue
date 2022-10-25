@@ -46,7 +46,7 @@ let userObject = reactive({});
 
 const getUserInfo = async () => {
 	const { data: res } = await httpServices.dashboard.user_dashboard({
-		uid: '4EL4hp_qRUYMzzal_G29f'
+		uid: localStorage.getItem('uid')
 	});
 
 	Object.assign(userObject, res.data);
