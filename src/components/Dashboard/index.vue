@@ -83,10 +83,13 @@
 					>
 						Add Event
 					</el-button>
-					<EventDialog
-						:dialogVisible="eventDialogVisible"
-						@setVisible="setEventDialogVisible"
-					/>
+
+					<template v-if="eventDialogVisible">
+						<EventDialog
+							:dialogVisible="eventDialogVisible"
+							@setVisible="setEventDialogVisible"
+						/>
+					</template>
 				</el-col>
 				<!-- events and tasks for today -->
 				<el-col :span="6" class="summary-events-tasks-box">
@@ -103,6 +106,7 @@
 						Add Task
 					</el-button>
 					<TaskDialog
+						v-if="taskDialogVisible"
 						:dialogVisible="taskDialogVisible"
 						@setVisible="setTaskDialogVisible"
 					/>
@@ -122,6 +126,7 @@
 						Add Booking
 					</el-button>
 					<BookingDialog
+						v-if="bookingDialogVisible"
 						:dialogVisible="bookingDialogVisible"
 						@setVisible="setBookingDialogVisible"
 					/>
@@ -132,7 +137,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { defineAsyncComponent, ref, watch } from 'vue';
 import {
 	Flag,
 	CircleCheck,
@@ -140,9 +145,8 @@ import {
 	Opportunity
 } from '@element-plus/icons-vue';
 
-import EventDialog from '@common/components/EventDialog/index.vue';
 import TaskDialog from '@common/components/TaskDialog/index.vue';
-
+import EventDialog from '@common/components/EventDialog/index.vue';
 import EventSummary from '@common/components/EventSummary/index.vue';
 import TaskSummary from '../../common/components/TaskSummary/index.vue';
 
@@ -150,6 +154,7 @@ import BookingSummary from '../../common/components/BookingSummary/index.vue';
 import BookingDialog from '../../common/components/BookingDialog/index.vue';
 
 import { useRoute, useRouter } from 'vue-router';
+
 const router = useRouter();
 
 const remarks = ref({ '2021-1-13': 'some tings' });
@@ -164,6 +169,7 @@ const userObject = {
 
 const eventDialogVisible = ref(false);
 const setEventDialogVisible = () => {
+	console.log('!eventDialogVisible.value', !eventDialogVisible.value);
 	eventDialogVisible.value = !eventDialogVisible.value;
 };
 

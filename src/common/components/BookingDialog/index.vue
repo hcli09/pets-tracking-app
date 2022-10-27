@@ -219,7 +219,7 @@ try {
 	console.log('error', error);
 }
 
-form.uid = '4EL4hp_qRUYMzzal_G29f';
+form.uid = localStorage.getItem('uid');
 
 const emailItems = ref([]);
 const querySearch = (queryString, cb) => {

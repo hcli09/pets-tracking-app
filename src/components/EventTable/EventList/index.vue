@@ -126,13 +126,13 @@
 				</el-table-column>
 			</el-table>
 		</el-skeleton>
-		<template v-if="editEventDialogVisible">
-			<EventDialog
-				:eventId="eventIdToEdit"
-				:dialogVisible="editEventDialogVisible"
-				@setVisible="setEditEventDialogVisible"
-			/>
-		</template>
+
+		<EventDialog
+			v-if="editEventDialogVisible"
+			:eventId="eventIdToEdit"
+			:dialogVisible="editEventDialogVisible"
+			@setVisible="setEditEventDialogVisible"
+		/>
 
 		<div class="right-filter">
 			<el-form>

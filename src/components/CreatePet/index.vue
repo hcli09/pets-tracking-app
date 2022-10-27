@@ -129,7 +129,7 @@ export default {
 	data() {
 		return {
 			// mock uid for now
-			uid: '4EL4hp_qRUYMzzal_G29f',
+			uid: localStorage.getItem('uid'),
 			// mock userobject data, use for sidebar and top bar. need uid to get userobject
 			userObject: {
 				firstName: '',

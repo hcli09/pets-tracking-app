@@ -136,7 +136,7 @@ const submitForm = formEl => {
 						message: 'Login Successfully',
 						type: 'success'
 					});
-
+					console.log('res', res);
 					const token = res.data.token;
 					const uid = res.data.uid;
 					localStorage.setItem('token', token);
@@ -150,10 +150,6 @@ const submitForm = formEl => {
 							let userObject = response.data.data;
 							localStorage.setItem(
 								'user',
-								JSON.stringify(userObject)
-							);
-							localStorage.setItem(
-								'uid',
 								JSON.stringify(userObject)
 							);
 						})
@@ -265,7 +261,7 @@ $lc-left-width: 50vw;
 	.lc-left {
 		width: $lc-left-width;
 		height: 100%;
-		background-image: url('src/assets/login/dog-background/dog-bgd.png');
+		background-image: url('https://raw.githubusercontent.com/hcli09/pets-tracking-app/main/src/assets/login/dog-background/dog-bgd.png');
 		background-position: center center;
 		background-size: 100% 100%;
 		background-repeat: no-repeat;

@@ -18,7 +18,6 @@
 				<el-table-column
 					align="left"
 					label="Title"
-					
 					column-key="booking_id"
 				>
 					<template #default="scope">
@@ -44,7 +43,6 @@
 					prop="attendee"
 					align="left"
 					label="Invitee"
-					
 					column-key="booking_id"
 				/>
 
@@ -86,7 +84,6 @@
 					align="center"
 					label="Start Date and Time"
 					column-key="booking_id"
-					
 					sortable
 				/>
 
@@ -95,7 +92,6 @@
 					align="center"
 					label="End Date and Time"
 					column-key="booking_id"
-					
 					sortable
 				/>
 
@@ -104,7 +100,6 @@
 					align="center"
 					label="Status"
 					column-key="booking_id"
-					
 					sortable
 				/>
 
@@ -165,13 +160,6 @@
 				</el-table-column>
 			</el-table>
 		</el-skeleton>
-		<template v-if="editEventDialogVisible">
-			<EventDialog
-				:eventId="eventIdToEdit"
-				:dialogVisible="editEventDialogVisible"
-				@setVisible="setEditEventDialogVisible"
-			/>
-		</template>
 
 		<div class="right-filter">
 			<el-form>
@@ -222,21 +210,11 @@
 	</div>
 </template>
 <script setup>
-import {
-	defineProps,
-	reactive,
-	inject,
-	ref,
-	defineAsyncComponent,
-	toRaw
-} from 'vue';
+import { defineProps, reactive, inject, ref, toRaw } from 'vue';
 import services from '../../../services';
 import { InfoFilled } from '@element-plus/icons-vue';
 import moment from 'moment';
 
-const EventDialog = defineAsyncComponent(() =>
-	import('../../../common/components/EventDialog/index.vue')
-);
 const reload = inject('reload');
 const props = defineProps({
 	currUid: {
@@ -279,14 +257,6 @@ const confirmCancelBooking = async booking_id => {
 		console.log('cancel fail: ', res.message);
 		ElMessage.error('error');
 	}
-};
-const eventIdToEdit = ref('');
-const handleEdit = eventId => {
-	eventIdToEdit.value = eventId;
-	editEventDialogVisible.value = true;
-};
-const setEditEventDialogVisible = () => {
-	editEventDialogVisible.value = !editEventDialogVisible.value;
 };
 
 const petSelected = ref('');

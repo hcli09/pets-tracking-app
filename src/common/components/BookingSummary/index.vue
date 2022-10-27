@@ -47,7 +47,7 @@ const bookings = reactive([]);
 const getBookingsByDateAsync = async () => {
 	try {
 		const { data: res, status } = await getBookingsByDate({
-			uid: '4EL4hp_qRUYMzzal_G29f',
+			uid: localStorage.getItem('uid'),
 			date: moment().format('YYYY-MM-DD')
 		});
 

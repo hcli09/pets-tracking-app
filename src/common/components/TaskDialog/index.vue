@@ -129,7 +129,7 @@ const onSubmit = async () => {
 	isSubmitting.value = true;
 	try {
 		if (props.taskId) {
-			form.uid = '4EL4hp_qRUYMzzal_G29f';
+			form.uid = localStorage.getItem('uid');
 			delete form.taskData.petAbList;
 			const { data: res } = await services.tasks.editTask(form);
 			if (res.status === 200) {
@@ -169,7 +169,7 @@ try {
 	console.log('error', error);
 }
 
-form.uid = '4EL4hp_qRUYMzzal_G29f';
+form.uid = localStorage.getItem('uid');
 </script>
 
 <style lang="scss" scoped>
@@ -204,7 +204,7 @@ form.uid = '4EL4hp_qRUYMzzal_G29f';
 	border-radius: 10px;
 	background-image: url('@assets/dialog/dialog-2.png');
 	background-size: 460px 509px;
-	background-position: -120px -50px;
+	background-position: -120px -30px;
 	background-repeat: no-repeat;
 }
 </style>

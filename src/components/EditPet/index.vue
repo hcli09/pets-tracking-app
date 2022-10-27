@@ -172,7 +172,7 @@ export default {
 	data() {
 		return {
 			// mock uid for now
-			uid: '4EL4hp_qRUYMzzal_G29f',
+			uid: localStorage.getItem('uid'),
 			// get petid from url
 			petId: this.$route.query.id,
 

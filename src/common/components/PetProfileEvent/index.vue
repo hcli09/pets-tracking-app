@@ -49,6 +49,7 @@
 		</el-button>
 
 		<EventDialog
+			v-if="eventDialogVisible"
 			:dialogVisible="eventDialogVisible"
 			@setVisible="setEventDialogVisible"
 		/>
@@ -70,7 +71,7 @@ const setEventDialogVisible = () => {
 export default {
 	data() {
 		return {
-			uid: '4EL4hp_qRUYMzzal_G29f',
+			uid: localStorage.getItem('uid'),
 			eventList: [],
 			// get petid from url
 			curr_petId: this.$route.query.id

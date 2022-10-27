@@ -156,7 +156,7 @@ import {
 const upload = ref();
 const user = reactive({
 	//jys uid
-	uid: '4EL4hp_qRUYMzzal_G29f',
+	uid: localStorage.getItem('uid'),
 	email: '',
 	firstName: '',
 	lastName: '',
@@ -175,8 +175,7 @@ onMounted(() => {
 
 const getUserProfile = async () => {
 	const res = await httpServices.userProfile.getUserProfile({
-		//jys uid
-		uid: '4EL4hp_qRUYMzzal_G29f'
+		uid: localStorage.getItem('uid')
 	});
 	user.firstName = res.data.data.firstName;
 	user.lastName = res.data.data.lastName;
@@ -301,7 +300,7 @@ export default {
 
 	.avatar-container {
 		display: flex;
-    	justify-content: center;
+		justify-content: center;
 		margin-top: 3vh;
 
 		.avatar-image {

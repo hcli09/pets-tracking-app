@@ -16,38 +16,24 @@ axios.defaults.baseURL = 'https://pets-backend.azurewebsites.net';
 // axios.defaults.baseURL = 'http://127.0.0.1:4523/m1/819321-0-default/';
 
 //using axios request interceptor to change the uid in the payload, because all uid in the code are hardcoded
-axios.interceptors.request.use(config=>{
-	// if(config.method === 'post'){
-	// 	console.log('config:', config)
-
-	// 	if (config.hasOwnProperty("data")) {
-	// 		let data = config.data;
-	// 		if(data.hasOwnProperty("uid")) {
-	// 			data.uid = window.localStorage.getItem('uid')
-	// 		}
-	// 	}
-	// 	if (config.hasOwnProperty("params")) {
-	// 		let params = config.params;
-	// 		if(params.hasOwnProperty("uid")) {
-	// 			params.uid = window.localStorage.getItem('uid')
-	// 		}
-	// 	}
-	    
+axios.interceptors.request.use(config => {
+	// if (
+	// 	config.hasOwnProperty('data') &&
+	// 	config.url !== '/login' &&
+	// 	config.url !== '/register'
+	// ) {
+	// 	config.data.uid = window.localStorage.getItem('uid');
 	// }
-	
-	console.log('config:', config)
+	// if (
+	// 	config.hasOwnProperty('params') &&
+	// 	config.url !== '/login' &&
+	// 	config.url !== '/register'
+	// ) {
+	// 	config.params.uid = window.localStorage.getItem('uid');
+	// }
 
-	if (config.hasOwnProperty("data")) {
-			config.data.uid = window.localStorage.getItem('uid')
-	}
-	if (config.hasOwnProperty("params")) {
-			config.params.uid = window.localStorage.getItem('uid')
-	}
-
-	return config
-
-})
-
+	return config;
+});
 
 // v-calendar
 import VCalendar from 'v-calendar';

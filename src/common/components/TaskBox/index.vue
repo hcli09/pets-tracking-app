@@ -81,7 +81,7 @@ const reload = inject('reload');
 
 const handleChange = async target => {
 	const { data: res } = await services.tasks.checkOffTask({
-		uid: '4EL4hp_qRUYMzzal_G29f',
+		uid: localStorage.getItem('uid'),
 		taskId,
 		isChecked: +target
 	});

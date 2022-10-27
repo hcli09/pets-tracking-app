@@ -45,7 +45,7 @@ const tasks = reactive([]);
 const getTasksByDateAsync = async () => {
 	try {
 		const { data: res, status } = await services.tasks.getTasksByDate({
-			uid: '4EL4hp_qRUYMzzal_G29f',
+			uid: localStorage.getItem('uid'),
 			date: moment().format('YYYY-MM-DD')
 		});
 

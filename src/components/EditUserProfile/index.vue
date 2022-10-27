@@ -110,7 +110,7 @@ import { Plus } from '@element-plus/icons-vue';
 import { CameraFilled } from '@element-plus/icons-vue';
 
 // const user = reactive({
-//     uid: '4EL4hp_qRUYMzzal_G29f',
+//     uid: localStorage.getItem('uid'),
 //     email: '',
 //     firstName: '',
 //     lastName: '',
@@ -120,7 +120,7 @@ import { CameraFilled } from '@element-plus/icons-vue';
 // })
 
 //jys uid
-const uid = '4EL4hp_qRUYMzzal_G29f';
+const uid = localStorage.getItem('uid');
 const formSize = ref('default');
 const ruleFormRef = ref();
 const ruleForm = reactive({
@@ -196,7 +196,7 @@ const getLocationList = async () => {
 const getUserProfile = async () => {
 	const res = await httpServices.userProfile.getUserProfile({
 		//jys uid
-		uid: '4EL4hp_qRUYMzzal_G29f'
+		uid: localStorage.getItem('uid')
 	});
 	ruleForm.firstName = res.data.data.firstName;
 	ruleForm.lastName = res.data.data.lastName;
@@ -223,7 +223,7 @@ const editUserProfile = async () => {
 
 	const res = await httpServices.userProfileEdit.editUserProfile({
 		//jys uid
-		uid: '4EL4hp_qRUYMzzal_G29f',
+		uid: localStorage.getItem('uid'),
 		firstName: ruleForm.firstName,
 		lastName: ruleForm.lastName,
 		phone: ruleForm.phone.toString(),

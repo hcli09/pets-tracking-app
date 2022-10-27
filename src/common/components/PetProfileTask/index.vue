@@ -38,6 +38,7 @@
 			Add Task
 		</el-button>
 		<TaskDialog
+			v-if="taskDialogVisible"
 			:dialogVisible="taskDialogVisible"
 			@setVisible="setTaskDialogVisible"
 		/>
@@ -64,7 +65,7 @@ export default {
 	inject: ['reload'],
 	data() {
 		return {
-			uid: '4EL4hp_qRUYMzzal_G29f',
+			uid: localStorage.getItem('uid'),
 			taskList: [],
 			// get petid from url
 			curr_petId: this.$route.query.id

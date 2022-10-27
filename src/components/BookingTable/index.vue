@@ -34,7 +34,7 @@ import Close from '@common/components/CloseButton/index.vue';
 import { ref } from 'vue';
 
 // jys uid
-const uid = '4EL4hp_qRUYMzzal_G29f';
+const uid = localStorage.getItem('uid');
 const activeName = ref('first');
 </script>
 

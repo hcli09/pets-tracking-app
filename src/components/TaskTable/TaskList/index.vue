@@ -112,13 +112,13 @@
 				</el-table-column>
 			</el-table>
 		</el-skeleton>
-		<template v-if="editTaskDialogVisible">
-			<TaskDialog
-				:taskId="taskIdToEdit"
-				:dialogVisible="editTaskDialogVisible"
-				@setVisible="setEditTaskDialogVisible"
-			/>
-		</template>
+
+		<TaskDialog
+			v-if="editTaskDialogVisible"
+			:taskId="taskIdToEdit"
+			:dialogVisible="editTaskDialogVisible"
+			@setVisible="setEditTaskDialogVisible"
+		/>
 
 		<div class="right-filter">
 			<el-form>

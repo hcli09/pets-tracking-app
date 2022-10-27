@@ -227,7 +227,7 @@ const onSubmit = async () => {
 	// console.log('form', form);
 	try {
 		if (props.eventId) {
-			form.uid = '4EL4hp_qRUYMzzal_G29f';
+			form.uid = localStorage.getItem('uid');
 			delete form.eventData.petAbList;
 			const { data: res } = await services.events.editEvent(form);
 			if (res.status === 200) {
@@ -279,7 +279,7 @@ try {
 	console.log('error', error);
 }
 
-form.uid = '4EL4hp_qRUYMzzal_G29f';
+form.uid = localStorage.getItem('uid');
 </script>
 
 <style lang="scss" scoped>
