@@ -41,7 +41,7 @@
 				<!-- Operations -->
 				<el-table-column label="Operations" align="center">
 					<template #default="scope">
-						<el-button
+						<el-button v-if="recordType != 'Vaccination'" 
 							size="small"
 							@click="handleView(scope.$index, scope.row)"
 							style="background: #f1eeec"
@@ -274,7 +274,7 @@
 				:before-upload="EditbeforeAvatarUpload"
 				:http-request="Upload"
 			>
-				<el-button size="medium" type="primary"
+				<el-button v-if="recordType != 'Vaccination'" size="medium" type="primary"
 					>Replace Document</el-button
 				>
 			</el-upload>
