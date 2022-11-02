@@ -29,15 +29,6 @@
 				></RecordGrid
 			></el-tab-pane>
 		</el-tabs>
-		<!-- <template v-if="$route.query.id">
-			<el-button
-				style="position: absolute; right: 10px; top: 3px"
-				type="primary"
-				plain
-				@click="topetProfile"
-				>Back to Pet Profile</el-button
-			>
-		</template> -->
 	</div>
 </template>
 
@@ -77,7 +68,6 @@ export default {
 				for (let pet of this.$data.petList) {
 					let temp = { value: pet.petId, label: pet.petName };
 					this.$data.petOptions.push(temp);
-					console.log(this.$data.petOptions);
 				}
 			})
 			.catch(error => {

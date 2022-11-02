@@ -159,7 +159,6 @@ import { getStorage, ref as ref_delete, deleteObject } from 'firebase/storage';
 </script>
 
 <script>
-//check height and weight
 var checknumber = (rule, value, callback) => {
 	if (value < 1 && value != null && value != '') {
 		callback(new Error('Must be greater than 0'));
@@ -171,12 +170,8 @@ var checknumber = (rule, value, callback) => {
 export default {
 	data() {
 		return {
-			// mock uid for now
 			uid: localStorage.getItem('uid'),
-			// get petid from url
 			petId: this.$route.query.id,
-
-			// mock userobject data, use for sidebar and top bar. need uid to get userobject, uid is from session storage
 			userObject: {
 				firstName: '',
 				lastName: '',
@@ -185,10 +180,7 @@ export default {
 				folderList: []
 			},
 
-			// pet avatar url
 			petAvatar: '',
-
-			// rules for pet form input
 			rules: {
 				petName: [
 					{
@@ -257,9 +249,6 @@ export default {
 	},
 
 	mounted() {
-		// TODO: fetch uid and petId
-		console.log(this.$route.query.id);
-
 		httpServices.petInfo.getSpecies().then(response => {
 			let species_list = response.data.data;
 			for (let species of species_list) {
@@ -324,17 +313,14 @@ export default {
 			done();
 		},
 
-		//send petforms to backend
 		submitForm(petForm) {
 			this.$refs[petForm].validate(valid => {
 				if (valid) {
 					let petForm = this.$data.petForm;
 					let petObject = {
-						//mock uid and petId for now
 						uid: this.$data.uid,
 						petId: this.$data.petId,
 
-						//from pet form
 						petName: petForm.petName,
 						gender: parseInt(petForm.gender),
 						petDob: petForm.petDob,
@@ -358,7 +344,6 @@ export default {
 						.updatePet(petObject)
 						.then(response => {
 							this.topetProfile();
-							// topetProfile();
 						})
 						.catch(error => {
 							console.log(error);
@@ -376,7 +361,6 @@ export default {
 			this.petAvatar = '';
 		},
 
-		// Delete pet
 		deletePet() {
 			try {
 				httpServices.petInfo
@@ -403,8 +387,6 @@ export default {
 		handleChange(value) {
 			console.log(value);
 		},
-
-		//avatar
 
 		beforeAvatarUpload(file) {
 			const isJPG = file.type === 'image/jpeg';

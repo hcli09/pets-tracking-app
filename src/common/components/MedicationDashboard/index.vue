@@ -233,7 +233,6 @@ export default {
 			.getmedi({ pet_id: this.$data.petId, range: 'All' })
 			.then(response => {
 				this.$data.medicationData = response.data.data;
-				console.log(this.$data.medicationData);
 			})
 			.catch(error => {
 				console.log(error.message);
@@ -267,13 +266,11 @@ export default {
 	methods: {
 		adddocument() {
 			this.$data.AdddialogFormVisible = false;
-			console.log(this.$data.documentForm);
 
 			// add new medication data
 			httpServices.healthTracking
 				.addmedi(this.$data.documentForm)
 				.then(response => {
-					console.log(response);
 					location.reload();
 				})
 				.catch(error => {
@@ -288,16 +285,12 @@ export default {
 			this.$data.EditdocumentForm.medi_name = row.medi_name;
 			this.$data.EditdocumentForm.frequency = row.frequency;
 			this.$data.EditdocumentForm.notes = row.notes;
-
-			console.log(this.$data.EditdocumentForm);
-			console.log(row);
 		},
 
 		editdocument() {
 			httpServices.healthTracking
 				.editmedi(this.$data.EditdocumentForm)
 				.then(response => {
-					console.log(response);
 					location.reload();
 				})
 				.catch(error => {
@@ -308,7 +301,6 @@ export default {
 		handleDelete(index, row) {
 			this.$data.deletedialogVisible = true;
 			this.$data.delete_data_id = row.data_id;
-			console.log(this.$data.delete_data_id);
 		},
 		documentDelete() {
 			this.$data.deletedialogVisible = false;
@@ -316,7 +308,6 @@ export default {
 			httpServices.healthTracking
 				.deletedata({ data_id: this.$data.delete_data_id })
 				.then(response => {
-					console.log(response);
 					location.reload();
 				})
 				.catch(error => {

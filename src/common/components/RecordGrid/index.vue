@@ -392,13 +392,11 @@ export default {
 			this.$data.view_fileFormat = record.fileFormat;
 			this.$data.view_fileDir = record.fileDir;
 			this.$data.dialogPDFVisible = true;
-			console.log(record, this.$data.view_recordTitle);
 		},
 
 		//add new invoice
 		adddocument() {
 			this.$data.AdddialogFormVisible = false;
-			console.log(this.$data.documentForm);
 			//add new invoice
 			httpServices.invoicemed
 				.addNewRecord({
@@ -413,7 +411,6 @@ export default {
 					}
 				})
 				.then(response => {
-					console.log(response);
 					location.reload();
 				})
 				.catch(error => {
@@ -477,8 +474,6 @@ export default {
 			this.$data.EditdocumentForm.fileDir = record.fileDir;
 			this.$data.EditdocumentForm.recordId = record.recordId;
 			this.$data.EditdocumentForm.fileFormat = record.fileFormat;
-
-			console.log(this.$data.EditdocumentForm);
 		},
 
 		editdocument() {
@@ -496,7 +491,6 @@ export default {
 					}
 				})
 				.then(response => {
-					console.log(response);
 					location.reload();
 				})
 				.catch(error => {
@@ -507,8 +501,6 @@ export default {
 			this.$data.deletedialogVisible = true;
 			this.$data.delete_recordId = record.recordId;
 			this.$data.delete_fileDir = record.fileDir;
-			console.log(this.$data.delete_recordId);
-			console.log(record);
 		},
 		documentDelete() {
 			this.$data.deletedialogVisible = false;
@@ -519,7 +511,6 @@ export default {
 					recordId: this.$data.delete_recordId
 				})
 				.then(response => {
-					console.log(response);
 					location.reload();
 					const storage = getStorage();
 					// Create a reference to the file to delete
@@ -543,7 +534,9 @@ export default {
 
 		//Edit upload document
 		EditbeforeAvatarUpload(file) {
+			//can click the save button when loading finished
 			this.$data.editloading = true;
+			//document can only be in the image or pdf format
 			const isJPG =
 				file.type === 'image/png' || file.type === 'image/jpeg';
 			const isPDF = file.type === 'application/pdf';
@@ -582,11 +575,9 @@ export default {
 				});
 			});
 		},
-		//filter date
+		//filter date and pet
 		applyFilter() {
 			this.$data.displayedRecordList = this.$data.recordList.slice();
-			console.log(this.$data.dateRange);
-			console.log(this.$data.petSelected);
 
 			if (this.$data.dateRange !== '' && this.$data.petSelected === '') {
 				let startDate = new Date(
@@ -633,7 +624,6 @@ export default {
 
 				for (let record of this.$data.recordList) {
 					let recordDate = new Date(record.date);
-					console.log(record);
 					if (
 						recordDate.getTime() < startDate.getTime() ||
 						recordDate.getTime() > endDate.getTime() ||

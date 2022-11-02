@@ -376,8 +376,6 @@ export default {
 		//add new invoice
 		adddocument() {
 			this.$data.AdddialogFormVisible = false;
-			console.log(this.$data.documentForm);
-			console.log(this.$data.documentForm.fileDir);
 			//add new invoice
 			httpServices.invoicemed
 				.addNewRecord({
@@ -392,7 +390,6 @@ export default {
 					}
 				})
 				.then(response => {
-					console.log(response);
 					location.reload();
 				})
 				.catch(error => {
@@ -408,8 +405,6 @@ export default {
 			this.$data.EditdocumentForm.fileDir = row.fileDir;
 			this.$data.EditdocumentForm.recordId = row.recordId;
 			this.$data.EditdocumentForm.fileFormat = row.fileFormat;
-
-			console.log(this.$data.EditdocumentForm);
 		},
 
 		editdocument() {
@@ -427,7 +422,6 @@ export default {
 					}
 				})
 				.then(response => {
-					console.log(response);
 					location.reload();
 				})
 				.catch(error => {
@@ -439,8 +433,6 @@ export default {
 			this.$data.deletedialogVisible = true;
 			this.$data.delete_recordId = row.recordId;
 			this.$data.delete_fileDir = row.fileDir;
-			console.log(index, row);
-			console.log(this.$data.delete_recordId);
 		},
 		documentDelete() {
 			this.$data.deletedialogVisible = false;
@@ -451,7 +443,6 @@ export default {
 					recordId: this.$data.delete_recordId
 				})
 				.then(response => {
-					console.log(response);
 					location.reload();
 					const storage = getStorage();
 					// Create a reference to the file to delete
@@ -478,7 +469,6 @@ export default {
 			this.$data.view_fileFormat = row.fileFormat;
 			this.$data.view_fileDir = row.fileDir;
 			this.$data.dialogPDFVisible = true;
-			console.log(index, row, this.$data.view_recordTitle);
 		},
 		//Add upload document
 		AddbeforeAvatarUpload(file) {
@@ -514,10 +504,8 @@ export default {
 				storage,
 				this.$data.uid + '_invocie' + '_' + timestamp
 			);
-			console.log(file);
 			uploadBytes(storageRef, file).then(() => {
 				getDownloadURL(storageRef).then(url => {
-					console.log(url);
 					this.$data.documentForm.fileDir = url;
 					this.$data.addloading = false;
 				});
@@ -526,6 +514,7 @@ export default {
 
 		//Edit upload document
 		EditbeforeAvatarUpload(file) {
+			//can click the save button when loading finished
 			this.$data.editloading = true;
 			const isJPG =
 				file.type === 'image/png' || file.type === 'image/jpeg';
@@ -558,6 +547,7 @@ export default {
 				storage,
 				this.$data.uid + '_invocie' + '_' + timestamp
 			);
+			//upload to firebase bucket
 			uploadBytes(storageRef, file).then(() => {
 				getDownloadURL(storageRef).then(url => {
 					this.$data.EditdocumentForm.fileDir = url;
@@ -613,7 +603,6 @@ export default {
 
 				for (let record of this.$data.recordList) {
 					let recordDate = new Date(record.date);
-					console.log(record);
 					if (
 						recordDate.getTime() < startDate.getTime() ||
 						recordDate.getTime() > endDate.getTime() ||

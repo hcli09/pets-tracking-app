@@ -6,7 +6,6 @@
 			height="40vh"
 			style="width: 100%"
 		>
-			<!-- <el-icon Calendar></el-icon> -->
 			<el-table-column prop="taskTitle" label="Title" align="center">
 			</el-table-column>
 			<el-table-column
@@ -67,7 +66,6 @@ export default {
 		return {
 			uid: localStorage.getItem('uid'),
 			taskList: [],
-			// get petid from url
 			curr_petId: this.$route.query.id
 		};
 	},
@@ -80,7 +78,6 @@ export default {
 					isChecked: 1
 				})
 				.then(response => {
-					console.log(response);
 					this.ElMessage({
 						message: 'Task checked off!',
 						type: 'success',
@@ -105,7 +102,6 @@ export default {
 						item.petIdList.includes(this.$data.curr_petId) &&
 						item.checked === false
 				);
-				console.log(this.$data.taskList);
 			})
 			.catch(error => {
 				console.log(error.message);

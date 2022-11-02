@@ -73,7 +73,6 @@ export default {
 		return {
 			uid: localStorage.getItem('uid'),
 			eventList: [],
-			// get petid from url
 			curr_petId: this.$route.query.id
 		};
 	},
@@ -87,7 +86,6 @@ export default {
 				this.$data.eventList = this.$data.eventList.filter(item =>
 					item.petIdList.includes(this.$data.curr_petId)
 				);
-				console.log(this.$data.eventList);
 			})
 			.catch(error => {
 				console.log(error.message);

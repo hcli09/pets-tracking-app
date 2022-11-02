@@ -102,7 +102,7 @@ export default {
 		return {
 			petsummary: {},
 			userInfo: {},
-			uid: localStorage.getItem('uid'),
+			uid: localStorage.getItem('uid'), //get uid from local storage
 			petId: this.$route.query.id // get petid from url
 		};
 	},
@@ -168,7 +168,6 @@ export default {
 			.then(response => {
 				let userobject = response.data.data;
 				this.$data.userInfo = userobject;
-				// console.log(this.$data.userInfo);
 			})
 			.catch(error => {
 				console.log(error.message);

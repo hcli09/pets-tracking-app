@@ -40,6 +40,7 @@
 			</div>
 		</div>
 		<div class="right">
+			<!-- fixed input for now -->
 			<div class="info-row">
 				<p>Microchip Number</p>
 				<p>00071A3357</p>

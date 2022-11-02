@@ -196,13 +196,11 @@ export default {
 				.getweight({ pet_id: petid, range: range })
 				.then(response => {
 					this.$data.weightData = response.data.data;
-					console.log(this.$data.weightData, 'hehe');
 					let temp_dates = [];
 					let temp_weights = [];
 					for (const record of this.$data.weightData) {
 						temp_weights.push(record.weight);
 						temp_dates.push(record.date);
-						console.log();
 					}
 					this.renderChart(temp_dates, temp_weights);
 				})
@@ -243,13 +241,11 @@ export default {
 
 		adddocument() {
 			this.$data.AdddialogFormVisible = false;
-			console.log(this.$data.documentForm);
 
 			// add new weight data
 			httpServices.healthTracking
 				.addweight(this.$data.documentForm)
 				.then(response => {
-					console.log(response);
 					location.reload();
 				})
 				.catch(error => {
@@ -261,7 +257,6 @@ export default {
 		handleDelete(index, row) {
 			this.$data.deletedialogVisible = true;
 			this.$data.delete_data_id = row.data_id;
-			console.log(this.$data.delete_data_id);
 		},
 		documentDelete() {
 			this.$data.deletedialogVisible = false;
@@ -269,7 +264,6 @@ export default {
 			httpServices.healthTracking
 				.deletedata({ data_id: this.$data.delete_data_id })
 				.then(response => {
-					console.log(response);
 					location.reload();
 				})
 				.catch(error => {

@@ -1,4 +1,5 @@
 <template>
+	<!-- load booking details when response is 200 -->
 	<template v-if="loading">
 		<div class="top">
 			<p class="text">
@@ -144,9 +145,6 @@
 					'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 				font-size: small;
 			}
-
-			.pets-name {
-			}
 		}
 	}
 }
@@ -163,42 +161,14 @@ export default {
 			loading: false,
 			booking_details: {},
 			bookingId: this.$route.query.id
-			// booking_details: {
-			// 	booking_id: 'ULr8fsXdwAhvjhYoTlwvn',
-			// 	uid: 'L2KY1s7PbESy2WEleFYfy',
-			// 	pet_id_list: ['cjmBiIwBYVFPcCvegpgmL', 'RKMUEpDLqQPO20BLGICwC'],
-			// 	attendee: 'bikinikang@gmail.com',
-			// 	title: 'WOOF at Infinity August',
-			// 	start_time: '2022-08-25 13:00',
-			// 	end_time: '2022-08-25 15:00',
-			// 	location: '1 Anthony Rolfe Ave, Gungahlin, ACT 2912',
-			// 	description: 'Please bring your own picnic blanket and cultery',
-			// 	status: 'pending',
-			// 	request_sender: true,
-			// 	pair_bk_id: null,
-			// 	petAbList: [
-			// 		{
-			// 			petId: 'cjmBiIwBYVFPcCvegpgmL',
-			// 			petName: 'Lucy',
-			// 			petAvatar: 'http://dummyimage.com/100x100'
-			// 		},
-			// 		{
-			// 			petId: 'RKMUEpDLqQPO20BLGICwC',
-			// 			petName: 'Huhu',
-			// 			petAvatar: 'http://dummyimage.com/100x100'
-			// 		}
-			// 	]
-			// }
 		};
 	},
 	created: function () {
-		console.log(this.$data.bookingId);
 		httpServices.resultPage
 			.confirmBooking({ booking_id: this.$data.bookingId })
 			.then(response => {
 				if (response.status == 200) {
 					this.$data.booking_details = response.data.data;
-					console.log(this.$data.booking_details);
 					this.$data.loading = true;
 				}
 			})
