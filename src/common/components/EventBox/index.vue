@@ -59,7 +59,6 @@
 <script setup>
 import { defineProps, onMounted, reactive, toRaw } from 'vue';
 import { useRouter } from 'vue-router';
-import { getPetAbListWithFullAvatar } from '../../utils/getPetAvatar';
 const router = useRouter();
 const props = defineProps({
 	customData: {
